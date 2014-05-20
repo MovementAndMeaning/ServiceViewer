@@ -19,3 +19,6 @@
 *.exe
 *.out
 *.app
+
+Doxygen_output
+UserInterfaceState.xcuserstate
