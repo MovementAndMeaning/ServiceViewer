@@ -22,3 +22,13 @@
 
 Doxygen_output
 UserInterfaceState.xcuserstate
+
+# Visual Studio stuff
+*.sdf
+*.opensdf
+*.user
+*.ilk
+*.suo
+*.pdb
+*.exp
+obj
