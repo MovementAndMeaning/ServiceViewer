@@ -100,3 +100,43 @@ bool CalculateMinDistance(float &         distanceSoFar,
     }
     return result;
 } // CalculateMinDistance
+
+void CalculateTextMeshDimensions(const ofMesh & textMesh,
+                                 ofVec2f &      dimensions)
+{
+    float maxX = 0;
+    float maxY = 0;
+    float minX = 0;
+    float minY = 0;
+    
+    for (int ii = 0, num = textMesh.getNumVertices(); num > ii; ++ii)
+    {
+        ofVec3f aVertex = textMesh.getVertex(ii);
+        
+        if (ii)
+        {
+            if (aVertex.x > maxX)
+            {
+                maxX = aVertex.x;
+            }
+            if (aVertex.x < minX)
+            {
+                minX = aVertex.x;
+            }
+            if (aVertex.y > maxY)
+            {
+                maxY = aVertex.y;
+            }
+            if (aVertex.y < minY)
+            {
+                minY = aVertex.y;
+            }
+        }
+        else
+        {
+            maxX = minX = aVertex.x;
+            maxY = minY = aVertex.y;
+        }
+    }
+    dimensions.set(maxX - minX, maxY - minY);
+} // CalculateTextMeshDimensions

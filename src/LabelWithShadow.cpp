@@ -40,6 +40,7 @@
 //--------------------------------------------------------------------------------------
 
 #include "LabelWithShadow.h"
+#include "Utilities.h"
 
 #if defined(__APPLE__)
 # pragma clang diagnostic push
@@ -72,17 +73,18 @@ ofColor LabelWithShadow::shadowColor(128);
 # pragma mark Constructors and destructors
 #endif // defined(__APPLE__)
 
-LabelWithShadow::LabelWithShadow(void) :
-            inherited()
+LabelWithShadow::LabelWithShadow(IconlessPanel * parent) :
+            inherited(), _parent(parent)
 {
 	_thisShadowColor = shadowColor;
     _thisShadowWidth = shadowWidth;
 } // LabelWithShadow::LabelWithShadow
 
-LabelWithShadow::LabelWithShadow(ofParameter<string> label,
+LabelWithShadow::LabelWithShadow(IconlessPanel *       parent,
+                                 ofParameter<string> label,
                                  const float         width,
                                  const float         height) :
-            inherited(label, width, height)
+            inherited(label, width, height), _parent(parent)
 {
 	_thisShadowColor = shadowColor;
     _thisShadowWidth = shadowWidth;
@@ -96,8 +98,29 @@ LabelWithShadow::~LabelWithShadow(void)
 # pragma mark Actions
 #endif // defined(__APPLE__)
 
+float LabelWithShadow::calculateTextWidth(void)
+{
+    string name;
+    
+    if (! getName().empty())
+    {
+        name = getName() + ": ";
+    }
+    name += static_cast<string>(label);
+    ofRectangle bbox = getTextBoundingBox(name, 0, 0);
+    
+    return ((0 <= bbox.width) ? (bbox.width + (2 * textPadding)) : 0);
+} // LabelWithShadow::calculateTextWidth
+
 void LabelWithShadow::generateDraw(void)
 {
+    float newWidth = calculateTextWidth();
+    
+    if (newWidth > getWidth())
+    {
+        _parent->setWidth(newWidth);
+        b.width = newWidth;
+    }
     _shadow.clear();
     _shadow.setFillColor(_thisShadowColor);
     _shadow.setFilled(true);
@@ -130,38 +153,6 @@ LabelWithShadow * LabelWithShadow::setup(string      labelName,
 # pragma mark Accessors
 #endif // defined(__APPLE__)
 
-ofColor LabelWithShadow::getShadowColor(void) const
-{
-	return _thisShadowColor;
-} // LabelWithShadow::getShadowColor
-
-float LabelWithShadow::getShadowWidth(void) const
-{
-    return _thisShadowWidth;
-} // LabelWithShadow::getShadowWidth
-
-void LabelWithShadow::setDefaultShadowColor(const ofColor & color)
-{
-	shadowColor = color;
-} // LabelWithShadow::setDefaultShadowColor
-
-void LabelWithShadow::setDefaultShadowWidth(const float width)
-{
-    shadowWidth = width;
-} // LabelWithShadow::setDefaultShadowWidth
-
-void LabelWithShadow::setShadowColor(const ofColor & color)
-{
-	generateDraw();
-	_thisShadowColor = color;
-} // LabelWithShadow::setShadowColor
-
-void LabelWithShadow::setShadowWidth(const float width)
-{
-    _thisShadowWidth = width;
-} // LabelWithShadow::setShadowWidth
-
 #if defined(__APPLE__)
 # pragma mark Global functions
 #endif // defined(__APPLE__)
-

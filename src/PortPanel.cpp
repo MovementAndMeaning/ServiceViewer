@@ -108,7 +108,7 @@ void PortPanel::addPort(string                         portName,
                         const PortEntry::PortDirection direction)
 {
     int         countBefore = getNumPorts();
-    PortEntry * aPort = new PortEntry(direction);
+    PortEntry * aPort = new PortEntry(this, direction);
     
     add(aPort->setup(portName));
     _owner->rememberPort(aPort);
@@ -254,11 +254,6 @@ bool PortPanel::setValue(float mx,
 #if defined(__APPLE__)
 # pragma mark Accessors
 #endif // defined(__APPLE__)
-
-void PortPanel::setTracker(MovementTracker * newTracker)
-{
-    _tracker = newTracker;
-} // PortPanel::setTracker
 
 #if defined(__APPLE__)
 # pragma mark Global functions

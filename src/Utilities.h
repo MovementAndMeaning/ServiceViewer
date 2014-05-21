@@ -42,6 +42,7 @@
 #if (! defined(__ServiceViewer__Utilities__))
 # define __ServiceViewer__Utilities__
 
+# include "ofMesh.h"
 # include "ofPoint.h"
 
 # if defined(__APPLE__)
@@ -81,5 +82,9 @@ inline bool CalculateMinDistance(float &         distanceSoFar,
 {
     return CalculateMinDistance(distanceSoFar, refPoint, ofPoint(testX, testY), bestSoFar);
 } // CalculateMinDistance
+
+/*! @brief !BLORT! */
+void CalculateTextMeshDimensions(const ofMesh & textMesh,
+                                 ofVec2f &      dimensions);
 
 #endif // ! defined(__ServiceViewer__Utilities__)

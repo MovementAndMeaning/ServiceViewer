@@ -74,8 +74,9 @@ static const float kArrowSize = 7;
 # pragma mark Constructors and destructors
 #endif // defined(__APPLE__)
 
-PortEntry::PortEntry(const PortDirection direction) :
-            inherited(), _direction(direction), _isLastPort(true)
+PortEntry::PortEntry(IconlessPanel *     parent,
+                     const PortDirection direction) :
+            inherited(parent), _direction(direction), _isLastPort(true)
 {
 } // PortEntry::PortEntry
 
@@ -174,9 +175,9 @@ PortEntry::AnchorSide PortEntry::calculateClosestAnchor(ofPoint &       result,
 void PortEntry::drawSourceAnchor(const AnchorSide anchor,
                                  const ofPoint &  anchorPos)
 {
-    ofRectangle outer(getShape());
     ofPoint     first;
     ofPoint     second;
+    ofRectangle outer(getShape());
     
     switch (anchor)
     {

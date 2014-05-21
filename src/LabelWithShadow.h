@@ -42,6 +42,8 @@
 #if (! defined(__ServiceViewer__LabelWithShadow__))
 # define __ServiceViewer__LabelWithShadow__
 
+# include "IconlessPanel.h"
+
 # include "ofxLabel.h"
 
 # if defined(__APPLE__)
@@ -60,35 +62,54 @@ class LabelWithShadow : public ofxLabel
 {
 public:
     
-    /*! @brief The constructor. */
-	LabelWithShadow(void);
+    /*! @brief The constructor.
+     @param parent The GUI element containing this element. */
+	LabelWithShadow(IconlessPanel * parent);
     
     /*! @brief The constructor.
+     @param parent The GUI element containing this element.
      @param label The named parameters of the panel.
      @param width The visual width of the panel.
      @param height The visual height of the panel. */
-    LabelWithShadow(ofParameter<string> label,
+    LabelWithShadow(IconlessPanel *     parent,
+                    ofParameter<string> label,
                     const float         width = defaultWidth,
                     const float         height = defaultHeight);
     
     /*! @brief The destructor. */
 	virtual ~LabelWithShadow(void);
     
+    /*! @brief Prepare the label for display. */
+	virtual void generateDraw(void);
+    
     /*! @brief Return the color used for the text label shadow.
      @returns The color used for the text label shadow. */
-	ofColor getShadowColor(void) const;
+	inline ofColor getShadowColor(void) const
+    {
+        return _thisShadowColor;
+    } // getShadowColor
     
     /*! @brief Return the width of the text label shadow.
      @returns The width of the text label shadow. */
-    float getShadowWidth(void) const;
+    inline float getShadowWidth(void) const
+    {
+        return _thisShadowWidth;
+    } // getShadowWidth
 
     /*! @brief Set the color used for the text label shadow.
      @param color The color to be used for the text label shadow. */
-	void setShadowColor(const ofColor & color);
+	inline void setShadowColor(const ofColor & color)
+    {
+        generateDraw();
+        _thisShadowColor = color;
+    } // setShadowColor
     
     /*! @brief Set the width of the text label shadow.
      @param width The width of the text label shadow. */
-    void setShadowWidth(const float width);
+    inline void setShadowWidth(const float width)
+    {
+        _thisShadowWidth = width;
+    } // setShadowWidth
     
     /*! @brief Set the parameters of the panel.
      @param label The named parameters of the panel.
@@ -110,17 +131,20 @@ public:
 
     /*! @brief Set the default color for text label shadows.
      @param color The default color for text label shadows. */
-	static void setDefaultShadowColor(const ofColor & color);
+	inline static void setDefaultShadowColor(const ofColor & color)
+    {
+        shadowColor = color;
+    } // setDefaultShadowColor
 
     /*! @brief Set the default width for text label shadows.
      @param width The default width for text label shadows. */
-	static void setDefaultShadowWidth(const float width);
+	inline static void setDefaultShadowWidth(const float width)
+    {
+        shadowWidth = width;
+    } // setDefaultShadowWidth
 
 protected:
     
-    /*! @brief Prepare the label for display. */
-	virtual void generateDraw(void);
-
     /*! @brief Display the label. */
 	virtual void render(void);
     
@@ -130,11 +154,14 @@ protected:
     /*! @brief The default text label shadow width. */
     static float   shadowWidth;
     
+    /*! @brief The GUI element containing this element. */
+    IconlessPanel * _parent;
+    
     /*! @brief The text label shadow color for this label. */
-	ofColor _thisShadowColor;
+	ofColor         _thisShadowColor;
 
     /*! @brief The text label shadow width for this label. */
-    float   _thisShadowWidth;
+    float           _thisShadowWidth;
 
 private:
     
@@ -152,6 +179,10 @@ private:
      Note - not implemented and private, to prevent unexpected copying.
      @param other Another object to construct from. */
     LabelWithShadow & operator=(const LabelWithShadow & other);
+    
+    /*! @brief Return the width of the text to be displayed.
+     @returns The width of the text to be displayed. */
+    float calculateTextWidth(void);
     
     /*! @brief The visual representation of the shadow. */
 	ofPath _shadow;

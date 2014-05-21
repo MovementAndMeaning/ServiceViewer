@@ -58,7 +58,7 @@
 # endif // defined(__APPLE__)
 
 /*! @brief A GUI panel without save / restore icons. */
-class IconlessPanel : public ofxGuiGroup
+class IconlessPanel : protected ofxGuiGroup
 {
 public:
     
@@ -77,13 +77,6 @@ public:
     
     /*! @brief The destructor. */
 	virtual ~IconlessPanel(void);
-    
-    /*! @brief Return the height of the vertical gap between panel elements.
-     @returns The vertical gap between panel elements. */
-    float getGapHeight(void) const
-    {
-        return inherited::spacingNextElement;
-    } // getRealHeight
     
     /*! @brief Set the parameters of the panel.
      @param collectionName The name of the panel.
@@ -105,6 +98,10 @@ public:
                           const float              xx = 10,
                           const float              yy = 10);
     
+    /*! @brief Change the width of the panel.
+     @param newWidth The new width for the panel. */
+	void setWidth(const float newWidth);
+
 protected:
 
     /*! @brief Prepare the panel for display. */
@@ -130,6 +127,10 @@ private:
      @param other Another object to construct from. */
     IconlessPanel & operator=(const IconlessPanel & other);
     
+    /*! @brief Return the width of the text to be displayed.
+     @returns The width of the text to be displayed. */
+    float calculateTextWidth(void);
+        
 }; // IconlessPanel
 
 #endif // ! defined(__ServiceViewer__IconlessPanel__)

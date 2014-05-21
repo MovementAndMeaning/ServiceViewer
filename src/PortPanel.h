@@ -60,7 +60,7 @@ class MovementTracker;
 class ServiceViewerApp;
 
 /*! @brief A GUI element to represent a set of ports. */
-class PortPanel : public IconlessPanel
+class PortPanel : protected IconlessPanel
 {
 public:
     
@@ -89,6 +89,26 @@ public:
     void addPort(string                         portName,
                  const PortEntry::PortDirection direction = PortEntry::kPortDirectionInputOutput);
     
+    /*! @brief Draw the panel. */
+	inline void draw(void)
+    {
+        inherited::draw();
+    } // draw
+
+    /*! @brief Return the height of the vertical gap between panel elements.
+     @returns The vertical gap between panel elements. */
+    inline float getGapHeight(void) const
+    {
+        return inherited::spacingNextElement;
+    } // getGapHeight
+    
+    /*! @brief Returns the height of the panel.
+     @returns The height of the panel. */
+	inline float getHeight(void)
+    {
+        return inherited::getHeight();
+    } // getHeight
+    
     /*! @brief Returns the number of ports in this panel.
      @returns The number of ports in this panel. */
     inline int getNumPorts(void)
@@ -100,6 +120,20 @@ public:
      @param num The zero-origin index of the port.
      @returns A port or @c NULL if the index is out of range. */
     PortEntry * getPort(const int num);
+
+    /*! @brief Returns the outline of the panel.
+     @returns The outline of the panel. */
+	inline ofRectangle getShape(void)
+    {
+        return inherited::getShape();
+    } // getShape
+
+    /*! @brief Returns the width of the panel.
+     @returns The width of the panel. */
+	inline float getWidth(void)
+    {
+        return inherited::getWidth();
+    } // getWidth
     
     /*! @brief Process a mouse-pressed event.
      @param args The attributes of the event.
@@ -111,9 +145,28 @@ public:
      @returns @c true if the event was processed and @c false if it can be further propagated. */
 	virtual bool mouseReleased(ofMouseEventArgs & args);
     
+    /*! @brief Set the title string for the panel.
+     @param name The new title string for the panel. */
+	inline void setName(string name)
+    {
+        inherited::setName(name);
+    } // setName
+
+    /*! @brief Move the panel to a new location.
+     @param xx The new horizontal coordinate.
+     @param yy The new vertical coordinate. */
+	inline virtual void setPosition(float xx,
+                                    float yy)
+    {
+        inherited::setPosition(xx, yy);
+    } // setPosition
+
     /*! @brief Connect a tracking object to the panel, that will receive handlePositionChange and positionChangeComplete
      notifications */
-    void setTracker(MovementTracker * newTracker);
+    inline void setTracker(MovementTracker * newTracker)
+    {
+        _tracker = newTracker;
+    } // setTracker
     
     /*! @brief Set the parameters of the panel.
      @param collectionName The name of the panel.

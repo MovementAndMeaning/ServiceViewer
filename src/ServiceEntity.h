@@ -75,8 +75,11 @@ public:
     /*! @brief Add a port to the panel.
      @param portName The name of the port.
      @param direction The primary direction of the port. */
-    void addPort(string                         portName,
-                 const PortEntry::PortDirection direction = PortEntry::kPortDirectionInputOutput);
+    inline void addPort(string                         portName,
+                        const PortEntry::PortDirection direction = PortEntry::kPortDirectionInputOutput)
+    {
+        _panel.addPort(portName, direction);
+    } // addPort
     
     /*! @brief Deselect the entity. */
     inline void deselect(void)
@@ -89,15 +92,24 @@ public:
     
     /*! @brief Return the color used for connections from this entity.
      @returns The color used for connections from this entity. */
-    ofColor getConnectionColor(void) const;
+    inline ofColor getConnectionColor(void) const
+    {
+        return _thisConnectionColor;
+    } // getConnectionColor
     
     /*! @brief Return the width of connections from this entity.
      @returns The width of connections from this entity. */
-    float getConnectionWidth(void) const;
-    
+    inline float getConnectionWidth(void) const
+    {
+        return _thisConnectionWidth;
+    } // getConnectionWidth
+
     /*! @brief Return the bounding box for the entity.
      @returns The bounding box for the entity. */
-    ofRectangle getShape(void);
+    inline ofRectangle getShape(void)
+    {
+        return _panel.getShape();
+    } // getShape
     
     /*! @brief The entity position has been changed. */
     virtual void handlePositionChange(void);
@@ -120,17 +132,26 @@ public:
     
     /*! @brief Set the color used for connections from this entity.
      @param color The color to be used for connections from this entity. */
-    void setConnectionColor(const ofColor & color);
+    inline void setConnectionColor(const ofColor & color)
+    {
+        _thisConnectionColor = color;
+    } // setConnectionColor
     
     /*! @brief Set the width of connections from this entity.
      @param width The width of connections from this entity. */
-    void setConnectionWidth(const float width);
+    inline void setConnectionWidth(const float width)
+    {
+        _thisConnectionWidth = width;
+    } // setConnectionWidth
     
     /*! @brief Move the entity to a new location on the display.
      @param xx The new horizontal position of the entity.
      @param yy The new vertical position of the entity. */
-    void setPosition(const float xx = 10,
-                     const float yy = 10);
+    inline void setPosition(const float xx = 10,
+                            const float yy = 10)
+    {
+        _panel.setPosition(xx, yy);
+    } // setPosition
     
     /*! @brief Set the parameters of the entity.
      @param entityName The name of the service or application.
@@ -142,11 +163,17 @@ public:
 
     /*! @brief Set the default color for connections from entities.
      @param color The default color for connections from entities. */
-	static void setDefaultConnectionColor(const ofColor & color);
-    
+	static void setDefaultConnectionColor(const ofColor & color)
+    {
+        connectionColor = color;
+    } // setDefaultConnectionColor
+        
     /*! @brief Set the default width for connections from entities.
      @param width The default width for connections from entities. */
-	static void setDefaultConnectionWidth(const float width);
+	static void setDefaultConnectionWidth(const float width)
+    {
+        connectionWidth = width;
+    } // setDefaultConnectionWidth
     
 protected:
     

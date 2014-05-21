@@ -40,7 +40,9 @@
 //--------------------------------------------------------------------------------------
 
 #include "IconlessPanel.h"
+#include "LabelWithShadow.h"
 #include "MovementTracker.h"
+#include "Utilities.h"
 
 #include "ofGraphics.h"
 
@@ -92,6 +94,13 @@ IconlessPanel::~IconlessPanel(void)
 # pragma mark Actions
 #endif // defined(__APPLE__)
 
+float IconlessPanel::calculateTextWidth(void)
+{
+    ofRectangle bbox = getTextBoundingBox(getName(), 0, 0);
+    
+    return ((0 < bbox.width) ? (bbox.width + (2 * textPadding)) : 0);
+} // IconlessPanel::calculateTextWidth
+
 void IconlessPanel::generateDraw(void)
 {
 	border.clear();
@@ -106,6 +115,12 @@ void IconlessPanel::generateDraw(void)
 	headerBg.rectangle(b.x, b.y + 1, b.width, header);
 #endif // defined(SHOW_PANEL_HEADER_)
 	textMesh = getTextMesh(getName(), textPadding + b.x, (header / 2) + (4 + b.y));
+    float newWidth = calculateTextWidth();
+    
+    if (newWidth > getWidth())
+    {
+        setWidth(newWidth);
+    }
 } // IconlessPanel::generateDraw
 
 void IconlessPanel::render(void)
@@ -159,6 +174,23 @@ IconlessPanel * IconlessPanel::setup(const ofParameterGroup & parameters,
 {
     return static_cast<IconlessPanel *>(inherited::setup(parameters, filename, xx, yy));
 } // IconlessPanel::setup
+
+void IconlessPanel::setWidth(const float newWidth)
+{
+    if (b.width < newWidth)
+    {
+        b.width = newWidth;
+        for (int ii = 0, mm = collection.size(); mm > ii; ++ii)
+        {
+            LabelWithShadow * aLabel = static_cast<LabelWithShadow *>(collection[ii]);
+            
+            aLabel->setSize(newWidth, aLabel->getHeight());
+            aLabel->generateDraw();
+        }
+        sizeChangedCB();
+        generateDraw();
+    }
+} // IconlessPanel::setWidth
 
 #if defined(__APPLE__)
 # pragma mark Accessors

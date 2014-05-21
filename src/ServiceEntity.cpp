@@ -119,12 +119,6 @@ ServiceEntity::~ServiceEntity(void)
 # pragma mark Actions
 #endif // defined(__APPLE__)
 
-void ServiceEntity::addPort(string                         portName,
-                            const PortEntry::PortDirection direction)
-{
-    _panel.addPort(portName, direction);
-} // ServiceEntity::addPort
-
 void ServiceEntity::draw(void)
 {
     _panel.draw();
@@ -177,12 +171,6 @@ void ServiceEntity::positionChangeComplete(void)
     
 } // ServiceEntity::positionChangeComplete
 
-void ServiceEntity::setPosition(const float xx,
-                                const float yy)
-{
-    _panel.setPosition(xx, yy);
-} // ServiceEntity::setPosition
-
 void ServiceEntity::setup(string      entityName,
                           const float xx,
                           const float yy)
@@ -197,41 +185,6 @@ void ServiceEntity::setup(string      entityName,
 #if defined(__APPLE__)
 # pragma mark Accessors
 #endif // defined(__APPLE__)
-
-ofColor ServiceEntity::getConnectionColor(void) const
-{
-	return _thisConnectionColor;
-} // ServiceEntity::getConnectionColor
-
-float ServiceEntity::getConnectionWidth(void) const
-{
-    return _thisConnectionWidth;
-} // ServiceEntity::getConnectionWidth
-
-ofRectangle ServiceEntity::getShape(void)
-{
-    return _panel.getShape();
-} // ServiceEntity::getShape
-
-void ServiceEntity::setConnectionColor(const ofColor & color)
-{
-	_thisConnectionColor = color;
-} // ServiceEntity::setConnectionColor
-
-void ServiceEntity::setConnectionWidth(const float width)
-{
-    _thisConnectionWidth = width;
-} // ServiceEntity::setConnectionWidth
-
-void ServiceEntity::setDefaultConnectionColor(const ofColor & color)
-{
-	connectionColor = color;
-} // ServiceEntity::setDefaultConnectionColor
-
-void ServiceEntity::setDefaultConnectionWidth(const float width)
-{
-    connectionWidth = width;
-} // ServiceEntity::setDefaultConnectionWidth
 
 #if defined(__APPLE__)
 # pragma mark Global functions

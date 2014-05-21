@@ -100,8 +100,10 @@ public:
     typedef set<PortEntry *> Connections;
 
     /*! @brief The constructor.
+     @param parent The GUI element containing this element.
      @param direection The primary direction of the port. */
-	PortEntry(const PortDirection direction = kPortDirectionInput);
+	PortEntry(IconlessPanel *     parent,
+              const PortDirection direction = kPortDirectionInput);
     
     /*! @brief The destructor. */
 	virtual ~PortEntry(void);
