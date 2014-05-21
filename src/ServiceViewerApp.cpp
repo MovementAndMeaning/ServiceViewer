@@ -233,7 +233,7 @@ void ServiceViewerApp::gatherEntities(void)
 #else // ! defined(TEST_GRAPHICS_)
     MplusM::Common::StringVector services;
     
-    MplusM::Utilities::GetServiceNames(services);
+    MplusM::Utilities::GetServiceNames(services, true);
     if (services.size())
     {
         for (size_t ii = 0, mm = services.size(); mm > ii; ++ii)
@@ -261,12 +261,16 @@ void ServiceViewerApp::gatherEntities(void)
     MplusM::Utilities::GetDetectedPortList(detectedPorts);
     if (detectedPorts.size())
     {
-        for (size_t ii = 0, mm = detectedPorts.size(); mm > ii; ++ii)
+        size_t mm = detectedPorts.size();
+        
+        for (size_t ii = 0; mm > ii; ++ii)
         {
             const MplusM::Utilities::PortDescriptor & aDescriptor = detectedPorts[ii];
             
+#if 0
             cout << aDescriptor._portName.c_str() << " " << aDescriptor._portIpAddress.c_str() << " " <<
                     aDescriptor._portPortNumber.c_str() << endl;
+#endif//0
             if (! findPort(aDescriptor._portName.c_str()))
             {
                 ServiceEntity * anEntity = new ServiceEntity(this);
@@ -274,6 +278,30 @@ void ServiceViewerApp::gatherEntities(void)
                 anEntity->setup((aDescriptor._portIpAddress + ":" + aDescriptor._portPortNumber).c_str());
                 anEntity->addPort(aDescriptor._portName, PortEntry::kPortDirectionInputOutput);
                 _entities.push_back(anEntity);
+            }
+        }
+        // Adde the connections
+        for (size_t ii = 0; mm > ii; ++ii)
+        {
+            const MplusM::Utilities::PortDescriptor & aDescriptor = detectedPorts[ii];
+            MplusM::Common::StringVector              inputs;
+            MplusM::Common::StringVector              outputs;
+            PortEntry *                               thisPort = findPort(aDescriptor._portName);
+            
+            if (thisPort)
+            {
+                MplusM::Utilities::GatherPortConnections(aDescriptor._portName, inputs, outputs,
+                                                         MplusM::Utilities::kInputAndOutputOutput, true);
+                for (int jj = 0, mm = outputs.size(); mm > jj; ++jj)
+                {
+                    PortEntry * otherPort = findPort(outputs[jj]);
+                    
+                    if (otherPort)
+                    {
+                        thisPort->addOutputConnection(otherPort);
+                        otherPort->addInputConnection(thisPort);
+                    }
+                }
             }
         }
     }
