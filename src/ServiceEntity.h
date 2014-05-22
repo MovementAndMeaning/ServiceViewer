@@ -74,11 +74,13 @@ public:
     
     /*! @brief Add a port to the panel.
      @param portName The name of the port.
+     @param isService @c true if the port is part of a service and @c false otherwise.
      @param direction The primary direction of the port. */
     inline void addPort(string                         portName,
+                        const bool                     isService,
                         const PortEntry::PortDirection direction = PortEntry::kPortDirectionInputOutput)
     {
-        _panel.addPort(portName, direction);
+        _panel.addPort(portName, isService, direction);
     } // addPort
     
     /*! @brief Deselect the entity. */

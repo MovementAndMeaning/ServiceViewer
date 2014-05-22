@@ -105,10 +105,11 @@ PortPanel::~PortPanel(void)
 #endif // defined(__APPLE__)
 
 void PortPanel::addPort(string                         portName,
+                        const bool                     isService,
                         const PortEntry::PortDirection direction)
 {
     int         countBefore = getNumPorts();
-    PortEntry * aPort = new PortEntry(this, direction);
+    PortEntry * aPort = new PortEntry(this, isService, direction);
     
     add(aPort->setup(portName));
     _owner->rememberPort(aPort);

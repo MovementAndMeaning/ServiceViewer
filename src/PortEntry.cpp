@@ -75,8 +75,9 @@ static const float kArrowSize = 7;
 #endif // defined(__APPLE__)
 
 PortEntry::PortEntry(IconlessPanel *     parent,
+                     const bool          isService,
                      const PortDirection direction) :
-            inherited(parent), _direction(direction), _isLastPort(true)
+            inherited(parent), _direction(direction), _isLastPort(true), _isService(isService)
 {
 } // PortEntry::PortEntry
 

@@ -197,9 +197,9 @@ void ServiceViewerApp::gatherEntities(void)
     ServiceEntity * anEntity = new ServiceEntity(this);
     
     anEntity->setup("blort");
-    anEntity->addPort("/blort-out", PortEntry::kPortDirectionOutput);
-    anEntity->addPort("/blort-in", PortEntry::kPortDirectionInput);
-    anEntity->addPort("/blort-out2", PortEntry::kPortDirectionOutput);
+    anEntity->addPort("/blort-out", false, PortEntry::kPortDirectionOutput);
+    anEntity->addPort("/blort-in", false, PortEntry::kPortDirectionInput);
+    anEntity->addPort("/blort-out2", false, PortEntry::kPortDirectionOutput);
     anEntity->setConnectionColor(ofColor::purple);
     
     _entities.push_back(anEntity);
@@ -207,11 +207,11 @@ void ServiceViewerApp::gatherEntities(void)
     
     anEntity = new ServiceEntity(this);
     anEntity->setup("blorg");
-    anEntity->addPort("/blorg", PortEntry::kPortDirectionInput);
+    anEntity->addPort("/blorg", false, PortEntry::kPortDirectionInput);
     _entities.push_back(anEntity);
     anEntity = new ServiceEntity(this);
     anEntity->setup("blirg");
-    anEntity->addPort("/blirg", PortEntry::kPortDirectionOutput);
+    anEntity->addPort("/blirg", false, PortEntry::kPortDirectionOutput);
     anEntity->setConnectionWidth(3);
     _entities.push_back(anEntity);
     PortEntry * blortOut = findPort("/blort-out");
@@ -247,14 +247,14 @@ void ServiceViewerApp::gatherEntities(void)
                 ServiceEntity * anEntity = new ServiceEntity(this);
                 
                 anEntity->setup(descriptor._canonicalName);
-                anEntity->addPort(aService, PortEntry::kPortDirectionInput);
+                anEntity->addPort(aService, true, PortEntry::kPortDirectionInput);
                 for (int jj = 0, nn = descriptor._inputChannels.size(); nn > jj; ++jj)
                 {
-                    anEntity->addPort(descriptor._inputChannels[jj], PortEntry::kPortDirectionInput);
+                    anEntity->addPort(descriptor._inputChannels[jj], true, PortEntry::kPortDirectionInput);
                 }
                 for (int jj = 0, nn = descriptor._outputChannels.size(); nn > jj; ++jj)
                 {
-                    anEntity->addPort(descriptor._outputChannels[jj], PortEntry::kPortDirectionOutput);
+                    anEntity->addPort(descriptor._outputChannels[jj], true, PortEntry::kPortDirectionOutput);
                 }
                 _entities.push_back(anEntity);
             }
@@ -271,20 +271,16 @@ void ServiceViewerApp::gatherEntities(void)
         {
             const MplusM::Utilities::PortDescriptor & aDescriptor = detectedPorts[ii];
             
-#if 0
-            cout << aDescriptor._portName.c_str() << " " << aDescriptor._portIpAddress.c_str() << " " <<
-                    aDescriptor._portPortNumber.c_str() << endl;
-#endif//0
             if (! findPort(aDescriptor._portName.c_str()))
             {
                 ServiceEntity * anEntity = new ServiceEntity(this);
                 
                 anEntity->setup((aDescriptor._portIpAddress + ":" + aDescriptor._portPortNumber).c_str());
-                anEntity->addPort(aDescriptor._portName, PortEntry::kPortDirectionInputOutput);
+                anEntity->addPort(aDescriptor._portName, false, PortEntry::kPortDirectionInputOutput);
                 _entities.push_back(anEntity);
             }
         }
-        // Adde the connections
+        // Add the connections
         for (size_t ii = 0; mm > ii; ++ii)
         {
             const MplusM::Utilities::PortDescriptor & aDescriptor = detectedPorts[ii];

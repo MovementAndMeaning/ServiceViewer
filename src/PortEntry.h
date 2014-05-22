@@ -101,8 +101,10 @@ public:
 
     /*! @brief The constructor.
      @param parent The GUI element containing this element.
+     @param isService @c true if the port is part of a service and @c false otherwise.
      @param direection The primary direction of the port. */
 	PortEntry(IconlessPanel *     parent,
+              const bool          isService,
               const PortDirection direction = kPortDirectionInput);
     
     /*! @brief The destructor. */
@@ -169,12 +171,19 @@ public:
         return _outputConnections;
     } // getOutputConnections
     
-    /*! @brief Returns @c true if the port entry is the bottom-most (last) port entry in a panel.
+    /*! @brief Returns @c true if the port entry is the bottom-most (last) port entry in a panel and @c false otherwise.
      @returns @c true if the port is the last port entry in a panel and @c false otherwise. */
     inline bool isLastPort(void) const
     {
         return _isLastPort;
     } // isLastPort
+    
+    /*! @brief Returns @c true if the port entry is part of a service and @c false otherwise.
+     @returns @c true if the port is part of a service and @c false otherwise. */
+    inline bool isService(void) const
+    {
+        return _isService;
+    } // isService
     
     /*! @brief Remove an input connection from a port.
      @param other The port that is to be disconnected. */
@@ -234,6 +243,9 @@ private:
     
     /*! @brief @c true if the port entry is the bottom-most (last) port entry in a panel and @c false otherwise. */
     bool          _isLastPort;
+    
+    /*! @brief @c true if the port entry is part of a service and @c false otherwise. */
+    bool          _isService;
     
 }; // PortEntry
 

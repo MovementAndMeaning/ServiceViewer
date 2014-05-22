@@ -146,7 +146,14 @@ void ServiceEntity::draw(void)
                 ofPoint               toThere;
                 PortEntry::AnchorSide anchorThere = otherEntry->calculateClosestAnchor(toThere, false, aCentre);
                 
-                ofSetLineWidth(_thisConnectionWidth);
+                if (otherEntry->isService())
+                {
+                    ofSetLineWidth(2 * _thisConnectionWidth);
+                }
+                else
+                {
+                    ofSetLineWidth(_thisConnectionWidth);
+                }
                 drawBezier(fromHere, toThere, aCentre, otherCentre);
                 ofSetLineWidth(1);
                 anEntry->drawSourceAnchor(anchorHere, fromHere);
