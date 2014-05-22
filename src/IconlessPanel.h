@@ -98,6 +98,13 @@ public:
                           const float              xx = 10,
                           const float              yy = 10);
     
+    /*! @brief Return the width of the panel.
+     @returns The width of the panel. */
+	float getWidth(void)
+    {
+        return inherited::getWidth();
+    } // getWidth
+    
     /*! @brief Change the width of the panel.
      @param newWidth The new width for the panel. */
 	void setWidth(const float newWidth);

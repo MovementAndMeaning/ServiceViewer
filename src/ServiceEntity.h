@@ -175,6 +175,20 @@ public:
         connectionWidth = width;
     } // setDefaultConnectionWidth
     
+    /*! @brief Return the default color for connections from entities.
+     @returns The default color for connections from entities. */
+	static ofColor getDefaultConnectionColor(void)
+    {
+        return connectionColor;
+    } // getDefaultConnectionColor
+    
+    /*! @brief Return the default width for connections from entities.
+     @returns The default width for connections from entities. */
+	static float getDefaultConnectionWidth(void)
+    {
+        return connectionWidth;
+    } // getDefaultConnectionWidth
+    
 protected:
     
     /*! @brief The default connection color. */

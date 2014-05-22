@@ -57,6 +57,9 @@
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
 
+/*! @brief The default width to be used for the labels. */
+static const int kOurDefaultLabelWidth = 20;
+
 #if defined(__APPLE__)
 # pragma mark Local functions
 #endif // defined(__APPLE__)
@@ -115,11 +118,16 @@ float LabelWithShadow::calculateTextWidth(void)
 void LabelWithShadow::generateDraw(void)
 {
     float newWidth = calculateTextWidth();
+    float parentWidth = _parent->getWidth();
     
-    if (newWidth > getWidth())
+    if ((newWidth > getWidth()) || (newWidth > _parent->getWidth()))
     {
-        _parent->setWidth(newWidth);
         b.width = newWidth;
+        _parent->setWidth(newWidth);
+    }
+    else if (getWidth() < parentWidth)
+    {
+        b.width = parentWidth;
     }
     _shadow.clear();
     _shadow.setFillColor(_thisShadowColor);
@@ -138,7 +146,10 @@ LabelWithShadow * LabelWithShadow::setup(ofParameter<string> label,
                                          const float         width,
                                          const float         height)
 {
-    return static_cast<LabelWithShadow *>(inherited::setup(label, width, height));
+    LabelWithShadow * result = static_cast<LabelWithShadow *>(inherited::setup(label, width, height));
+
+    b.width = kOurDefaultLabelWidth;
+    return result;
 } // LabelWithShadow::setup
 
 LabelWithShadow * LabelWithShadow::setup(string      labelName,
@@ -146,7 +157,10 @@ LabelWithShadow * LabelWithShadow::setup(string      labelName,
                                          const float width,
                                          const float height)
 {
-    return static_cast<LabelWithShadow *>(inherited::setup(labelName, label, width, height));
+    LabelWithShadow * result = static_cast<LabelWithShadow *>(inherited::setup(labelName, label, width, height));
+    
+    b.width = kOurDefaultLabelWidth;
+    return result;
 } // LabelWithShadow::setup
 
 #if defined(__APPLE__)

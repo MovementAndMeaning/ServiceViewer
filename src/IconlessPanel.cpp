@@ -61,6 +61,9 @@
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
 
+/*! @brief The default width to be used for the panels. */
+static const int kOurDefaultPanelWidth = 20;
+
 #if defined(__APPLE__)
 # pragma mark Local functions
 #endif // defined(__APPLE__)
@@ -115,12 +118,7 @@ void IconlessPanel::generateDraw(void)
 	headerBg.rectangle(b.x, b.y + 1, b.width, header);
 #endif // defined(SHOW_PANEL_HEADER_)
 	textMesh = getTextMesh(getName(), textPadding + b.x, (header / 2) + (4 + b.y));
-    float newWidth = calculateTextWidth();
-    
-    if (newWidth > getWidth())
-    {
-        setWidth(newWidth);
-    }
+    setWidth(calculateTextWidth());
 } // IconlessPanel::generateDraw
 
 void IconlessPanel::render(void)
@@ -164,7 +162,12 @@ IconlessPanel * IconlessPanel::setup(string      collectionName,
                                      const float xx,
                                      const float yy)
 {
-    return static_cast<IconlessPanel *>(inherited::setup(collectionName, filename, xx, yy));
+    IconlessPanel * result = static_cast<IconlessPanel *>(inherited::setup(collectionName, filename, xx, yy));
+    
+    // Override the default width - this will be adjusted later.
+    b.width = kOurDefaultPanelWidth;
+    sizeChangedCB();
+    return result;
 } // IconlessPanel::setup
 
 IconlessPanel * IconlessPanel::setup(const ofParameterGroup & parameters,
@@ -172,7 +175,12 @@ IconlessPanel * IconlessPanel::setup(const ofParameterGroup & parameters,
                                      const float              xx,
                                      const float              yy)
 {
-    return static_cast<IconlessPanel *>(inherited::setup(parameters, filename, xx, yy));
+    IconlessPanel * result = static_cast<IconlessPanel *>(inherited::setup(parameters, filename, xx, yy));
+    
+    // Override the default width - this will be adjusted later.
+    b.width = kOurDefaultPanelWidth;
+    sizeChangedCB();
+    return result;
 } // IconlessPanel::setup
 
 void IconlessPanel::setWidth(const float newWidth)

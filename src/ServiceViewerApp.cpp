@@ -248,9 +248,13 @@ void ServiceViewerApp::gatherEntities(void)
                 
                 anEntity->setup(descriptor._canonicalName);
                 anEntity->addPort(aService, PortEntry::kPortDirectionInput);
-                for (int jj = 0, nn = descriptor._channels.size(); nn > jj; ++jj)
+                for (int jj = 0, nn = descriptor._inputChannels.size(); nn > jj; ++jj)
                 {
-                    anEntity->addPort(descriptor._channels[jj], PortEntry::kPortDirectionOutput);
+                    anEntity->addPort(descriptor._inputChannels[jj], PortEntry::kPortDirectionInput);
+                }
+                for (int jj = 0, nn = descriptor._outputChannels.size(); nn > jj; ++jj)
+                {
+                    anEntity->addPort(descriptor._outputChannels[jj], PortEntry::kPortDirectionOutput);
                 }
                 _entities.push_back(anEntity);
             }
