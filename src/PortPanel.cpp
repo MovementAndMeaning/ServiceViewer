@@ -219,12 +219,11 @@ bool PortPanel::setValue(float mx,
 		if (b.inside(mx, my))
         {
 			bGuiActive = true;
-#if defined(SHOW_PANEL_HEADER_)
-# if defined(CAN_GRAB_OUTSIDE_HEADER_)
+#if defined(CAN_GRAB_OUTSIDE_HEADER_)
             _grabbed = true;
             _grabPt.set(mx - b.x, my - b.y);
-# else // ! defined(CAN_GRAB_OUTSIDE_HEADER_)
-			if ((my > b.y) && (my <= (b.y + header)))
+#else // ! defined(CAN_GRAB_OUTSIDE_HEADER_)
+			if ((my > b.y) && (my <= (b.y + getHeader())))
             {
                 _grabbed = true;
                 _grabPt.set(mx - b.x, my - b.y);
@@ -233,11 +232,7 @@ bool PortPanel::setValue(float mx,
             {
 				_grabbed = false;
 			}
-# endif // ! defined(CAN_GRAB_OUTSIDE_HEADER_)
-#else // ! defined(SHOW_PANEL_HEADER_)
-            _grabbed = true;
-            _grabPt.set(mx - b.x, my - b.y);
-#endif // ! defined(SHOW_PANEL_HEADER_)
+#endif // ! defined(CAN_GRAB_OUTSIDE_HEADER_)
 		}
 	}
     else if (_grabbed)

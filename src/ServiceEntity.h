@@ -225,10 +225,6 @@ private:
     /*! @brief The GUI object that represents the entity. */
     PortPanel          _panel;
     
-    /*! @brief The relative position of the centre of the bottom edge of the entity, where the selection dot will be
-     displayed. */
-    ofPoint            _dotPos;
-    
     /*! @brief The application object that manages the entity. */
     ServiceViewerApp * _owner;
     

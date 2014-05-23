@@ -124,8 +124,10 @@ void ServiceEntity::draw(void)
     _panel.draw();
     if (_drawDot)
     {
+        ofPoint dotPos(_panel.getWidth() / 2, _panel.getHeader());//_panel.getHeight() - (_panel.getGapHeight() / 2));
+        
         ofSetColor(ofColor::red);
-        ofCircle(_dotPos + getShape().getTopLeft(), kRedDotRadius);
+        ofCircle(dotPos + getShape().getTopLeft(), kRedDotRadius);
     }
     ofSetColor(_thisConnectionColor);
     for (int ii = 0, mm = _panel.getNumPorts(); mm > ii; ++ii)
@@ -185,7 +187,7 @@ void ServiceEntity::setup(string      entityName,
     _panel.setup();
     _panel.setName(entityName);
     setPosition(xx, yy);
-    _dotPos = ofPoint(_panel.getWidth() / 2, _panel.getHeight() - (_panel.getGapHeight() / 2));
+    
     _panel.setTracker(this);
 } // ServiceEntity::setup
 

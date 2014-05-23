@@ -44,8 +44,6 @@
 
 # include "ofxGuiGroup.h"
 
-# define SHOW_PANEL_HEADER_ /* */
-
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
 #  pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
@@ -98,9 +96,17 @@ public:
                           const float              xx = 10,
                           const float              yy = 10);
     
+    /*! @brief Return the height of the header for the panel.
+     @returns The height of the header for the panel. */
+    inline float getHeader(void)
+    const
+    {
+        return inherited::header;
+    } // getHeader
+    
     /*! @brief Return the width of the panel.
      @returns The width of the panel. */
-	float getWidth(void)
+	inline float getWidth(void)
     {
         return inherited::getWidth();
     } // getWidth

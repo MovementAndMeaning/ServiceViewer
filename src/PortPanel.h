@@ -104,6 +104,14 @@ public:
         return inherited::spacingNextElement;
     } // getGapHeight
     
+    /*! @brief Return the height of the header for the panel.
+     @returns The height of the header for the panel. */
+    inline float getHeader(void)
+    const
+    {
+        return inherited::getHeader();
+    } // getHeader
+    
     /*! @brief Returns the height of the panel.
      @returns The height of the panel. */
 	inline float getHeight(void)

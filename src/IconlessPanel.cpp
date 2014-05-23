@@ -111,22 +111,18 @@ void IconlessPanel::generateDraw(void)
 	border.setStrokeWidth(1);
 	border.setFilled(false);
 	border.rectangle(b.x, b.y, b.width + 1, b.height - spacingNextElement);
-#if defined(SHOW_PANEL_HEADER_)
 	headerBg.clear();
 	headerBg.setFillColor(ofColor(thisHeaderBackgroundColor, 180));
 	headerBg.setFilled(true);
-	headerBg.rectangle(b.x, b.y + 1, b.width, header);
-#endif // defined(SHOW_PANEL_HEADER_)
-	textMesh = getTextMesh(getName(), textPadding + b.x, (header / 2) + (4 + b.y));
+	headerBg.rectangle(b.x, b.y + 1, b.width, getHeader());
+	textMesh = getTextMesh(getName(), textPadding + b.x, (getHeader() / 2) + (4 + b.y));
     setWidth(calculateTextWidth());
 } // IconlessPanel::generateDraw
 
 void IconlessPanel::render(void)
 {
 	border.draw();
-#if defined(SHOW_PANEL_HEADER_)
 	headerBg.draw();
-#endif // defined(SHOW_PANEL_HEADER_)
 	ofBlendMode blendMode = ofGetStyle().blendingMode;
     
 	if (OF_BLENDMODE_ALPHA != blendMode)
