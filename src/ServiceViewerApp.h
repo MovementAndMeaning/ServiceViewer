@@ -68,23 +68,30 @@ public:
     /*! @brief The constructor. */
     ServiceViewerApp(void);
     
+    /*! @brief Add an entity to the list of displayed entities.
+     @param anEntity The entity to be added. */
+    void addEntity(ServiceEntity * anEntity);
+    
     /*! @brief Returns the state of the ALT/OPTION modifier key.
      @returns @c true if the ALT/OPTION modifier key is pressed and @c false otherwise. */
-    inline bool altActive(void) const
+    inline bool altActive(void)
+    const
     {
         return _altActive;
     } // altActive
     
     /*! @brief Returns the state of the COMMAND modifier key.
      @returns @c true if the COMMAND modifier key is pressed and @c false otherwise. */
-    inline bool commandActive(void) const
+    inline bool commandActive(void)
+    const
     {
         return _commandActive;
     } // commandActive
     
     /*! @brief Returns the state of the CONTROL modifier key.
      @returns @c true if the CONTROL modifier key is pressed and @c false otherwise. */
-    inline bool controlActive(void) const
+    inline bool controlActive(void)
+    const
     {
         return _controlActive;
     } // controlActive
@@ -99,14 +106,19 @@ public:
     /*! @brief Handle an exit request. */
     virtual void exit(void);
     
-    /*! @brief Remove a port from the set of known ports.
-     @param aPort The port to be removed. */
-    void forgetPort(PortEntry * aPort);
+    /*! @brief Find an entity by name.
+     @param name The name of the entity.
+     @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
+    ServiceEntity * findEntity(string name);
     
     /*! @brief Find a port by name.
      @param name The name of the port.
      @returns @c NULL if the port cannot be found and non-@c NULL if it is found. */
     PortEntry * findPort(string name);
+    
+    /*! @brief Remove a port from the set of known ports.
+     @param aPort The port to be removed. */
+    void forgetPort(PortEntry * aPort);
     
     /*! @brief Process a message event.
      @param msg The message details. */
@@ -159,7 +171,8 @@ public:
     
     /*! @brief Returns the state of the SHIFT modifier key.
      @returns @c true if the SHIFT modifier key is pressed and @c false otherwise. */
-    inline bool shiftActive(void) const
+    inline bool shiftActive(void)
+    const
     {
         return _shiftActive;
     } // shiftActive

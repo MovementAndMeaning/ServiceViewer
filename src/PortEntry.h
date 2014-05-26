@@ -159,28 +159,32 @@ public:
     
     /*! @brief Return the set of input connections to the port.
      @returns The set of input connections to the port. */
-    inline const Connections & getInputConnections(void) const
+    inline const Connections & getInputConnections(void)
+    const
     {
         return _inputConnections;
     } // getInputConnections
     
     /*! @brief Return the set of output connections to the port.
      @returns The set of output connections to the port. */
-    inline const Connections & getOutputConnections(void) const
+    inline const Connections & getOutputConnections(void)
+    const
     {
         return _outputConnections;
     } // getOutputConnections
     
     /*! @brief Returns @c true if the port entry is the bottom-most (last) port entry in a panel and @c false otherwise.
      @returns @c true if the port is the last port entry in a panel and @c false otherwise. */
-    inline bool isLastPort(void) const
+    inline bool isLastPort(void)
+    const
     {
         return _isLastPort;
     } // isLastPort
     
     /*! @brief Returns @c true if the port entry is part of a service and @c false otherwise.
      @returns @c true if the port is part of a service and @c false otherwise. */
-    inline bool isService(void) const
+    inline bool isService(void)
+    const
     {
         return _isService;
     } // isService

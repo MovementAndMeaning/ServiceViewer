@@ -124,7 +124,7 @@ void ServiceEntity::draw(void)
     _panel.draw();
     if (_drawDot)
     {
-        ofPoint dotPos(_panel.getWidth() / 2, _panel.getHeader());//_panel.getHeight() - (_panel.getGapHeight() / 2));
+        ofPoint dotPos(_panel.getWidth() / 2, _panel.getHeader());
         
         ofSetColor(ofColor::red);
         ofCircle(dotPos + getShape().getTopLeft(), kRedDotRadius);

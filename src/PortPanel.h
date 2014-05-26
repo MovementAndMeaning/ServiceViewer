@@ -99,7 +99,8 @@ public:
 
     /*! @brief Return the height of the vertical gap between panel elements.
      @returns The vertical gap between panel elements. */
-    inline float getGapHeight(void) const
+    inline float getGapHeight(void)
+    const
     {
         return inherited::spacingNextElement;
     } // getGapHeight
@@ -118,6 +119,13 @@ public:
     {
         return inherited::getHeight();
     } // getHeight
+    
+    /*! @brief Returns the name of the panel.
+     @returns The name of the panel. */
+	inline string getName(void)
+    {
+        return inherited::getName();
+    } // getName
     
     /*! @brief Returns the number of ports in this panel.
      @returns The number of ports in this panel. */

@@ -94,18 +94,27 @@ public:
     
     /*! @brief Return the color used for connections from this entity.
      @returns The color used for connections from this entity. */
-    inline ofColor getConnectionColor(void) const
+    inline ofColor getConnectionColor(void)
+    const
     {
         return _thisConnectionColor;
     } // getConnectionColor
     
     /*! @brief Return the width of connections from this entity.
      @returns The width of connections from this entity. */
-    inline float getConnectionWidth(void) const
+    inline float getConnectionWidth(void)
+    const
     {
         return _thisConnectionWidth;
     } // getConnectionWidth
 
+    /*! @brief Return the name of the entity.
+     @returns The name of the entity. */
+    inline string getName(void)
+    {
+        return _panel.getName();
+    } // getName
+    
     /*! @brief Return the bounding box for the entity.
      @returns The bounding box for the entity. */
     inline ofRectangle getShape(void)
@@ -118,7 +127,8 @@ public:
     
     /*! @brief Return @c true is the entity is selected.
      @returns @c true if the entity is selected and @c false otherwise. */
-    inline bool isSelected(void) const
+    inline bool isSelected(void)
+    const
     {
         return _selected;
     } // isSelected

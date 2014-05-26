@@ -47,12 +47,12 @@
 #include "ofGraphics.h"
 #include "ofMesh.h"
 
-//#include "ODEnableLogging.h"
-#include "ODLogging.h"
-
 // Note that openFrameworks defines a macro called 'check' :( which messes up other header files.
 #undef check
 #include "M+MUtilities.h"
+
+//#include "ODEnableLogging.h"
+#include "ODLogging.h"
 
 #if defined(__APPLE__)
 # pragma clang diagnostic push
@@ -68,8 +68,6 @@
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
-
-//#define TEST_GRAPHICS_ /* */
 
 #if defined(__APPLE__)
 # pragma clang diagnostic push
@@ -90,6 +88,133 @@
 # pragma mark Local functions
 #endif // defined(__APPLE__)
 
+/*! @brief Add connections between detected ports.
+ @param theApp The application object.
+ @param detectedPorts The set of detected YARP ports. */
+static void addPortConnections(ServiceViewerApp *                    theApp,
+                               const MplusM::Utilities::PortVector & detectedPorts)
+{
+    for (size_t ii = 0, mm = detectedPorts.size(); mm > ii; ++ii)
+    {
+        const MplusM::Utilities::PortDescriptor & aDescriptor = detectedPorts[ii];
+        MplusM::Common::StringVector              inputs;
+        MplusM::Common::StringVector              outputs;
+        PortEntry *                               thisPort = theApp->findPort(aDescriptor._portName);
+        
+        if (thisPort)
+        {
+            MplusM::Utilities::GatherPortConnections(aDescriptor._portName, inputs, outputs,
+                                                     MplusM::Utilities::kInputAndOutputOutput, true);
+            for (int jj = 0, mm = outputs.size(); mm > jj; ++jj)
+            {
+                PortEntry * otherPort = theApp->findPort(outputs[jj]);
+                
+                if (otherPort)
+                {
+                    thisPort->addOutputConnection(otherPort);
+                    otherPort->addInputConnection(thisPort);
+                }
+            }
+        }
+    }
+} // addPortConnections
+
+/*! @brief Add ports that have associates as 'adapter' entities.
+ @param theApp The application object.
+ @param detectedPorts The set of detected YARP ports. */
+static void addPortsWithAssociates(ServiceViewerApp *                    theApp,
+                                   const MplusM::Utilities::PortVector & detectedPorts)
+{
+    for (int ii = 0, mm = detectedPorts.size(); mm > ii; ++ii)
+    {
+        const MplusM::Utilities::PortDescriptor & aDescriptor = detectedPorts[ii];
+        yarp::os::ConstString                     aPort(aDescriptor._portName);
+        
+        
+        if (! theApp->findPort(aDescriptor._portName.c_str()))
+        {
+            MplusM::Common::StringVector inputs;
+            MplusM::Common::StringVector outputs;
+            bool                         isPrimary;
+            
+            if (MplusM::Utilities::GetAssociatedPorts(aDescriptor._portName, inputs, outputs, isPrimary, true))
+            {
+                if (isPrimary)
+                {
+                    ServiceEntity * anEntity = new ServiceEntity(theApp);
+                    
+                    anEntity->setup((aDescriptor._portIpAddress + ":" + aDescriptor._portPortNumber).c_str());
+                    for (int jj = 0, nn = inputs.size(); nn > jj; ++jj)
+                    {
+                        anEntity->addPort(inputs[jj], false, PortEntry::kPortDirectionInput);
+                    }
+                    for (int jj = 0, nn = outputs.size(); nn > jj; ++jj)
+                    {
+                        anEntity->addPort(outputs[jj], false, PortEntry::kPortDirectionOutput);
+                    }
+                    anEntity->addPort(aDescriptor._portName, false, PortEntry::kPortDirectionInputOutput);
+                    theApp->addEntity(anEntity);
+                }
+            }
+        }
+    }
+} // addPortsWithAssociates
+
+/*! @brief Add regular YARP ports as distinct entities.
+ @param theApp The application object.
+ @param detectedPorts The set of detected YARP ports. */
+static void addRegularPortEntities(ServiceViewerApp *                    theApp,
+                                   const MplusM::Utilities::PortVector & detectedPorts)
+{
+    for (size_t ii = 0, mm = detectedPorts.size(); mm > ii; ++ii)
+    {
+        const MplusM::Utilities::PortDescriptor & aDescriptor = detectedPorts[ii];
+        
+        if (! theApp->findPort(aDescriptor._portName.c_str()))
+        {
+            ServiceEntity * anEntity = new ServiceEntity(theApp);
+            
+            anEntity->setup((aDescriptor._portIpAddress + ":" + aDescriptor._portPortNumber).c_str());
+            anEntity->addPort(aDescriptor._portName, false, PortEntry::kPortDirectionInputOutput);
+            theApp->addEntity(anEntity);
+        }
+    }
+} // addRegularPortEntities
+
+/*! @brief Add services as distinct entities.
+ @param theApp The application object.
+ @param detectedPorts The set of detected YARP ports. */
+static void addServices(ServiceViewerApp *                   theApp,
+                        const MplusM::Common::StringVector & services)
+{
+    for (size_t ii = 0, mm = services.size(); mm > ii; ++ii)
+    {
+        yarp::os::ConstString aService = services[ii];
+        
+        if (! theApp->findEntity(aService.c_str()))
+        {
+            MplusM::Utilities::ServiceDescriptor descriptor;
+
+            if (MplusM::Utilities::GetNameAndDescriptionForService(aService, descriptor))
+            {
+                ServiceEntity * anEntity = new ServiceEntity(theApp);
+                
+                anEntity->setup(descriptor._canonicalName);
+                anEntity->addPort(aService, true, PortEntry::kPortDirectionInput);
+                for (int jj = 0, nn = descriptor._inputChannels.size(); nn > jj; ++jj)
+                {
+                    anEntity->addPort(descriptor._inputChannels[jj], true, PortEntry::kPortDirectionInput);
+                }
+                for (int jj = 0, nn = descriptor._outputChannels.size(); nn > jj; ++jj)
+                {
+                    anEntity->addPort(descriptor._outputChannels[jj], true, PortEntry::kPortDirectionOutput);
+                }
+                theApp->addEntity(anEntity);
+            }
+        }
+    }
+} // addServices
+
 #if defined(__APPLE__)
 # pragma mark Class methods
 #endif // defined(__APPLE__)
@@ -108,6 +233,11 @@ ServiceViewerApp::ServiceViewerApp(void) :
 # pragma mark Actions
 #endif // defined(__APPLE__)
 
+void ServiceViewerApp::addEntity(ServiceEntity * anEntity)
+{
+    _entities.push_back(anEntity);
+} // ServiceViewerApp::addEntity
+
 void ServiceViewerApp::dragEvent(ofDragInfo dragInfo)
 {
     inherited::dragEvent(dragInfo);
@@ -115,11 +245,7 @@ void ServiceViewerApp::dragEvent(ofDragInfo dragInfo)
 
 void ServiceViewerApp::draw(void)
 {
-#if defined(TEST_GRAPHICS_)
-    ofBackground(ofColor::white);
-#else // ! defined(TEST_GRAPHICS_)
     ofBackgroundGradient(ofColor::white, ofColor::gray);
-#endif // ! defined(TEST_GRAPHICS_)
     if (_networkAvailable)
     {
         for (EntityList::iterator it(_entities.begin()); _entities.end() != it; ++it)
@@ -162,6 +288,25 @@ void ServiceViewerApp::exit(void)
     inherited::exit();
 } // ServiceViewerApp::exit
 
+ServiceEntity * ServiceViewerApp::findEntity(string name)
+{
+    EntityList::iterator it(_entities.begin());
+    ServiceEntity *      result = NULL;
+    
+    for ( ; _entities.end() != it; ++it)
+    {
+        ServiceEntity * anEntity = *it;
+        
+        if (anEntity && (name == anEntity->getName()))
+        {
+            result = anEntity;
+            break;
+        }
+        
+    }
+    return result;
+} // ServiceViewerApp::findEntity
+
 PortEntry * ServiceViewerApp::findPort(string name)
 {
     PortEntry *       result;
@@ -193,119 +338,19 @@ void ServiceViewerApp::forgetPort(PortEntry * aPort)
 
 void ServiceViewerApp::gatherEntities(void)
 {
-#if defined(TEST_GRAPHICS_)
-    ServiceEntity * anEntity = new ServiceEntity(this);
-    
-    anEntity->setup("blort");
-    anEntity->addPort("/blort-out", false, PortEntry::kPortDirectionOutput);
-    anEntity->addPort("/blort-in", false, PortEntry::kPortDirectionInput);
-    anEntity->addPort("/blort-out2", false, PortEntry::kPortDirectionOutput);
-    anEntity->setConnectionColor(ofColor::purple);
-    
-    _entities.push_back(anEntity);
-    ofRectangle prevShape = anEntity->getShape();
-    
-    anEntity = new ServiceEntity(this);
-    anEntity->setup("blorg");
-    anEntity->addPort("/blorg", false, PortEntry::kPortDirectionInput);
-    _entities.push_back(anEntity);
-    anEntity = new ServiceEntity(this);
-    anEntity->setup("blirg");
-    anEntity->addPort("/blirg", false, PortEntry::kPortDirectionOutput);
-    anEntity->setConnectionWidth(3);
-    _entities.push_back(anEntity);
-    PortEntry * blortOut = findPort("/blort-out");
-    PortEntry * blorgIn = findPort("/blorg");
-    
-    if (blortOut && blorgIn)
-    {
-        blortOut->addOutputConnection(blorgIn);
-        blorgIn->addInputConnection(blortOut);
-    }
-    PortEntry * blirgOut = findPort("/blirg");
-    PortEntry * blortIn = findPort("/blort-in");
-    
-    if (blirgOut && blortIn)
-    {
-        blirgOut->addOutputConnection(blortIn);
-        blortIn->addInputConnection(blirgOut);
-    }
-#else // ! defined(TEST_GRAPHICS_)
     MplusM::Common::StringVector services;
     
     MplusM::Utilities::GetServiceNames(services, true);
-    if (services.size())
-    {
-        for (size_t ii = 0, mm = services.size(); mm > ii; ++ii)
-        {
-            yarp::os::ConstString aService = services[ii];
-            
-            MplusM::Utilities::ServiceDescriptor descriptor;
-            
-            if (MplusM::Utilities::GetNameAndDescriptionForService(aService, descriptor))
-            {
-                ServiceEntity * anEntity = new ServiceEntity(this);
-                
-                anEntity->setup(descriptor._canonicalName);
-                anEntity->addPort(aService, true, PortEntry::kPortDirectionInput);
-                for (int jj = 0, nn = descriptor._inputChannels.size(); nn > jj; ++jj)
-                {
-                    anEntity->addPort(descriptor._inputChannels[jj], true, PortEntry::kPortDirectionInput);
-                }
-                for (int jj = 0, nn = descriptor._outputChannels.size(); nn > jj; ++jj)
-                {
-                    anEntity->addPort(descriptor._outputChannels[jj], true, PortEntry::kPortDirectionOutput);
-                }
-                _entities.push_back(anEntity);
-            }
-        }
-    }
+    addServices(this, services);
     MplusM::Utilities::PortVector detectedPorts;
     
     MplusM::Utilities::GetDetectedPortList(detectedPorts);
-    if (detectedPorts.size())
-    {
-        size_t mm = detectedPorts.size();
-        
-        for (size_t ii = 0; mm > ii; ++ii)
-        {
-            const MplusM::Utilities::PortDescriptor & aDescriptor = detectedPorts[ii];
-            
-            if (! findPort(aDescriptor._portName.c_str()))
-            {
-                ServiceEntity * anEntity = new ServiceEntity(this);
-                
-                anEntity->setup((aDescriptor._portIpAddress + ":" + aDescriptor._portPortNumber).c_str());
-                anEntity->addPort(aDescriptor._portName, false, PortEntry::kPortDirectionInputOutput);
-                _entities.push_back(anEntity);
-            }
-        }
-        // Add the connections
-        for (size_t ii = 0; mm > ii; ++ii)
-        {
-            const MplusM::Utilities::PortDescriptor & aDescriptor = detectedPorts[ii];
-            MplusM::Common::StringVector              inputs;
-            MplusM::Common::StringVector              outputs;
-            PortEntry *                               thisPort = findPort(aDescriptor._portName);
-            
-            if (thisPort)
-            {
-                MplusM::Utilities::GatherPortConnections(aDescriptor._portName, inputs, outputs,
-                                                         MplusM::Utilities::kInputAndOutputOutput, true);
-                for (int jj = 0, mm = outputs.size(); mm > jj; ++jj)
-                {
-                    PortEntry * otherPort = findPort(outputs[jj]);
-                    
-                    if (otherPort)
-                    {
-                        thisPort->addOutputConnection(otherPort);
-                        otherPort->addInputConnection(thisPort);
-                    }
-                }
-            }
-        }
-    }
-#endif // ! defined(TEST_GRAPHICS_)
+    // Identify and add ports that have associated ports, as they are adapters
+    addPortsWithAssociates(this, detectedPorts);
+    // Add regular YARP ports as distinct entities
+    addRegularPortEntities(this, detectedPorts);
+    // Add the connections
+    addPortConnections(this, detectedPorts);
 } // ServiceViewerApp::gatherEntities
 
 void ServiceViewerApp::gotMessage(ofMessage msg)
@@ -454,7 +499,7 @@ void ServiceViewerApp::updateEntityList(ServiceEntity * anEntity)
             if (anEntity && anEntity->isSelected())
             {
                 _entities.erase(it);
-                _entities.push_back(anEntity);
+                addEntity(anEntity);
                 break;
             }
             

@@ -84,14 +84,16 @@ public:
     
     /*! @brief Return the color used for the text label shadow.
      @returns The color used for the text label shadow. */
-	inline ofColor getShadowColor(void) const
+	inline ofColor getShadowColor(void)
+    const
     {
         return _thisShadowColor;
     } // getShadowColor
     
     /*! @brief Return the width of the text label shadow.
      @returns The width of the text label shadow. */
-    inline float getShadowWidth(void) const
+    inline float getShadowWidth(void)
+    const
     {
         return _thisShadowWidth;
     } // getShadowWidth
