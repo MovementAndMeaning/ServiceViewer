@@ -102,7 +102,7 @@ public:
     /*! @brief The constructor.
      @param parent The GUI element containing this element.
      @param isService @c true if the port is part of a service and @c false otherwise.
-     @param direection The primary direction of the port. */
+     @param direction The primary direction of the port. */
 	PortEntry(IconlessPanel *     parent,
               const bool          isService,
               const PortDirection direction = kPortDirectionInput);

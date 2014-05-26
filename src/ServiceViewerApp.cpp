@@ -183,7 +183,7 @@ static void addRegularPortEntities(ServiceViewerApp *                    theApp,
 
 /*! @brief Add services as distinct entities.
  @param theApp The application object.
- @param detectedPorts The set of detected YARP ports. */
+ @param services The set of detected services. */
 static void addServices(ServiceViewerApp *                   theApp,
                         const MplusM::Common::StringVector & services)
 {

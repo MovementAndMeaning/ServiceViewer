@@ -42,7 +42,7 @@
 #if (! defined(__ServiceViewer__LabelWithShadow__))
 # define __ServiceViewer__LabelWithShadow__
 
-# include "IconlessPanel.h"
+//# include "IconlessPanel.h"
 
 # include "ofxLabel.h"
 
@@ -56,6 +56,8 @@
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
+
+class IconlessPanel;
 
 /*! @brief A text label with a shadow. */
 class LabelWithShadow : public ofxLabel

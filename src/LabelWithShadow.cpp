@@ -40,6 +40,7 @@
 //--------------------------------------------------------------------------------------
 
 #include "LabelWithShadow.h"
+#include "IconlessPanel.h"
 #include "Utilities.h"
 
 #if defined(__APPLE__)
