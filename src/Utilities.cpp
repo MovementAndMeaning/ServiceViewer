@@ -41,6 +41,9 @@
 
 #include "Utilities.h"
 
+//#include "ODEnableLogging.h"
+#include "ODLogging.h"
+
 #if defined(__APPLE__)
 # pragma clang diagnostic push
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
@@ -85,6 +88,9 @@ bool CalculateMinDistance(float &         distanceSoFar,
                           const ofPoint & testPoint,
                           ofPoint &       bestSoFar)
 {
+    OD_LOG_ENTER();//####
+    OD_LOG_P4("distanceSoFar = ", &distanceSoFar, "refPoint = ", &refPoint, "testPoint = ", &testPoint,//####
+              "bestSoFar = ", &bestSoFar);//####
     bool  result;
     float newDistance = refPoint.distance(testPoint);
     
@@ -98,12 +104,15 @@ bool CalculateMinDistance(float &         distanceSoFar,
     {
         result = false;
     }
+    OD_LOG_EXIT_B(result);//####
     return result;
 } // CalculateMinDistance
 
 void CalculateTextMeshDimensions(const ofMesh & textMesh,
                                  ofVec2f &      dimensions)
 {
+    OD_LOG_ENTER();//####
+    OD_LOG_P2("textMesh = ", &textMesh, "dimensions = ", &dimensions);//####
     float maxX = 0;
     float maxY = 0;
     float minX = 0;
@@ -139,4 +148,5 @@ void CalculateTextMeshDimensions(const ofMesh & textMesh,
         }
     }
     dimensions.set(maxX - minX, maxY - minY);
+    OD_LOG_EXIT();//####
 } // CalculateTextMeshDimensions

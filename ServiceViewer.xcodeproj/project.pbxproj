@@ -24,7 +24,7 @@
 		DF498683192567A6000EB074 /* libYARP_init.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF498682192567A6000EB074 /* libYARP_init.a */; };
 		DF498685192567AF000EB074 /* libYARP_OS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF498684192567AF000EB074 /* libYARP_OS.a */; };
 		DF498687192567B8000EB074 /* libACE.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF498686192567B8000EB074 /* libACE.dylib */; };
-		DF49868B19256CB5000EB074 /* libodLogging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF49868A19256CB5000EB074 /* libodLogging.a */; };
+		DF656FB319364D6E00A39DA6 /* libodLogging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF656FB219364D6E00A39DA6 /* libodLogging.a */; };
 		DFCEE154191D4AD7003EE453 /* IconlessPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DFCEE152191D4AD7003EE453 /* IconlessPanel.cpp */; };
 		DFCEE157191D5AE4003EE453 /* ServiceEntity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DFCEE155191D5AE4003EE453 /* ServiceEntity.cpp */; };
 		DFCEE15A191D86EC003EE453 /* MovementTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DFCEE158191D86EC003EE453 /* MovementTracker.cpp */; };
@@ -110,7 +110,7 @@
 		DF498682192567A6000EB074 /* libYARP_init.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libYARP_init.a; path = /usr/local/lib/libYARP_init.a; sourceTree = "<absolute>"; };
 		DF498684192567AF000EB074 /* libYARP_OS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libYARP_OS.a; path = /usr/local/lib/libYARP_OS.a; sourceTree = "<absolute>"; };
 		DF498686192567B8000EB074 /* libACE.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libACE.dylib; path = /usr/local/lib/libACE.dylib; sourceTree = "<absolute>"; };
-		DF49868A19256CB5000EB074 /* libodLogging.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libodLogging.a; path = /usr/local/lib/libodLogging.a; sourceTree = "<absolute>"; };
+		DF656FB219364D6E00A39DA6 /* libodLogging.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libodLogging.a; path = ../../../../../../usr/local/lib/libodLogging.a; sourceTree = "<group>"; };
 		DFCEE152191D4AD7003EE453 /* IconlessPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IconlessPanel.cpp; path = src/IconlessPanel.cpp; sourceTree = SOURCE_ROOT; };
 		DFCEE153191D4AD7003EE453 /* IconlessPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IconlessPanel.h; path = src/IconlessPanel.h; sourceTree = SOURCE_ROOT; };
 		DFCEE155191D5AE4003EE453 /* ServiceEntity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ServiceEntity.cpp; path = src/ServiceEntity.cpp; sourceTree = SOURCE_ROOT; };
@@ -158,7 +158,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DF194D4019268C9700A47642 /* libmpmCommon.a in Frameworks */,
-				DF49868B19256CB5000EB074 /* libodLogging.a in Frameworks */,
+				DF656FB319364D6E00A39DA6 /* libodLogging.a in Frameworks */,
 				DF498683192567A6000EB074 /* libYARP_init.a in Frameworks */,
 				DF498685192567AF000EB074 /* libYARP_OS.a in Frameworks */,
 				DF498687192567B8000EB074 /* libACE.dylib in Frameworks */,
@@ -288,7 +288,7 @@
 			isa = PBXGroup;
 			children = (
 				DF194D3F19268C9700A47642 /* libmpmCommon.a */,
-				DF49868A19256CB5000EB074 /* libodLogging.a */,
+				DF656FB219364D6E00A39DA6 /* libodLogging.a */,
 				DF498682192567A6000EB074 /* libYARP_init.a */,
 				DF498684192567AF000EB074 /* libYARP_OS.a */,
 				DF498686192567B8000EB074 /* libACE.dylib */,

@@ -42,6 +42,9 @@
 #include "ServiceViewerApp.h"
 #include "ServiceEntity.h"
 
+//#include "ODEnableLogging.h"
+#include "ODLogging.h"
+
 #include "ofAppRunner.h"
 #include "ofBitmapFont.h"
 #include "ofGraphics.h"
@@ -50,9 +53,6 @@
 // Note that openFrameworks defines a macro called 'check' :( which messes up other header files.
 #undef check
 #include "M+MUtilities.h"
-
-//#include "ODEnableLogging.h"
-#include "ODLogging.h"
 
 #if defined(__APPLE__)
 # pragma clang diagnostic push
@@ -94,6 +94,8 @@
 static void addPortConnections(ServiceViewerApp *                    theApp,
                                const MplusM::Utilities::PortVector & detectedPorts)
 {
+    OD_LOG_ENTER();//####
+    OD_LOG_P2("theApp = ", theApp, "detectedPorts = ", &detectedPorts);//####
     for (size_t ii = 0, mm = detectedPorts.size(); mm > ii; ++ii)
     {
         const MplusM::Utilities::PortDescriptor & aDescriptor = detectedPorts[ii];
@@ -117,6 +119,7 @@ static void addPortConnections(ServiceViewerApp *                    theApp,
             }
         }
     }
+    OD_LOG_EXIT();//####
 } // addPortConnections
 
 /*! @brief Add ports that have associates as 'adapter' entities.
@@ -125,6 +128,8 @@ static void addPortConnections(ServiceViewerApp *                    theApp,
 static void addPortsWithAssociates(ServiceViewerApp *                    theApp,
                                    const MplusM::Utilities::PortVector & detectedPorts)
 {
+    OD_LOG_ENTER();//####
+    OD_LOG_P2("theApp = ", theApp, "detectedPorts = ", &detectedPorts);//####
     for (int ii = 0, mm = detectedPorts.size(); mm > ii; ++ii)
     {
         const MplusM::Utilities::PortDescriptor & aDescriptor = detectedPorts[ii];
@@ -146,18 +151,20 @@ static void addPortsWithAssociates(ServiceViewerApp *                    theApp,
                     anEntity->setup((aDescriptor._portIpAddress + ":" + aDescriptor._portPortNumber).c_str());
                     for (int jj = 0, nn = inputs.size(); nn > jj; ++jj)
                     {
-                        anEntity->addPort(inputs[jj], false, PortEntry::kPortDirectionInput);
+                        anEntity->addPort(inputs[jj], PortEntry::kPortUsageOther, PortEntry::kPortDirectionInput);
                     }
                     for (int jj = 0, nn = outputs.size(); nn > jj; ++jj)
                     {
-                        anEntity->addPort(outputs[jj], false, PortEntry::kPortDirectionOutput);
+                        anEntity->addPort(outputs[jj], PortEntry::kPortUsageOther, PortEntry::kPortDirectionOutput);
                     }
-                    anEntity->addPort(aDescriptor._portName, false, PortEntry::kPortDirectionInputOutput);
+                    anEntity->addPort(aDescriptor._portName, PortEntry::kPortUsageClient,
+                                      PortEntry::kPortDirectionInputOutput);
                     theApp->addEntity(anEntity);
                 }
             }
         }
     }
+    OD_LOG_EXIT();//####
 } // addPortsWithAssociates
 
 /*! @brief Add regular YARP ports as distinct entities.
@@ -166,6 +173,8 @@ static void addPortsWithAssociates(ServiceViewerApp *                    theApp,
 static void addRegularPortEntities(ServiceViewerApp *                    theApp,
                                    const MplusM::Utilities::PortVector & detectedPorts)
 {
+    OD_LOG_ENTER();//####
+    OD_LOG_P2("theApp = ", theApp, "detectedPorts = ", &detectedPorts);//####
     for (size_t ii = 0, mm = detectedPorts.size(); mm > ii; ++ii)
     {
         const MplusM::Utilities::PortDescriptor & aDescriptor = detectedPorts[ii];
@@ -175,10 +184,11 @@ static void addRegularPortEntities(ServiceViewerApp *                    theApp,
             ServiceEntity * anEntity = new ServiceEntity(theApp);
             
             anEntity->setup((aDescriptor._portIpAddress + ":" + aDescriptor._portPortNumber).c_str());
-            anEntity->addPort(aDescriptor._portName, false, PortEntry::kPortDirectionInputOutput);
+            anEntity->addPort(aDescriptor._portName, PortEntry::kPortUsageOther, PortEntry::kPortDirectionInputOutput);
             theApp->addEntity(anEntity);
         }
     }
+    OD_LOG_EXIT();//####
 } // addRegularPortEntities
 
 /*! @brief Add services as distinct entities.
@@ -187,6 +197,8 @@ static void addRegularPortEntities(ServiceViewerApp *                    theApp,
 static void addServices(ServiceViewerApp *                   theApp,
                         const MplusM::Common::StringVector & services)
 {
+    OD_LOG_ENTER();//####
+    OD_LOG_P2("theApp = ", theApp, "services = ", &services);//####
     for (size_t ii = 0, mm = services.size(); mm > ii; ++ii)
     {
         yarp::os::ConstString aService = services[ii];
@@ -200,19 +212,22 @@ static void addServices(ServiceViewerApp *                   theApp,
                 ServiceEntity * anEntity = new ServiceEntity(theApp);
                 
                 anEntity->setup(descriptor._canonicalName);
-                anEntity->addPort(aService, true, PortEntry::kPortDirectionInput);
+                anEntity->addPort(aService, PortEntry::kPortUsageService, PortEntry::kPortDirectionInput);
                 for (int jj = 0, nn = descriptor._inputChannels.size(); nn > jj; ++jj)
                 {
-                    anEntity->addPort(descriptor._inputChannels[jj], true, PortEntry::kPortDirectionInput);
+                    anEntity->addPort(descriptor._inputChannels[jj], PortEntry::kPortUsageService,
+                                      PortEntry::kPortDirectionInput);
                 }
                 for (int jj = 0, nn = descriptor._outputChannels.size(); nn > jj; ++jj)
                 {
-                    anEntity->addPort(descriptor._outputChannels[jj], true, PortEntry::kPortDirectionOutput);
+                    anEntity->addPort(descriptor._outputChannels[jj], PortEntry::kPortUsageService,
+                                      PortEntry::kPortDirectionOutput);
                 }
                 theApp->addEntity(anEntity);
             }
         }
     }
+    OD_LOG_EXIT();//####
 } // addServices
 
 #if defined(__APPLE__)
@@ -227,6 +242,8 @@ ServiceViewerApp::ServiceViewerApp(void) :
             inherited(), _altActive(false), _commandActive(false), _controlActive(false), _networkAvailable(false),
             _registryAvailable(false), _shiftActive(false)
 {
+    OD_LOG_ENTER();//####
+    OD_LOG_EXIT_P(this);//####
 } // ServiceViewerApp::ServiceViewerApp
 
 #if defined(__APPLE__)
@@ -235,16 +252,22 @@ ServiceViewerApp::ServiceViewerApp(void) :
 
 void ServiceViewerApp::addEntity(ServiceEntity * anEntity)
 {
+    OD_LOG_OBJENTER();//####
+    OD_LOG_P1("anEntity = ", anEntity);//####
     _entities.push_back(anEntity);
+    OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::addEntity
 
 void ServiceViewerApp::dragEvent(ofDragInfo dragInfo)
 {
+    OD_LOG_OBJENTER();//####
     inherited::dragEvent(dragInfo);
+    OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::dragEvent
 
 void ServiceViewerApp::draw(void)
 {
+//    OD_LOG_OBJENTER();//####
     ofBackgroundGradient(ofColor::white, ofColor::gray);
     if (_networkAvailable)
     {
@@ -281,15 +304,20 @@ void ServiceViewerApp::draw(void)
 		ofBitmapStringGetTextureRef().unbind();
         ofDisableAlphaBlending();
     }
+//    OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::draw
 
 void ServiceViewerApp::exit(void)
 {
+    OD_LOG_OBJENTER();//####
     inherited::exit();
+    OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::exit
 
 ServiceEntity * ServiceViewerApp::findEntity(string name)
 {
+    OD_LOG_OBJENTER();//####
+    OD_LOG_S1("name = ", name.c_str());//####
     EntityList::iterator it(_entities.begin());
     ServiceEntity *      result = NULL;
     
@@ -304,11 +332,14 @@ ServiceEntity * ServiceViewerApp::findEntity(string name)
         }
         
     }
+    OD_LOG_OBJEXIT_P(result);//####
     return result;
 } // ServiceViewerApp::findEntity
 
 PortEntry * ServiceViewerApp::findPort(string name)
 {
+    OD_LOG_OBJENTER();//####
+    OD_LOG_S1("name = ", name.c_str());//####
     PortEntry *       result;
     PortMap::iterator match(_ports.find(name));
     
@@ -320,11 +351,14 @@ PortEntry * ServiceViewerApp::findPort(string name)
     {
         result = match->second;
     }
+    OD_LOG_OBJEXIT_P(result);//####
     return result;
 } // ServiceViewerApp::findPort
 
 void ServiceViewerApp::forgetPort(PortEntry * aPort)
 {
+    OD_LOG_OBJENTER();//####
+    OD_LOG_P1("aPort = ", aPort);//####
     if (aPort)
     {
         PortMap::iterator match(_ports.find(aPort->getName()));
@@ -334,10 +368,12 @@ void ServiceViewerApp::forgetPort(PortEntry * aPort)
             _ports.erase(match);
         }
     }
+    OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::forgetPort
 
 void ServiceViewerApp::gatherEntities(void)
 {
+    OD_LOG_OBJENTER();//####
     MplusM::Common::StringVector services;
     
     MplusM::Utilities::GetServiceNames(services, true);
@@ -351,15 +387,19 @@ void ServiceViewerApp::gatherEntities(void)
     addRegularPortEntities(this, detectedPorts);
     // Add the connections
     addPortConnections(this, detectedPorts);
+    OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::gatherEntities
 
 void ServiceViewerApp::gotMessage(ofMessage msg)
 {
+    OD_LOG_OBJENTER();//####
     inherited::gotMessage(msg);
+    OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::gotMessage
 
 void ServiceViewerApp::keyPressed(int key)
 {
+    OD_LOG_OBJENTER();//####
     if (OF_KEY_ALT == (key & OF_KEY_ALT))
     {
         _altActive = true;
@@ -377,10 +417,12 @@ void ServiceViewerApp::keyPressed(int key)
         _shiftActive = true;
     }
     inherited::keyPressed(key);
+    OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::keyPressed
 
 void ServiceViewerApp::keyReleased(int key)
 {
+    OD_LOG_OBJENTER();//####
     if (OF_KEY_ALT == (key & OF_KEY_ALT))
     {
         _altActive = false;
@@ -398,46 +440,58 @@ void ServiceViewerApp::keyReleased(int key)
         _shiftActive = false;
     }
     inherited::keyReleased(key);
+    OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::keyReleased
 
 void ServiceViewerApp::mouseDragged(int x,
                                     int y,
                                     int button)
 {
+    OD_LOG_OBJENTER();//####
     inherited::mouseDragged(x, y, button);
+    OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::mouseDragged
 
 void ServiceViewerApp::mouseMoved(int x,
                                   int y)
 {
+//    OD_LOG_OBJENTER();//####
     inherited::mouseMoved(x, y);
+//    OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::mouseMoved
 
 void ServiceViewerApp::mousePressed(int x,
                                     int y,
                                     int button)
 {
-//    cout << "pressed here" << endl;
+    OD_LOG_OBJENTER();//####
     inherited::mousePressed(x, y, button);
+    OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::mousePressed
 
 void ServiceViewerApp::mouseReleased(int x,
                                      int y,
                                      int button)
 {
+    OD_LOG_OBJENTER();//####
     inherited::mouseReleased(x, y, button);
+    OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::mouseReleased
 
 void ServiceViewerApp::rememberPort(PortEntry * aPort)
 {
+    OD_LOG_OBJENTER();//####
+    OD_LOG_P1("aPort = ", aPort);//####
     if (aPort)
     {
         _ports.insert(PortMap::value_type(static_cast<string>(*aPort), aPort));
     }
+    OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::rememberPort
 
 void ServiceViewerApp::setInitialEntityPositions(void)
 {
+    OD_LOG_OBJENTER();//####
 //#if defined(TEST_GRAPHICS_)
     float fullHeight = ofGetHeight();
     float fullWidth = ofGetWidth();
@@ -457,17 +511,20 @@ void ServiceViewerApp::setInitialEntityPositions(void)
     }
 //#else // ! defined(TEST_GRAPHICS_)
 //#endif // ! defined(TEST_GRAPHICS_)
+    OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::setInitialEntityPositions
 
 void ServiceViewerApp::setup(void)
 {
+    OD_LOG_OBJENTER();//####
     ofSetWindowTitle("Service Viewer");
+	ofSetFrameRate(60);
+	ofSetVerticalSync(true);
 #if CheckNetworkWorks_
     if (yarp::os::Network::checkNetwork())
 #endif // CheckNetworkWorks_
     {
         _networkAvailable = true;
-        ofSetLogLevel(OF_LOG_VERBOSE);
         gatherEntities();
         setInitialEntityPositions();
     }
@@ -479,15 +536,21 @@ void ServiceViewerApp::setup(void)
         _networkAvailable = false;
     }
 #endif // CheckNetworkWorks_
+    OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::setup
 
 void ServiceViewerApp::update(void)
 {
+//    OD_LOG_OBJENTER();//####
+    ofLogVerbose() << "updating";
     inherited::update();
+//    OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::update
 
 void ServiceViewerApp::updateEntityList(ServiceEntity * anEntity)
 {
+    OD_LOG_OBJENTER();//####
+    OD_LOG_P1("anEntity = ", anEntity);//####
     if (anEntity->isSelected())
     {
         EntityList::iterator it(_entities.begin());
@@ -505,12 +568,16 @@ void ServiceViewerApp::updateEntityList(ServiceEntity * anEntity)
             
         }
     }
+    OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::updateEntityList
 
 void ServiceViewerApp::windowResized(int w,
                                      int h)
 {
+    OD_LOG_OBJENTER();//####
+    OD_LOG_L2("w = ", w, "h = ", h);//####
     inherited::windowResized(w, h);
+    OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::windowResized
 
 #if defined(__APPLE__)

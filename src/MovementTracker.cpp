@@ -41,6 +41,9 @@
 
 #include "MovementTracker.h"
 
+//#include "ODEnableLogging.h"
+#include "ODLogging.h"
+
 #if defined(__APPLE__)
 # pragma clang diagnostic push
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
@@ -70,10 +73,14 @@
 
 MovementTracker::MovementTracker(void)
 {
+    OD_LOG_ENTER();//####
+    OD_LOG_EXIT_P(this);//####
 } // MovementTracker::MovementTracker
 
 MovementTracker::~MovementTracker(void)
 {
+    OD_LOG_OBJENTER();//####
+    OD_LOG_OBJEXIT();//####
 } // MovementTracker::~MovementTracker
 
 #if defined(__APPLE__)

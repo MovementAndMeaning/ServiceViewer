@@ -42,6 +42,9 @@
 #include "PortEntry.h"
 #include "Utilities.h"
 
+//#include "ODEnableLogging.h"
+#include "ODLogging.h"
+
 #include "ofGraphics.h"
 
 #if defined(__APPLE__)
@@ -75,14 +78,20 @@ static const float kArrowSize = 7;
 #endif // defined(__APPLE__)
 
 PortEntry::PortEntry(IconlessPanel *     parent,
-                     const bool          isService,
+                     const PortUsage     portKind,
                      const PortDirection direction) :
-            inherited(parent), _direction(direction), _isLastPort(true), _isService(isService)
+            inherited(parent), _direction(direction), _usage(portKind), _isLastPort(true)
 {
+    OD_LOG_ENTER();//####
+    OD_LOG_P1("parent = ", parent);//####
+    OD_LOG_L2("portKind = ", portKind, "direction = ", direction);//####
+    OD_LOG_EXIT_P(this);//####
 } // PortEntry::PortEntry
 
 PortEntry::~PortEntry(void)
 {
+    OD_LOG_OBJENTER();//####
+    OD_LOG_OBJEXIT();//####
 } // PortEntry::~PortEntry
 
 #if defined(__APPLE__)
@@ -93,26 +102,35 @@ PortEntry::~PortEntry(void)
  @param other The port that is to be connected. */
 void PortEntry::addInputConnection(PortEntry * other)
 {
+    OD_LOG_OBJENTER();//####
+    OD_LOG_P1("other = ", other);//####
     if (other)
     {
         _inputConnections.insert(other);
     }
+    OD_LOG_OBJEXIT();//####
 } // PortEntry::addInputConnection
 
 /*! @brief Add an output connection to the port.
  @param other The port that is to be connected. */
 void PortEntry::addOutputConnection(PortEntry * other)
 {
+    OD_LOG_OBJENTER();//####
+    OD_LOG_P1("other = ", other);//####
     if (other)
     {
         _outputConnections.insert(other);
     }
+    OD_LOG_OBJEXIT();//####
 } // PortEntry::addOutputConnection
 
 PortEntry::AnchorSide PortEntry::calculateClosestAnchor(ofPoint &       result,
                                                         const bool      isSource,
                                                         const ofPoint & pp)
 {
+    OD_LOG_OBJENTER();//####
+    OD_LOG_P2("result = ", result, "pp = ", &pp);//####
+    OD_LOG_B1("isSource = ", isSource);//####
     // Check each anchor point - the two side centres and optionally the bottom - to find the shortest distance.
     AnchorSide  anchor = kAnchorUnknown;
     float       soFar = 1e23; // Ridiculously big, just in case.
@@ -170,12 +188,16 @@ PortEntry::AnchorSide PortEntry::calculateClosestAnchor(ofPoint &       result,
         }
 #endif // defined(SUPPORT_BOTTOM_DIAGONALS_)
     }
+    OD_LOG_OBJEXIT_L(static_cast<int>(anchor));//####
     return anchor;
 } // PortEntry::calculateClosestAnchor
 
 void PortEntry::drawSourceAnchor(const AnchorSide anchor,
                                  const ofPoint &  anchorPos)
 {
+    OD_LOG_OBJENTER();//####
+    OD_LOG_L1("anchor = ", static_cast<int>(anchor));//####
+    OD_LOG_P1("anchorPos = ", &anchorPos);//####
     ofPoint     first;
     ofPoint     second;
     ofRectangle outer(getShape());
@@ -220,11 +242,15 @@ void PortEntry::drawSourceAnchor(const AnchorSide anchor,
         ofLine(anchorPos, first);
         ofLine(anchorPos, second);
     }
+    OD_LOG_OBJEXIT();//####
 } // PortEntry::drawSourceAnchor
 
 void PortEntry::drawTargetAnchor(const AnchorSide anchor,
                                  const ofPoint &  anchorPos)
 {
+    OD_LOG_OBJENTER();//####
+    OD_LOG_L1("anchor = ", static_cast<int>(anchor));//####
+    OD_LOG_P1("anchorPos = ", &anchorPos);//####
     ofRectangle outer(getShape());
     ofPoint     first;
     ofPoint     second;
@@ -269,10 +295,13 @@ void PortEntry::drawTargetAnchor(const AnchorSide anchor,
         ofLine(anchorPos, first);
         ofLine(anchorPos, second);
     }
+    OD_LOG_OBJEXIT();//####
 } // PortEntry::drawTargetAnchor
 
 void PortEntry::removeInputConnection(PortEntry * other)
 {
+    OD_LOG_OBJENTER();//####
+    OD_LOG_P1("other = ", other);//####
     if (other)
     {
         Connections::iterator match(_inputConnections.find(other));
@@ -282,10 +311,13 @@ void PortEntry::removeInputConnection(PortEntry * other)
             _inputConnections.erase(match);
         }
     }
+    OD_LOG_OBJEXIT();//####
 } // PortEntry::removeInputConnection
 
 void PortEntry::removeOutputConnection(PortEntry * other)
 {
+    OD_LOG_OBJENTER();//####
+    OD_LOG_P1("other = ", other);//####
     if (other)
     {
         Connections::iterator match(_outputConnections.find(other));
@@ -295,14 +327,19 @@ void PortEntry::removeOutputConnection(PortEntry * other)
             _outputConnections.erase(match);
         }
     }
+    OD_LOG_OBJEXIT();//####
 } // PortEntry::removeOutputConnection
 
 PortEntry * PortEntry::setup(string      label,
                              const float width,
                              const float height)
 {
+    OD_LOG_OBJENTER();//####
+    OD_LOG_S1("label = ", label.c_str());//####
+    OD_LOG_D2("width = ", width, "height = ", height);//####
     string tag;
     
+    _portName = label;
     switch (_direction)
     {
         case kPortDirectionInput:
@@ -321,7 +358,10 @@ PortEntry * PortEntry::setup(string      label,
             tag = "Unk";
             break;
     }
-    return static_cast<PortEntry *>(inherited::setup(tag, label, width, height));
+    PortEntry * result = static_cast<PortEntry *>(inherited::setup(tag, label, width, height));
+    
+    OD_LOG_OBJEXIT_P(result);//####
+    return result;
 } // PortEntry::setup
 
 #if defined(__APPLE__)
@@ -330,8 +370,10 @@ PortEntry * PortEntry::setup(string      label,
 
 ofPoint PortEntry::getCentre(void)
 {
+    OD_LOG_OBJENTER();//####
     ofRectangle outer(getShape());
     
+    OD_LOG_OBJEXIT();//####
     return ofPoint(outer.x + (outer.width / 2), outer.y + (outer.height / 2));
 } // PortEntry::getCentre
 

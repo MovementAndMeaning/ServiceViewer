@@ -85,10 +85,10 @@ public:
     
     /*! @brief Add a port to the panel.
      @param portName The name of the port.
-     @param isService @c true if the port is part of a service and @c false otherwise.
+     @param portKind What the port will be used for.
      @param direction The primary direction of the port. */
     void addPort(string                         portName,
-                 const bool                     isService = false,
+                 const PortEntry::PortUsage     portKind = PortEntry::kPortUsageOther,
                  const PortEntry::PortDirection direction = PortEntry::kPortDirectionInputOutput);
     
     /*! @brief Draw the panel. */
@@ -153,6 +153,16 @@ public:
         return inherited::getWidth();
     } // getWidth
     
+    /*! @brief Process a mouse-dragged event.
+     @param args The attributes of the event.
+     @returns @c true if the event was processed and @c false if it can be further propagated. */
+	virtual bool mouseDragged(ofMouseEventArgs & args);
+    
+    /*! @brief Process a mouse-moved event.
+     @param args The attributes of the event.
+     @returns @c true if the event was processed and @c false if it can be further propagated. */
+	virtual bool mouseMoved(ofMouseEventArgs & args);
+
     /*! @brief Process a mouse-pressed event.
      @param args The attributes of the event.
      @returns @c true if the event was processed and @c false if it can be further propagated. */

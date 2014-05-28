@@ -43,6 +43,9 @@
 #include "ServiceViewerApp.h"
 #include "Utilities.h"
 
+//#include "ODEnableLogging.h"
+#include "ODLogging.h"
+
 #include "ofGraphics.h"
 
 #if defined(__APPLE__)
@@ -80,6 +83,9 @@ static void drawBezier(const ofPoint & startPoint,
                        const ofPoint & startCentre,
                        const ofPoint & endCentre)
 {
+    OD_LOG_ENTER();//####
+    OD_LOG_P4("startPoint = ", &startPoint, "endPoint = ", &endPoint, "startCentre = ", &startCentre,//####
+              "endCentre = ", &endCentre);//####
     ofPolyline bLine;
     float      controlLength = (ofDist(startPoint.x, startPoint.y, endPoint.x, endPoint.y) * kControlLengthScale);
     float      startAngle = atan2(startPoint.y - startCentre.y, startPoint.x - startCentre.x);
@@ -90,6 +96,7 @@ static void drawBezier(const ofPoint & startPoint,
     bLine.addVertex(startPoint);
     bLine.bezierTo(startPoint + controlPoint1, endPoint + controlPoint2, endPoint);
     bLine.draw();
+    OD_LOG_EXIT();//####
 } // drawBezier
 
 #if defined(__APPLE__)
@@ -107,12 +114,17 @@ ofColor ServiceEntity::connectionColor(0, 0, 255);
 ServiceEntity::ServiceEntity(ServiceViewerApp * owner) :
             inherited(), _panel(owner), _owner(owner), _drawDot(false), _selected(false)
 {
+    OD_LOG_ENTER();//####
+    OD_LOG_P1("owner = ", owner);//####
 	_thisConnectionColor = connectionColor;
     _thisConnectionWidth = connectionWidth;
+    OD_LOG_EXIT_P(this);//####
 } // ServiceEntity::ServiceEntity
 
 ServiceEntity::~ServiceEntity(void)
 {
+    OD_LOG_OBJENTER();//####
+    OD_LOG_OBJEXIT();//####
 } // ServiceEntity::~ServiceEntity
 
 #if defined(__APPLE__)
@@ -121,6 +133,7 @@ ServiceEntity::~ServiceEntity(void)
 
 void ServiceEntity::draw(void)
 {
+    OD_LOG_OBJENTER();//####
     _panel.draw();
     if (_drawDot)
     {
@@ -163,32 +176,38 @@ void ServiceEntity::draw(void)
             }
         }
     }
+    OD_LOG_OBJEXIT();//####
 } // ServiceEntity::draw
 
 void ServiceEntity::handlePositionChange(void)
 {
+    OD_LOG_OBJENTER();//####
     // Here we re-adjust any lines attached to the entity.
     _selected = _drawDot = true;
+    OD_LOG_OBJEXIT();//####
 } // ServiceEntity::handlePositionChange
 
 void ServiceEntity::positionChangeComplete(void)
 {
+    OD_LOG_OBJENTER();//####
     _owner->updateEntityList(this);
     _selected = _drawDot = false;
-    
     // something to do??
-    
+    OD_LOG_OBJEXIT();//####
 } // ServiceEntity::positionChangeComplete
 
 void ServiceEntity::setup(string      entityName,
                           const float xx,
                           const float yy)
 {
+    OD_LOG_OBJENTER();//####
+    OD_LOG_S1("entityName = ", entityName.c_str());//####
+    OD_LOG_D2("xx = ", xx, "yy = ", yy);//####
     _panel.setup();
     _panel.setName(entityName);
     setPosition(xx, yy);
-    
     _panel.setTracker(this);
+    OD_LOG_OBJEXIT();//####
 } // ServiceEntity::setup
 
 #if defined(__APPLE__)

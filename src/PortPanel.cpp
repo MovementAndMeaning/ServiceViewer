@@ -43,6 +43,15 @@
 #include "MovementTracker.h"
 #include "ServiceViewerApp.h"
 
+//#include "ODEnableLogging.h"
+#include "ODLogging.h"
+
+#include "ofSystemUtils.h"
+
+// Note that openFrameworks defines a macro called 'check' :( which messes up other header files.
+#undef check
+#include "M+MUtilities.h"
+
 #define CAN_GRAB_OUTSIDE_HEADER_ /* */
 
 #if defined(__APPLE__)
@@ -75,6 +84,9 @@
 PortPanel::PortPanel(ServiceViewerApp * owner) :
             inherited(), _tracker(NULL), _owner(owner), _grabbed(false)
 {
+    OD_LOG_ENTER();//####
+    OD_LOG_P1("owner = ", owner);//####
+    OD_LOG_EXIT_P(this);//####
 } // PortPanel::PortPanel
 
 PortPanel::PortPanel(ServiceViewerApp *       owner,
@@ -84,10 +96,16 @@ PortPanel::PortPanel(ServiceViewerApp *       owner,
                      const float              yy) :
             inherited(parameters, filename, xx, yy), _tracker(NULL), _owner(owner), _grabbed(false)
 {
+    OD_LOG_ENTER();//####
+    OD_LOG_P2("owner = ", owner, "parameters = ", &parameters);//####
+    OD_LOG_S1("filename = ", filename.c_str());//####
+    OD_LOG_D2("xx = ", xx, "yy = ", yy);//####
+    OD_LOG_EXIT_P(this);//####
 } // PortPanel::PortPanel
 
 PortPanel::~PortPanel(void)
 {
+    OD_LOG_OBJENTER();//####
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         PortEntry * aPort = getPort(ii);
@@ -98,6 +116,7 @@ PortPanel::~PortPanel(void)
             delete aPort;
         }
     }
+    OD_LOG_OBJEXIT();//####
 } // PortPanel::~PortPanel
 
 #if defined(__APPLE__)
@@ -105,11 +124,13 @@ PortPanel::~PortPanel(void)
 #endif // defined(__APPLE__)
 
 void PortPanel::addPort(string                         portName,
-                        const bool                     isService,
+                        const PortEntry::PortUsage     portKind,
                         const PortEntry::PortDirection direction)
 {
+    OD_LOG_OBJENTER();//####
+    OD_LOG_S1("portName = ", portName.c_str());//####
     int         countBefore = getNumPorts();
-    PortEntry * aPort = new PortEntry(this, isService, direction);
+    PortEntry * aPort = new PortEntry(this, portKind, direction);
     
     add(aPort->setup(portName));
     _owner->rememberPort(aPort);
@@ -121,10 +142,13 @@ void PortPanel::addPort(string                         portName,
             aPort->unsetAsLastPort();
         }
     }
+    OD_LOG_OBJEXIT();//####
 } // PortPanel::addPort
 
 PortEntry * PortPanel::getPort(const int num)
 {
+//    OD_LOG_OBJENTER();//####
+//    OD_LOG_L1("num = ", num);//####
     PortEntry * result;
     
     if (0 <= num)
@@ -135,54 +159,169 @@ PortEntry * PortPanel::getPort(const int num)
     {
         result = NULL;
     }
+//    OD_LOG_OBJEXIT_P(result);//####
     return result;
 } // getPort
 
-bool PortPanel::mousePressed(ofMouseEventArgs & args)
+bool PortPanel::mouseDragged(ofMouseEventArgs & args)
 {
+    OD_LOG_OBJENTER();//####
+    OD_LOG_P1("args = ", &args);//####
+    OD_LOG_L1("args.button = ", args.button);//####
     bool result = false;
     
-    if (inherited::mousePressed(args))
+    OD_LOG_P1("_owner = ", _owner);//####
+    if (_owner)
     {
-        // The mouse event was already processed.
-        result = true;
-    }
-    else if (_owner)
-    {
-        if (_owner->controlActive())
+        if (_owner->controlActive() || (OF_MOUSE_BUTTON_3 == args.button))
         {
-            cout << "got here" << endl;
-            result = true; // process a popup here...
+            OD_LOG("(_owner->controlActive() || (OF_MOUSE_BUTTON_3 == args.button))");//####
+            result = true; // process a popup here...?
         }
         else if (_owner->shiftActive())
         {
             //??
         }
     }
+    if (! result)
+    {
+        if (inherited::mouseDragged(args)) // <-- This calls setValue(,,true)
+        {
+            // The mouse event was already processed.
+            result = true;
+        }
+    }
+    OD_LOG_OBJEXIT_B(result);//####
+    return result;
+} // PortPanel::mouseDragged
+
+bool PortPanel::mouseMoved(ofMouseEventArgs & args)
+{
+//    OD_LOG_OBJENTER();//####
+//    OD_LOG_P1("args = ", &args);//####
+    bool result;
+    
+    result = inherited::mouseMoved(args);
+//    OD_LOG_OBJEXIT_B(result);//####
+    return result;
+} // PortPanel::mouseMoved
+
+bool PortPanel::mousePressed(ofMouseEventArgs & args)
+{
+    OD_LOG_OBJENTER();//####
+    OD_LOG_P1("args = ", &args);//####
+    OD_LOG_L1("args.button = ", args.button);//####
+    bool result = false;
+    bool specialClick = false;
+    
+    OD_LOG_P1("_owner = ", _owner);//####
+    if (_owner)
+    {
+        if (_owner->controlActive() || (OF_MOUSE_BUTTON_3 == args.button))
+        {
+            OD_LOG("(_owner->controlActive() || (OF_MOUSE_BUTTON_3 == args.button))");//####
+            if (b.inside(args.x, args.y))
+            {
+                for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
+                {
+                    PortEntry * aPort = getPort(ii);
+                    
+                    if (aPort)
+                    {
+                        ofRectangle entryShape(aPort->getShape());
+                        
+                        if (entryShape.inside(args.x, args.y))
+                        {
+                            string thePortName(aPort->getPortName());
+                            string thePortKind;
+                            
+                            switch (MplusM::Utilities::GetPortKind(thePortName.c_str()))
+                            {
+                                case MplusM::Utilities::kPortKindAdapter:
+                                    thePortKind = "Adapter port ";
+                                    break;
+                                    
+                                case MplusM::Utilities::kPortKindClient:
+                                    thePortKind = "Client port ";
+                                    break;
+                                    
+                                case MplusM::Utilities::kPortKindService:
+                                    thePortKind = "Service port ";
+                                    break;
+                                    
+                                case MplusM::Utilities::kPortKindServiceRegistry:
+                                    thePortKind = "Service Registry port ";
+                                    break;
+                                    
+                                case MplusM::Utilities::kPortKindStandard:
+                                    thePortKind = "Standard port ";
+                                    break;
+                                    
+                            }
+                            ofSystemAlertDialog(thePortKind + aPort->getPortName());
+                            break;
+                        }
+                    }
+                }
+                result = true;
+            }
+            specialClick = true;
+        }
+        else if (_owner->shiftActive())
+        {
+            //??
+        }
+    }
+    if ((! result) && (! specialClick))
+    {
+        if (inherited::mousePressed(args)) // <-- This calls setValue(,,true)
+        {
+            // The mouse event was already processed.
+            result = true;
+        }
+    }
+    OD_LOG_OBJEXIT_B(result);//####
     return result;
 } // PortPanel::mousePressed
 
 bool PortPanel::mouseReleased(ofMouseEventArgs & args)
 {
-    bool result;
+    OD_LOG_OBJENTER();//####
+    OD_LOG_P1("args = ", &args);//####
+    OD_LOG_L1("args.button = ", args.button);//####
+    bool result = false;
+    bool specialClick = false;
     
-    if (_tracker && _grabbed)
+    OD_LOG_P1("_owner = ", _owner);//####
+    if (_owner)
     {
-        _tracker->positionChangeComplete();
+        if (_owner->controlActive() || (OF_MOUSE_BUTTON_3 == args.button))
+        {
+            OD_LOG("(_owner->controlActive() || (OF_MOUSE_BUTTON_3 == args.button))");//####
+            specialClick = true;
+        }
+        else if (_owner->shiftActive())
+        {
+            //??
+        }
     }
-    _grabbed = false;
-    if (inherited::mouseReleased(args))
+    if ((! result) && (! specialClick))
     {
-        result = true;
+        if (_tracker && _grabbed)
+        {
+            _tracker->positionChangeComplete();
+        }
+        _grabbed = false;
+        if (inherited::mouseReleased(args)) // <-- this clears bGuiActive
+        {
+            result = true;
+        }
+        else if (isGuiDrawing() && b.inside(ofPoint(args.x, args.y)))
+        {
+            result = true;
+        }
     }
-    else if (isGuiDrawing() && b.inside(ofPoint(args.x, args.y)))
-    {
-    	result = true;
-    }
-    else
-    {
-    	result = false;
-    }
+    OD_LOG_OBJEXIT_B(result);//####
     return result;
 } // PortPanel::mouseReleased
 
@@ -191,8 +330,12 @@ PortPanel * PortPanel::setup(string      collectionName,
                              const float xx,
                              const float yy)
 {
+    OD_LOG_OBJENTER();//####
 	registerMouseEvents();
-    return static_cast<PortPanel *>(inherited::setup(collectionName, filename, xx, yy));
+    PortPanel * result = static_cast<PortPanel *>(inherited::setup(collectionName, filename, xx, yy));
+    
+    OD_LOG_OBJEXIT_P(result);//####
+    return result;
 } // PortPanel::setup
 
 PortPanel * PortPanel::setup(const ofParameterGroup & parameters,
@@ -200,14 +343,21 @@ PortPanel * PortPanel::setup(const ofParameterGroup & parameters,
                              const float              xx,
                              const float              yy)
 {
+    OD_LOG_OBJENTER();//####
 	registerMouseEvents();
-    return static_cast<PortPanel *>(inherited::setup(parameters, filename, xx, yy));
+    PortPanel * result = static_cast<PortPanel *>(inherited::setup(parameters, filename, xx, yy));
+
+    OD_LOG_OBJEXIT_P(result);//####
+    return result;
 } // PortPanel::setup
 
 bool PortPanel::setValue(float mx,
                          float my,
                          bool  bCheck)
 {
+    OD_LOG_OBJENTER();//####
+    OD_LOG_D2("mx = ", mx, "my = ", my);//####
+    OD_LOG_B1("bCheck = ", bCheck);//####
     bool result = false;
     
 	if (! isGuiDrawing())
@@ -233,6 +383,7 @@ bool PortPanel::setValue(float mx,
 				_grabbed = false;
 			}
 #endif // ! defined(CAN_GRAB_OUTSIDE_HEADER_)
+            OD_LOG_B1("_grabbed <- ", _grabbed);//####
 		}
 	}
     else if (_grabbed)
@@ -244,6 +395,7 @@ bool PortPanel::setValue(float mx,
         }
 		result = true;
 	}
+    OD_LOG_OBJEXIT_B(result);//####
     return result;
 } // PortPanel::setValue
 
@@ -254,4 +406,3 @@ bool PortPanel::setValue(float mx,
 #if defined(__APPLE__)
 # pragma mark Global functions
 #endif // defined(__APPLE__)
-

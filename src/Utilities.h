@@ -83,7 +83,9 @@ inline bool CalculateMinDistance(float &         distanceSoFar,
     return CalculateMinDistance(distanceSoFar, refPoint, ofPoint(testX, testY), bestSoFar);
 } // CalculateMinDistance
 
-/*! @brief !BLORT! */
+/*! @brief Determine the dimsnesions of a text string.
+ @param textMesh The text string rendered in a mesh.
+ @param dimensions The dimensions of the text string. */
 void CalculateTextMeshDimensions(const ofMesh & textMesh,
                                  ofVec2f &      dimensions);
 

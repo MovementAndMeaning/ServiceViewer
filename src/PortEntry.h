@@ -96,15 +96,26 @@ public:
         kPortDirectionUnknown
     }; // PortDirection
     
+    /*! @brief What the port will be used for. */
+    enum PortUsage
+    {
+        /*! @brief The port is for a client or adapter. */
+        kPortUsageClient,
+        /*! @brief The port is for a service. */
+        kPortUsageService,
+        /*! @brief The port has no specific characterization. */
+        kPortUsageOther
+    }; // PortUsage
+    
     /*! @brief The set of connections to the port. */
     typedef set<PortEntry *> Connections;
 
     /*! @brief The constructor.
      @param parent The GUI element containing this element.
-     @param isService @c true if the port is part of a service and @c false otherwise.
+     @param portKind What the port will be used for.
      @param direction The primary direction of the port. */
 	PortEntry(IconlessPanel *     parent,
-              const bool          isService,
+              const PortUsage     portKind,
               const PortDirection direction = kPortDirectionInput);
     
     /*! @brief The destructor. */
@@ -173,6 +184,14 @@ public:
         return _outputConnections;
     } // getOutputConnections
     
+    /*! @brief Return the name of the associated port.
+     @returns The name of the associated port. */
+    inline string getPortName(void)
+    const
+    {
+        return _portName;
+    } // getPortName
+    
     /*! @brief Returns @c true if the port entry is the bottom-most (last) port entry in a panel and @c false otherwise.
      @returns @c true if the port is the last port entry in a panel and @c false otherwise. */
     inline bool isLastPort(void)
@@ -186,7 +205,7 @@ public:
     inline bool isService(void)
     const
     {
-        return _isService;
+        return (kPortUsageService == _usage);
     } // isService
     
     /*! @brief Remove an input connection from a port.
@@ -242,14 +261,17 @@ private:
     /*! @brief The connections to the port. */
     Connections   _outputConnections;
     
+    /*! @brief The name of the associated port. */
+    string        _portName;
+    
     /*! @brief The primary direction for connections to the port. */
     PortDirection _direction;
     
+    /*! @brief The primary usage for the port. */
+    PortUsage     _usage;
+    
     /*! @brief @c true if the port entry is the bottom-most (last) port entry in a panel and @c false otherwise. */
     bool          _isLastPort;
-    
-    /*! @brief @c true if the port entry is part of a service and @c false otherwise. */
-    bool          _isService;
     
 }; // PortEntry
 
