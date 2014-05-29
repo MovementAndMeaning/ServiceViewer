@@ -42,8 +42,6 @@
 #if (! defined(__ServiceViewer__LabelWithShadow__))
 # define __ServiceViewer__LabelWithShadow__
 
-//# include "IconlessPanel.h"
-
 # include "ofxLabel.h"
 
 # if defined(__APPLE__)

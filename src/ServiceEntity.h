@@ -58,6 +58,7 @@
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
+class PortEntry;
 class ServiceViewerApp;
 
 /*! @brief A moveable GUI element to represent a set of ports. */
@@ -66,8 +67,12 @@ class ServiceEntity : MovementTracker
 public:
     
     /*! @brief The constructor.
+     @param kind The kind of entity.
+     @param description The description, if this is a service.
      @param owner The application object that manages this entity. */
-	ServiceEntity(ServiceViewerApp * owner);
+	ServiceEntity(const PortPanel::EntityKind kind,
+                  const string                description,
+                  ServiceViewerApp *          owner);
     
     /*! @brief The destructor. */
 	virtual ~ServiceEntity(void);
@@ -82,6 +87,18 @@ public:
     {
         _panel.addPort(portName, portKind, direction);
     } // addPort
+    
+    /*! @brief Stop displaying the connect marker. */
+    inline void clearConnectMarker(void)
+    {
+        _drawConnectMarker = false;
+    } // clearConnectMarker
+    
+    /*! @brief Stop displaying the disconnect marker. */
+    inline void clearDisconnectMarker(void)
+    {
+        _drawDisconnectMarker = false;
+    } // clearDisconnectMarker
     
     /*! @brief Deselect the entity. */
     inline void deselect(void)
@@ -125,6 +142,11 @@ public:
     /*! @brief The entity position has been changed. */
     virtual void handlePositionChange(void);
     
+    /*! @brief Check if a port is part of the entity.
+     @param aPort The port to be checked for.
+     @returns @c true if the port is contained within the entity and @c false otherwise. */
+    bool hasPort(const PortEntry * aPort);
+    
     /*! @brief Return @c true is the entity is selected.
      @returns @c true if the entity is selected and @c false otherwise. */
     inline bool isSelected(void)
@@ -156,6 +178,18 @@ public:
         _thisConnectionWidth = width;
     } // setConnectionWidth
     
+    /*! @brief Start displaying the connect marker. */
+    inline void setConnectMarker(void)
+    {
+        _drawConnectMarker = true;
+    } // setConnectMarker
+    
+    /*! @brief Start displaying the disconnect marker. */
+    inline void setDisconnectMarker(void)
+    {
+        _drawDisconnectMarker = true;
+    } // setDisconnectMarker
+    
     /*! @brief Move the entity to a new location on the display.
      @param xx The new horizontal position of the entity.
      @param yy The new vertical position of the entity. */
@@ -173,20 +207,6 @@ public:
                const float xx = 10,
                const float yy = 10);
 
-    /*! @brief Set the default color for connections from entities.
-     @param color The default color for connections from entities. */
-	static void setDefaultConnectionColor(const ofColor & color)
-    {
-        connectionColor = color;
-    } // setDefaultConnectionColor
-        
-    /*! @brief Set the default width for connections from entities.
-     @param width The default width for connections from entities. */
-	static void setDefaultConnectionWidth(const float width)
-    {
-        connectionWidth = width;
-    } // setDefaultConnectionWidth
-    
     /*! @brief Return the default color for connections from entities.
      @returns The default color for connections from entities. */
 	static ofColor getDefaultConnectionColor(void)
@@ -200,6 +220,20 @@ public:
     {
         return connectionWidth;
     } // getDefaultConnectionWidth
+    
+    /*! @brief Set the default color for connections from entities.
+     @param color The default color for connections from entities. */
+	static void setDefaultConnectionColor(const ofColor & color)
+    {
+        connectionColor = color;
+    } // setDefaultConnectionColor
+        
+    /*! @brief Set the default width for connections from entities.
+     @param width The default width for connections from entities. */
+	static void setDefaultConnectionWidth(const float width)
+    {
+        connectionWidth = width;
+    } // setDefaultConnectionWidth
     
 protected:
     
@@ -233,16 +267,19 @@ private:
     ServiceEntity & operator=(const ServiceEntity & other);
     
     /*! @brief The GUI object that represents the entity. */
-    PortPanel          _panel;
+    PortPanel _panel;
     
-    /*! @brief The application object that manages the entity. */
-    ServiceViewerApp * _owner;
+    /*! @brief @c true if the connect marker is to be displayed and @c false otherwise. */
+    bool      _drawConnectMarker;
     
-    /*! @brief @c true if the selection dot is to be displayed and @c false otherwise. */
-    bool               _drawDot;
+    /*! @brief @c true if the disconnect marker is to be displayed and @c false otherwise. */
+    bool      _drawDisconnectMarker;
+    
+    /*! @brief @c true if the movement marker is to be displayed and @c false otherwise. */
+    bool      _drawMoveMarker;
 
     /*! @brief @c true if the entity is selected and @c false otherwise. */
-    bool               _selected;
+    bool      _selected;
     
 }; // ServiceEntity
 

@@ -81,24 +81,30 @@
 # pragma mark Constructors and destructors
 #endif // defined(__APPLE__)
 
-PortPanel::PortPanel(ServiceViewerApp * owner) :
-            inherited(), _tracker(NULL), _owner(owner), _grabbed(false)
+PortPanel::PortPanel(const EntityKind   kind,
+                     const string       description,
+                     ServiceViewerApp * owner) :
+            inherited(), _tracker(NULL), _owner(owner), _description(description), _kind(kind), _grabbed(false)
 {
     OD_LOG_ENTER();//####
+    OD_LOG_S1("description = ", description.c_str());//####
     OD_LOG_P1("owner = ", owner);//####
     OD_LOG_EXIT_P(this);//####
 } // PortPanel::PortPanel
 
-PortPanel::PortPanel(ServiceViewerApp *       owner,
+PortPanel::PortPanel(const EntityKind         kind,
+                     const string             description,
+                     ServiceViewerApp *       owner,
                      const ofParameterGroup & parameters,
                      string                   filename,
                      const float              xx,
                      const float              yy) :
-            inherited(parameters, filename, xx, yy), _tracker(NULL), _owner(owner), _grabbed(false)
+            inherited(parameters, filename, xx, yy), _tracker(NULL), _owner(owner), _description(description),
+            _kind(kind), _grabbed(false)
 {
     OD_LOG_ENTER();//####
+    OD_LOG_S2("description = ", description.c_str(), "filename = ", filename.c_str());//####
     OD_LOG_P2("owner = ", owner, "parameters = ", &parameters);//####
-    OD_LOG_S1("filename = ", filename.c_str());//####
     OD_LOG_D2("xx = ", xx, "yy = ", yy);//####
     OD_LOG_EXIT_P(this);//####
 } // PortPanel::PortPanel
@@ -170,26 +176,35 @@ bool PortPanel::mouseDragged(ofMouseEventArgs & args)
     OD_LOG_L1("args.button = ", args.button);//####
     bool result = false;
     
-    OD_LOG_P1("_owner = ", _owner);//####
     if (_owner)
     {
-        if (_owner->controlActive() || (OF_MOUSE_BUTTON_3 == args.button))
+        bool altWasActive = _owner->altActive();
+        bool commandWasActive = _owner->commandActive();
+        bool controlWasActive = _owner->controlActive();
+        bool shiftWasActive = _owner->shiftActive();
+        
+        OD_LOG_B4("altWasActive = ", altWasActive, "commandWasActive = ", commandWasActive,//####
+                  "controlWasActive = ", controlWasActive, "shiftWasActive = ", shiftWasActive);//####
+        if (controlWasActive || (OF_MOUSE_BUTTON_3 == args.button))
         {
-            OD_LOG("(_owner->controlActive() || (OF_MOUSE_BUTTON_3 == args.button))");//####
-            result = true; // process a popup here...?
+            result = true;
         }
-        else if (_owner->shiftActive())
+        else if (shiftWasActive)
         {
-            //??
+            result = true;
+        }
+        else if (commandWasActive)
+        {
+            result = true;
+        }
+        else if (altWasActive)
+        {
+            result = true;
         }
     }
     if (! result)
     {
-        if (inherited::mouseDragged(args)) // <-- This calls setValue(,,true)
-        {
-            // The mouse event was already processed.
-            result = true;
-        }
+        result = inherited::mouseDragged(args);
     }
     OD_LOG_OBJEXIT_B(result);//####
     return result;
@@ -199,9 +214,8 @@ bool PortPanel::mouseMoved(ofMouseEventArgs & args)
 {
 //    OD_LOG_OBJENTER();//####
 //    OD_LOG_P1("args = ", &args);//####
-    bool result;
+    bool result = inherited::mouseMoved(args);
     
-    result = inherited::mouseMoved(args);
 //    OD_LOG_OBJEXIT_B(result);//####
     return result;
 } // PortPanel::mouseMoved
@@ -211,73 +225,53 @@ bool PortPanel::mousePressed(ofMouseEventArgs & args)
     OD_LOG_OBJENTER();//####
     OD_LOG_P1("args = ", &args);//####
     OD_LOG_L1("args.button = ", args.button);//####
-    bool result = false;
-    bool specialClick = false;
+    bool result = inherited::mousePressed(args);
     
-    OD_LOG_P1("_owner = ", _owner);//####
-    if (_owner)
+    if (! result)
     {
-        if (_owner->controlActive() || (OF_MOUSE_BUTTON_3 == args.button))
+        if (_owner)
         {
-            OD_LOG("(_owner->controlActive() || (OF_MOUSE_BUTTON_3 == args.button))");//####
             if (b.inside(args.x, args.y))
             {
-                for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
+                bool altWasActive = _owner->altActive();
+                bool commandWasActive = _owner->commandActive();
+                bool controlWasActive = _owner->controlActive();
+                bool shiftWasActive = _owner->shiftActive();
+
+                OD_LOG_B4("altWasActive = ", altWasActive, "commandWasActive = ", commandWasActive,//####
+                          "controlWasActive = ", controlWasActive, "shiftWasActive = ", shiftWasActive);//####
+                if (OF_MOUSE_BUTTON_3 == args.button)
                 {
-                    PortEntry * aPort = getPort(ii);
+                    string thePanelDescription;
                     
-                    if (aPort)
+                    switch (_kind)
                     {
-                        ofRectangle entryShape(aPort->getShape());
-                        
-                        if (entryShape.inside(args.x, args.y))
-                        {
-                            string thePortName(aPort->getPortName());
-                            string thePortKind;
-                            
-                            switch (MplusM::Utilities::GetPortKind(thePortName.c_str()))
-                            {
-                                case MplusM::Utilities::kPortKindAdapter:
-                                    thePortKind = "Adapter port ";
-                                    break;
-                                    
-                                case MplusM::Utilities::kPortKindClient:
-                                    thePortKind = "Client port ";
-                                    break;
-                                    
-                                case MplusM::Utilities::kPortKindService:
-                                    thePortKind = "Service port ";
-                                    break;
-                                    
-                                case MplusM::Utilities::kPortKindServiceRegistry:
-                                    thePortKind = "Service Registry port ";
-                                    break;
-                                    
-                                case MplusM::Utilities::kPortKindStandard:
-                                    thePortKind = "Standard port ";
-                                    break;
-                                    
-                            }
-                            ofSystemAlertDialog(thePortKind + aPort->getPortName());
+                        case kEntityKindClientOrAdapter:
+                            thePanelDescription = "A client or adapter";
                             break;
-                        }
+                            
+                        case kEntityKindService:
+                            thePanelDescription = _description;
+                            break;
+                            
+                        case kEntityKindOther:
+                            thePanelDescription = "A standard port";
+                            break;
+                            
                     }
+                    ofSystemAlertDialog(thePanelDescription);
+                    result = true;
                 }
-                result = true;
+                else if (controlWasActive)
+                {
+                    result = true;
+                }
+                else if (altWasActive || commandWasActive || shiftWasActive)
+                {
+                    _owner->reportPortEntryClicked(NULL, altWasActive, commandWasActive, shiftWasActive);
+                    result = true;
+                }
             }
-            specialClick = true;
-        }
-        else if (_owner->shiftActive())
-        {
-            //??
-        }
-    }
-    if ((! result) && (! specialClick))
-    {
-        if (inherited::mousePressed(args)) // <-- This calls setValue(,,true)
-        {
-            // The mouse event was already processed.
-            result = true;
         }
     }
     OD_LOG_OBJEXIT_B(result);//####
@@ -290,33 +284,49 @@ bool PortPanel::mouseReleased(ofMouseEventArgs & args)
     OD_LOG_P1("args = ", &args);//####
     OD_LOG_L1("args.button = ", args.button);//####
     bool result = false;
-    bool specialClick = false;
     
     OD_LOG_P1("_owner = ", _owner);//####
     if (_owner)
     {
-        if (_owner->controlActive() || (OF_MOUSE_BUTTON_3 == args.button))
+        if (b.inside(args.x, args.y))
         {
-            OD_LOG("(_owner->controlActive() || (OF_MOUSE_BUTTON_3 == args.button))");//####
-            specialClick = true;
-        }
-        else if (_owner->shiftActive())
-        {
-            //??
+            bool altWasActive = _owner->altActive();
+            bool commandWasActive = _owner->commandActive();
+            bool controlWasActive = _owner->controlActive();
+            bool shiftWasActive = _owner->shiftActive();
+            
+            OD_LOG_B4("altWasActive = ", altWasActive, "commandWasActive = ", commandWasActive,//####
+                      "controlWasActive = ", controlWasActive, "shiftWasActive = ", shiftWasActive);//####
+            if (controlWasActive || (OF_MOUSE_BUTTON_3 == args.button))
+            {
+                result = true;
+            }
+            else if (shiftWasActive)
+            {
+                result = true;
+            }
+            else if (commandWasActive)
+            {
+                result = true;
+            }
+            else if (altWasActive)
+            {
+                result = true;
+            }
         }
     }
-    if ((! result) && (! specialClick))
+    if (! result)
     {
         if (_tracker && _grabbed)
         {
             _tracker->positionChangeComplete();
         }
-        _grabbed = false;
+        _grabbed = result = false;
         if (inherited::mouseReleased(args)) // <-- this clears bGuiActive
         {
             result = true;
         }
-        else if (isGuiDrawing() && b.inside(ofPoint(args.x, args.y)))
+        else if (isGuiDrawing() && b.inside(args.x, args.y))
         {
             result = true;
         }

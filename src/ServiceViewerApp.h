@@ -111,6 +111,16 @@ public:
      @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
     ServiceEntity * findEntity(string name);
     
+    /*! @brief Find an entity by the name of a port within it.
+     @param name The name of the port.
+     @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
+    ServiceEntity * findEntityForPort(string name);
+    
+    /*! @brief Find an entity by a port within it.
+     @param aPort The port of interest.
+     @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
+    ServiceEntity * findEntityForPort(const PortEntry * aPort);
+    
     /*! @brief Find a port by name.
      @param name The name of the port.
      @returns @c NULL if the port cannot be found and non-@c NULL if it is found. */
@@ -166,6 +176,16 @@ public:
      @param aPort The port to be added. */
     void rememberPort(PortEntry * aPort);
     
+    /*! @brief Process a click on a Port Entry with a modifier set.
+     @param aPort The port being handled.
+     @param altIsActive The ALT key is active.
+     @param commandIsActive The COMMAND key is active.
+     @param shiftIsActive The SHIFT key is active. */
+    void reportPortEntryClicked(PortEntry * aPort,
+                                const bool  altIsActive,
+                                const bool  commandIsActive,
+                                const bool  shiftIsActive);
+    
     /*! @brief Setup the parameters of the application. */
     virtual void setup(void);
     
@@ -220,28 +240,34 @@ private:
     void setInitialEntityPositions(void);
     
     /*! @brief The collection of visible services and ports. */
-    EntityList _entities;
+    EntityList  _entities;
 
     /*! @brief The set of known ports. */
-    PortMap    _ports;
+    PortMap     _ports;
+    
+    /*! @brief The starting port for a connection being added. */
+    PortEntry * _firstAddPort;
+    
+    /*! @brief The starting port for a connection being removed. */
+    PortEntry * _firstRemovePort;
     
     /*! @brief @c true if the ALT/OPTION modifier key is depressed and @c false otherwise. */
-    bool       _altActive;
+    bool        _altActive;
     
     /*! @brief @c true if the COMMAND modifier key is depressed and @c false otherwise. */
-    bool       _commandActive;
+    bool        _commandActive;
     
     /*! @brief @c true if the CONTROL modifier key is depressed and @c false otherwise. */
-    bool       _controlActive;
+    bool        _controlActive;
     
     /*! @brief @c true if the YARP network is running. */
-    bool       _networkAvailable;
+    bool        _networkAvailable;
     
     /*! @brief @c true if the service registry can be used. */
-    bool       _registryAvailable;
+    bool        _registryAvailable;
     
     /*! @brief @c true if the SHIFT modifier key is depressed and @c false otherwise. */
-    bool       _shiftActive;
+    bool        _shiftActive;
     
 }; // ServiceViewerApp
 

@@ -40,6 +40,7 @@
 //--------------------------------------------------------------------------------------
 
 #include "ServiceViewerApp.h"
+#include "PortEntry.h"
 #include "ServiceEntity.h"
 
 //#include "ODEnableLogging.h"
@@ -146,7 +147,7 @@ static void addPortsWithAssociates(ServiceViewerApp *                    theApp,
             {
                 if (isPrimary)
                 {
-                    ServiceEntity * anEntity = new ServiceEntity(theApp);
+                    ServiceEntity * anEntity = new ServiceEntity(PortPanel::kEntityKindClientOrAdapter, "", theApp);
                     
                     anEntity->setup((aDescriptor._portIpAddress + ":" + aDescriptor._portPortNumber).c_str());
                     for (int jj = 0, nn = inputs.size(); nn > jj; ++jj)
@@ -181,7 +182,7 @@ static void addRegularPortEntities(ServiceViewerApp *                    theApp,
         
         if (! theApp->findPort(aDescriptor._portName.c_str()))
         {
-            ServiceEntity * anEntity = new ServiceEntity(theApp);
+            ServiceEntity * anEntity = new ServiceEntity(PortPanel::kEntityKindOther, "", theApp);
             
             anEntity->setup((aDescriptor._portIpAddress + ":" + aDescriptor._portPortNumber).c_str());
             anEntity->addPort(aDescriptor._portName, PortEntry::kPortUsageOther, PortEntry::kPortDirectionInputOutput);
@@ -209,7 +210,8 @@ static void addServices(ServiceViewerApp *                   theApp,
 
             if (MplusM::Utilities::GetNameAndDescriptionForService(aService, descriptor))
             {
-                ServiceEntity * anEntity = new ServiceEntity(theApp);
+                ServiceEntity * anEntity = new ServiceEntity(PortPanel::kEntityKindService,
+                                                             descriptor._description.c_str(), theApp);
                 
                 anEntity->setup(descriptor._canonicalName);
                 anEntity->addPort(aService, PortEntry::kPortUsageService, PortEntry::kPortDirectionInput);
@@ -239,8 +241,8 @@ static void addServices(ServiceViewerApp *                   theApp,
 #endif // defined(__APPLE__)
 
 ServiceViewerApp::ServiceViewerApp(void) :
-            inherited(), _altActive(false), _commandActive(false), _controlActive(false), _networkAvailable(false),
-            _registryAvailable(false), _shiftActive(false)
+            inherited(), _firstAddPort(NULL), _firstRemovePort(NULL), _altActive(false), _commandActive(false),
+            _controlActive(false), _networkAvailable(false), _registryAvailable(false), _shiftActive(false)
 {
     OD_LOG_ENTER();//####
     OD_LOG_EXIT_P(this);//####
@@ -318,10 +320,9 @@ ServiceEntity * ServiceViewerApp::findEntity(string name)
 {
     OD_LOG_OBJENTER();//####
     OD_LOG_S1("name = ", name.c_str());//####
-    EntityList::iterator it(_entities.begin());
-    ServiceEntity *      result = NULL;
+    ServiceEntity * result = NULL;
     
-    for ( ; _entities.end() != it; ++it)
+    for (EntityList::iterator it(_entities.begin()); _entities.end() != it; ++it)
     {
         ServiceEntity * anEntity = *it;
         
@@ -335,6 +336,52 @@ ServiceEntity * ServiceViewerApp::findEntity(string name)
     OD_LOG_OBJEXIT_P(result);//####
     return result;
 } // ServiceViewerApp::findEntity
+
+ServiceEntity * ServiceViewerApp::findEntityForPort(string name)
+{
+    OD_LOG_OBJENTER();//####
+    OD_LOG_S1("name = ", name.c_str());//####
+    PortMap::iterator match(_ports.find(name));
+    ServiceEntity *   result = NULL;
+    
+    if (_ports.end() != match)
+    {
+        for (EntityList::iterator it(_entities.begin()); _entities.end() != it; ++it)
+        {
+            ServiceEntity * anEntity = *it;
+            
+            if (anEntity && anEntity->hasPort(match->second))
+            {
+                result = anEntity;
+                break;
+            }
+            
+        }
+    }
+    OD_LOG_OBJEXIT_P(result);//####
+    return result;
+} // ServiceViewerApp::findEntityForPort
+
+ServiceEntity * ServiceViewerApp::findEntityForPort(const PortEntry * aPort)
+{
+    OD_LOG_OBJENTER();//####
+    OD_LOG_P1("aPort = ", aPort);//####
+    ServiceEntity *      result = NULL;
+    
+    for (EntityList::iterator it(_entities.begin()); _entities.end() != it; ++it)
+    {
+        ServiceEntity * anEntity = *it;
+        
+        if (anEntity && anEntity->hasPort(aPort))
+        {
+            result = anEntity;
+            break;
+        }
+        
+    }
+    OD_LOG_OBJEXIT_P(result);//####
+    return result;
+} // ServiceViewerApp::findEntityForPort
 
 PortEntry * ServiceViewerApp::findPort(string name)
 {
@@ -399,12 +446,13 @@ void ServiceViewerApp::gotMessage(ofMessage msg)
 
 void ServiceViewerApp::keyPressed(int key)
 {
-    OD_LOG_OBJENTER();//####
+//    OD_LOG_OBJENTER();//####
+//    OD_LOG_L1("key = ", key);//####
     if (OF_KEY_ALT == (key & OF_KEY_ALT))
     {
         _altActive = true;
     }
-    if (OF_KEY_CONTROL == (key & OF_KEY_COMMAND))
+    if (OF_KEY_COMMAND == (key & OF_KEY_COMMAND))
     {
         _commandActive = true;
     }
@@ -417,17 +465,18 @@ void ServiceViewerApp::keyPressed(int key)
         _shiftActive = true;
     }
     inherited::keyPressed(key);
-    OD_LOG_OBJEXIT();//####
+//    OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::keyPressed
 
 void ServiceViewerApp::keyReleased(int key)
 {
-    OD_LOG_OBJENTER();//####
+//    OD_LOG_OBJENTER();//####
+//    OD_LOG_L1("key = ", key);//####
     if (OF_KEY_ALT == (key & OF_KEY_ALT))
     {
         _altActive = false;
     }
-    if (OF_KEY_CONTROL == (key & OF_KEY_COMMAND))
+    if (OF_KEY_COMMAND == (key & OF_KEY_COMMAND))
     {
         _commandActive = false;
     }
@@ -440,7 +489,7 @@ void ServiceViewerApp::keyReleased(int key)
         _shiftActive = false;
     }
     inherited::keyReleased(key);
-    OD_LOG_OBJEXIT();//####
+//    OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::keyReleased
 
 void ServiceViewerApp::mouseDragged(int x,
@@ -448,6 +497,7 @@ void ServiceViewerApp::mouseDragged(int x,
                                     int button)
 {
     OD_LOG_OBJENTER();//####
+    OD_LOG_L3("x = ", x, "y = ", y, "button = ", button);//####
     inherited::mouseDragged(x, y, button);
     OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::mouseDragged
@@ -456,6 +506,7 @@ void ServiceViewerApp::mouseMoved(int x,
                                   int y)
 {
 //    OD_LOG_OBJENTER();//####
+//    OD_LOG_L2("x = ", x, "y = ", y);//####
     inherited::mouseMoved(x, y);
 //    OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::mouseMoved
@@ -465,7 +516,9 @@ void ServiceViewerApp::mousePressed(int x,
                                     int button)
 {
     OD_LOG_OBJENTER();//####
+    OD_LOG_L3("x = ", x, "y = ", y, "button = ", button);//####
     inherited::mousePressed(x, y, button);
+    reportPortEntryClicked(NULL, _altActive, _commandActive, _shiftActive);
     OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::mousePressed
 
@@ -474,6 +527,7 @@ void ServiceViewerApp::mouseReleased(int x,
                                      int button)
 {
     OD_LOG_OBJENTER();//####
+    OD_LOG_L3("x = ", x, "y = ", y, "button = ", button);//####
     inherited::mouseReleased(x, y, button);
     OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::mouseReleased
@@ -488,6 +542,150 @@ void ServiceViewerApp::rememberPort(PortEntry * aPort)
     }
     OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::rememberPort
+
+void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort,
+                                              const bool  altIsActive,
+                                              const bool  commandIsActive,
+                                              const bool  shiftIsActive)
+{
+    OD_LOG_OBJENTER();//####
+    OD_LOG_P1("aPort = ", aPort);//####
+    OD_LOG_B3("altIsActive = ", altIsActive, "commandIsActive = ", commandIsActive, "shiftIsActive = ",//####
+              shiftIsActive);//####
+    
+    if (aPort)
+    {
+        if (commandIsActive)
+        {
+            // Process connection delete requests.
+            PortEntry::PortDirection direction = aPort->getDirection();
+            
+            if (_firstRemovePort)
+            {
+                ServiceEntity * firstEntity = findEntityForPort(_firstRemovePort);
+                
+                if (_firstRemovePort != aPort)
+                {
+                    // Check if we can end here.
+                    if (PortEntry::kPortDirectionOutput != direction)
+                    {
+                        ServiceEntity * secondEntity = findEntityForPort(aPort);
+                        
+                        if (firstEntity && secondEntity)
+                        {
+                            if (MplusM::Utilities::RemoveConnection(_firstRemovePort->getPortName().c_str(),
+                                                                    aPort->getPortName().c_str()))
+                            {
+                                _firstRemovePort->removeOutputConnection(aPort);
+                                aPort->removeInputConnection(_firstRemovePort);
+                            }
+                        }
+                    }
+                }
+                if (firstEntity)
+                {
+                    firstEntity->clearDisconnectMarker();
+                    _firstRemovePort = NULL;
+                }
+            }
+            else
+            {
+                // Check if we can start from here.
+                if (PortEntry::kPortDirectionInput != direction)
+                {
+                    ServiceEntity * entity = findEntityForPort(aPort);
+                    
+                    if (entity)
+                    {
+                        entity->setDisconnectMarker();
+                        _firstRemovePort = aPort;
+                    }
+                }
+            }
+        }
+        else if (shiftIsActive)
+        {
+            // Process connection add requests.
+            PortEntry::PortDirection direction = aPort->getDirection();
+            
+            if (_firstAddPort)
+            {
+                // Check if we can end here.
+                ServiceEntity * firstEntity = findEntityForPort(_firstAddPort);
+                
+                if (_firstAddPort != aPort)
+                {
+                    if (PortEntry::kPortDirectionOutput != direction)
+                    {
+                        ServiceEntity * secondEntity = findEntityForPort(aPort);
+                        
+                        if (firstEntity && secondEntity)
+                        {
+                            if (MplusM::Utilities::AddConnection(_firstAddPort->getPortName().c_str(),
+                                                                 aPort->getPortName().c_str()))
+                            {
+                                _firstAddPort->addOutputConnection(aPort);
+                                aPort->addInputConnection(_firstAddPort);
+                            }
+                        }
+                    }
+                }
+                if (firstEntity)
+                {
+                    firstEntity->clearConnectMarker();
+                    _firstAddPort = NULL;
+                }
+            }
+            else
+            {
+                // Check if we can start from here.
+                if (PortEntry::kPortDirectionInput != direction)
+                {
+                    ServiceEntity * entity = findEntityForPort(aPort);
+                    
+                    if (entity)
+                    {
+                        entity->setConnectMarker();
+                        _firstAddPort = aPort;
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        // Operation being cleared.
+        if (commandIsActive)
+        {
+            // Process connection delete requests.
+            if (_firstRemovePort)
+            {
+                ServiceEntity * entity = findEntityForPort(_firstRemovePort);
+                
+                if (entity)
+                {
+                    entity->clearDisconnectMarker();
+                }
+                _firstRemovePort = NULL;
+            }
+        }
+        else if (shiftIsActive)
+        {
+            // Process connaction add requests.
+            if (_firstAddPort)
+            {
+                ServiceEntity * entity = findEntityForPort(_firstAddPort);
+                
+                if (entity)
+                {
+                    entity->clearConnectMarker();
+                }
+                _firstAddPort = NULL;
+            }
+        }
+    }
+    OD_LOG_OBJEXIT();//####
+} // ServiceViewerApp::reportPortEntryClicked
 
 void ServiceViewerApp::setInitialEntityPositions(void)
 {

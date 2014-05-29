@@ -59,6 +59,7 @@
 
 //# define SUPPORT_BOTTOM_DIAGONALS_ /* Allow connections to the bottom corners of the port entry. */
 
+class PortPanel;
 class ServiceViewerApp;
 
 /*! @brief A GUI element to represent ports. */
@@ -170,6 +171,14 @@ public:
      @returns The location of the centre of the port entry. */
     ofPoint getCentre(void);
     
+    /*! @brief Return the direction of the port entry.
+     @returns The direction of the port entry. */
+    PortDirection getDirection(void)
+    const
+    {
+        return _direction;
+    } // getDirection
+    
     /*! @brief Return the set of input connections to the port.
      @returns The set of input connections to the port. */
     inline const Connections & getInputConnections(void)
@@ -185,6 +194,12 @@ public:
     {
         return _outputConnections;
     } // getOutputConnections
+    
+    inline PortPanel * getParent(void)
+    const
+    {
+        return reinterpret_cast<PortPanel *>(_parent);
+    } // getParent
     
     /*! @brief Return the name of the associated port.
      @returns The name of the associated port. */

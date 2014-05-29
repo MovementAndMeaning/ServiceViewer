@@ -64,9 +64,22 @@ class PortPanel : protected IconlessPanel
 {
 public:
     
+    /*! @brief What kind of entity. */
+    enum EntityKind
+    {
+        /*! @brief The entity is a client or adapter. */
+        kEntityKindClientOrAdapter,
+        /*! @brief The entity is a service. */
+        kEntityKindService,
+        /*! @brief The entity is neither a serice nor a client nor an adapter. */
+        kEntityKindOther
+    }; // EntityKind
+    
     /*! @brief The constructor.
      @param owner The application object that manages this panel. */
-	PortPanel(ServiceViewerApp * owner);
+	PortPanel(const EntityKind   kind,
+              const string       description,
+              ServiceViewerApp * owner);
     
     /*! @brief The constructor.
      @param owner The application object that manages this panel.
@@ -74,7 +87,9 @@ public:
      @param filename The settings file for the panel.
      @param xx The initial horizontal position of the panel.
      @param yy The initial vertical position of the panel. */
-	PortPanel(ServiceViewerApp *       owner,
+	PortPanel(const EntityKind         kind,
+              const string             description,
+              ServiceViewerApp *       owner,
               const ofParameterGroup & parameters,
               string                   filename = "settings.xml",
               const float              xx = 10,
@@ -259,6 +274,12 @@ private:
     /*! @brief The application object that manages the panel. */
     ServiceViewerApp * _owner;
 
+    /*! @brief The description of the entity, if it is a service. */
+    string             _description;
+    
+    /*! @brief The kind of entity. */
+    EntityKind         _kind;
+    
     /*! @brief @c true if the panel is being dragged and @c false otherwise. */
 	bool               _grabbed;
     

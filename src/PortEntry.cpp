@@ -40,6 +40,8 @@
 //--------------------------------------------------------------------------------------
 
 #include "PortEntry.h"
+#include "PortPanel.h"
+#include "ServiceEntity.h"
 #include "ServiceViewerApp.h"
 #include "Utilities.h"
 
@@ -47,6 +49,11 @@
 #include "ODLogging.h"
 
 #include "ofGraphics.h"
+#include "ofSystemUtils.h"
+
+// Note that openFrameworks defines a macro called 'check' :( which messes up other header files.
+#undef check
+#include "M+MUtilities.h"
 
 #if defined(__APPLE__)
 # pragma clang diagnostic push
@@ -129,9 +136,9 @@ PortEntry::AnchorSide PortEntry::calculateClosestAnchor(ofPoint &       result,
                                                         const bool      isSource,
                                                         const ofPoint & pp)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_P2("result = ", result, "pp = ", &pp);//####
-    OD_LOG_B1("isSource = ", isSource);//####
+//    OD_LOG_OBJENTER();//####
+//    OD_LOG_P2("result = ", &result, "pp = ", &pp);//####
+//    OD_LOG_B1("isSource = ", isSource);//####
     // Check each anchor point - the two side centres and optionally the bottom - to find the shortest distance.
     AnchorSide  anchor = kAnchorUnknown;
     float       soFar = 1e23; // Ridiculously big, just in case.
@@ -189,16 +196,16 @@ PortEntry::AnchorSide PortEntry::calculateClosestAnchor(ofPoint &       result,
         }
 #endif // defined(SUPPORT_BOTTOM_DIAGONALS_)
     }
-    OD_LOG_OBJEXIT_L(static_cast<int>(anchor));//####
+//    OD_LOG_OBJEXIT_L(static_cast<int>(anchor));//####
     return anchor;
 } // PortEntry::calculateClosestAnchor
 
 void PortEntry::drawSourceAnchor(const AnchorSide anchor,
                                  const ofPoint &  anchorPos)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_L1("anchor = ", static_cast<int>(anchor));//####
-    OD_LOG_P1("anchorPos = ", &anchorPos);//####
+//    OD_LOG_OBJENTER();//####
+//    OD_LOG_L1("anchor = ", static_cast<int>(anchor));//####
+//    OD_LOG_P1("anchorPos = ", &anchorPos);//####
     ofPoint     first;
     ofPoint     second;
     ofRectangle outer(getShape());
@@ -243,15 +250,15 @@ void PortEntry::drawSourceAnchor(const AnchorSide anchor,
         ofLine(anchorPos, first);
         ofLine(anchorPos, second);
     }
-    OD_LOG_OBJEXIT();//####
+//    OD_LOG_OBJEXIT();//####
 } // PortEntry::drawSourceAnchor
 
 void PortEntry::drawTargetAnchor(const AnchorSide anchor,
                                  const ofPoint &  anchorPos)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_L1("anchor = ", static_cast<int>(anchor));//####
-    OD_LOG_P1("anchorPos = ", &anchorPos);//####
+//    OD_LOG_OBJENTER();//####
+//    OD_LOG_L1("anchor = ", static_cast<int>(anchor));//####
+//    OD_LOG_P1("anchorPos = ", &anchorPos);//####
     ofRectangle outer(getShape());
     ofPoint     first;
     ofPoint     second;
@@ -296,7 +303,7 @@ void PortEntry::drawTargetAnchor(const AnchorSide anchor,
         ofLine(anchorPos, first);
         ofLine(anchorPos, second);
     }
-    OD_LOG_OBJEXIT();//####
+//    OD_LOG_OBJEXIT();//####
 } // PortEntry::drawTargetAnchor
 
 bool PortEntry::mouseDragged(ofMouseEventArgs & args)
@@ -304,8 +311,38 @@ bool PortEntry::mouseDragged(ofMouseEventArgs & args)
     OD_LOG_OBJENTER();//####
     OD_LOG_P1("args = ", &args);//####
     OD_LOG_L1("args.button = ", args.button);//####
-    bool result = false;
+    bool result = inherited::mouseDragged(args);
 
+    if (! result)
+    {
+        ServiceViewerApp * owner = getParent()->getOwner();
+        
+        if (owner)
+        {
+            if (b.inside(args.x, args.y))
+            {
+                bool altWasActive = owner->altActive();
+                bool commandWasActive = owner->commandActive();
+                bool controlWasActive = owner->controlActive();
+                bool shiftWasActive = owner->shiftActive();
+                
+                OD_LOG_B4("altWasActive = ", altWasActive, "commandWasActive = ", commandWasActive,//####
+                          "controlWasActive = ", controlWasActive, "shiftWasActive = ", shiftWasActive);//####
+                if (OF_MOUSE_BUTTON_3 == args.button)
+                {
+                    result = true;
+                }
+                else if (controlWasActive)
+                {
+                    result = true;
+                }
+                else if (altWasActive || commandWasActive || shiftWasActive)
+                {
+                    result = true;
+                }
+            }
+        }
+    }
     OD_LOG_OBJEXIT_B(result);//####
     return result;
 } // PortEntry::mouseDragged
@@ -314,9 +351,8 @@ bool PortEntry::mouseMoved(ofMouseEventArgs & args)
 {
 //    OD_LOG_OBJENTER();//####
 //    OD_LOG_P1("args = ", &args);//####
-    bool result;
-
-    result = inherited::mouseMoved(args);
+    bool result = inherited::mouseMoved(args);
+    
 //    OD_LOG_OBJEXIT_B(result);//####
     return result;
 } // PortEntry::mouseMoved
@@ -326,9 +362,65 @@ bool PortEntry::mousePressed(ofMouseEventArgs & args)
     OD_LOG_OBJENTER();//####
     OD_LOG_P1("args = ", &args);//####
     OD_LOG_L1("args.button = ", args.button);//####
-    bool result = false;
-    bool specialClick = false;
-
+    bool result = inherited::mousePressed(args);
+    
+    if (! result)
+    {
+        ServiceViewerApp * owner = getParent()->getOwner();
+        
+        if (owner)
+        {
+            if (b.inside(args.x, args.y))
+            {
+                bool altWasActive = owner->altActive();
+                bool commandWasActive = owner->commandActive();
+                bool controlWasActive = owner->controlActive();
+                bool shiftWasActive = owner->shiftActive();
+                
+                OD_LOG_B4("altWasActive = ", altWasActive, "commandWasActive = ", commandWasActive,//####
+                          "controlWasActive = ", controlWasActive, "shiftWasActive = ", shiftWasActive);//####
+                if (OF_MOUSE_BUTTON_3 == args.button)
+                {
+                    string thePortKind;
+                    
+                    switch (MplusM::Utilities::GetPortKind(_portName.c_str()))
+                    {
+                        case MplusM::Utilities::kPortKindAdapter:
+                            thePortKind = "Adapter port ";
+                            break;
+                            
+                        case MplusM::Utilities::kPortKindClient:
+                            thePortKind = "Client port ";
+                            break;
+                            
+                        case MplusM::Utilities::kPortKindService:
+                            thePortKind = "Service port ";
+                            break;
+                            
+                        case MplusM::Utilities::kPortKindServiceRegistry:
+                            thePortKind = "Service Registry port ";
+                            break;
+                            
+                        case MplusM::Utilities::kPortKindStandard:
+                            thePortKind = "Standard port ";
+                            break;
+                            
+                    }
+                    ofSystemAlertDialog(thePortKind + _portName);
+                    result = true;
+                }
+                else if (controlWasActive)
+                {
+                    result = true;
+                }
+                else if (altWasActive || commandWasActive || shiftWasActive)
+                {
+                    owner->reportPortEntryClicked(this, altWasActive, commandWasActive, shiftWasActive);
+                    result = true;
+                }
+            }
+        }
+    }
     OD_LOG_OBJEXIT_B(result);//####
     return result;
 } // PortEntry::mousePressed
@@ -338,9 +430,38 @@ bool PortEntry::mouseReleased(ofMouseEventArgs & args)
     OD_LOG_OBJENTER();//####
     OD_LOG_P1("args = ", &args);//####
     OD_LOG_L1("args.button = ", args.button);//####
-    bool result = false;
-    bool specialClick = false;
+    bool result = inherited::mouseReleased(args);
 
+    if (! result)
+    {
+        ServiceViewerApp * owner = getParent()->getOwner();
+        
+        if (owner)
+        {
+            if (b.inside(args.x, args.y))
+            {
+                bool altWasActive = owner->altActive();
+                bool commandWasActive = owner->commandActive();
+                bool controlWasActive = owner->controlActive();
+                bool shiftWasActive = owner->shiftActive();
+                
+                OD_LOG_B4("altWasActive = ", altWasActive, "commandWasActive = ", commandWasActive,//####
+                          "controlWasActive = ", controlWasActive, "shiftWasActive = ", shiftWasActive);//####
+                if (OF_MOUSE_BUTTON_3 == args.button)
+                {
+                    result = true;
+                }
+                else if (controlWasActive)
+                {
+                    result = true;
+                }
+                else if (altWasActive || commandWasActive || shiftWasActive)
+                {
+                    result = true;
+                }
+            }
+        }
+    }
     OD_LOG_OBJEXIT_B(result);//####
     return result;
 } // PortEntry::mouseReleased
@@ -417,10 +538,10 @@ PortEntry * PortEntry::setup(string      label,
 
 ofPoint PortEntry::getCentre(void)
 {
-    OD_LOG_OBJENTER();//####
+//    OD_LOG_OBJENTER();//####
     ofRectangle outer(getShape());
     
-    OD_LOG_OBJEXIT();//####
+//    OD_LOG_OBJEXIT();//####
     return ofPoint(outer.x + (outer.width / 2), outer.y + (outer.height / 2));
 } // PortEntry::getCentre
 

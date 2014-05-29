@@ -66,8 +66,8 @@
 /*! @brief The scale factor to apply to get the lenght of the control vector. */
 const float kControlLengthScale = 0.25;
 
-/*! @brief The diameter of the central red dot displayed during movement. */
-const float kRedDotRadius = 6;
+/*! @brief The width and height of the marker displayed during movement. */
+const float kMarkerSide = 12;
 
 #if defined(__APPLE__)
 # pragma mark Local functions
@@ -111,10 +111,14 @@ ofColor ServiceEntity::connectionColor(0, 0, 255);
 # pragma mark Constructors and destructors
 #endif // defined(__APPLE__)
 
-ServiceEntity::ServiceEntity(ServiceViewerApp * owner) :
-            inherited(), _panel(owner), _owner(owner), _drawDot(false), _selected(false)
+ServiceEntity::ServiceEntity(const PortPanel::EntityKind kind,
+                             const string                description,
+                             ServiceViewerApp *          owner) :
+            inherited(), _panel(kind, description, owner), _drawConnectMarker(false), _drawDisconnectMarker(false),
+            _drawMoveMarker(false), _selected(false)
 {
     OD_LOG_ENTER();//####
+    OD_LOG_S1("description = ", description.c_str());//####
     OD_LOG_P1("owner = ", owner);//####
 	_thisConnectionColor = connectionColor;
     _thisConnectionWidth = connectionWidth;
@@ -135,12 +139,31 @@ void ServiceEntity::draw(void)
 {
     OD_LOG_OBJENTER();//####
     _panel.draw();
-    if (_drawDot)
+    if (_drawConnectMarker)
     {
-        ofPoint dotPos(_panel.getWidth() / 2, _panel.getHeader());
+        ofPoint markerPos(_panel.getWidth() / 2, _panel.getHeader());
         
-        ofSetColor(ofColor::red);
-        ofCircle(dotPos + getShape().getTopLeft(), kRedDotRadius);
+        ofSetColor(ofColor::yellow);
+        ofFill();
+        ofCircle(markerPos + getShape().getTopLeft(), kMarkerSide / 2);
+    }
+    else if (_drawDisconnectMarker)
+    {
+        ofPoint markerPos(_panel.getWidth() / 2, _panel.getHeader());
+        
+        ofSetColor(ofColor::yellow);
+        ofNoFill();
+        ofSetLineWidth(2);
+        ofCircle(markerPos + getShape().getTopLeft(), kMarkerSide / 2);
+    }
+    else if (_drawMoveMarker)
+    {
+        ofPoint markerPos(_panel.getWidth() / 2, _panel.getHeader());
+        
+        ofSetColor(ofColor::yellow);
+        ofFill();
+        markerPos += getShape().getTopLeft() - ofPoint(kMarkerSide / 2, kMarkerSide / 2);
+        ofRect(markerPos, kMarkerSide, kMarkerSide);
     }
     ofSetColor(_thisConnectionColor);
     for (int ii = 0, mm = _panel.getNumPorts(); mm > ii; ++ii)
@@ -183,15 +206,35 @@ void ServiceEntity::handlePositionChange(void)
 {
     OD_LOG_OBJENTER();//####
     // Here we re-adjust any lines attached to the entity.
-    _selected = _drawDot = true;
+    _selected = _drawMoveMarker = true;
     OD_LOG_OBJEXIT();//####
 } // ServiceEntity::handlePositionChange
+
+bool ServiceEntity::hasPort(const PortEntry * aPort)
+{
+    OD_LOG_OBJENTER();//####
+    bool result = false;
+    
+    for (int ii = 0, mm = _panel.getNumPorts(); mm > ii; ++ii)
+    {
+        PortEntry * anEntry = _panel.getPort(ii);
+        
+        if (aPort == anEntry)
+        {
+            result = true;
+            break;
+        }
+        
+    }
+    OD_LOG_OBJEXIT_B(result);//####
+    return result;
+} // ServiceEntity::hasPort
 
 void ServiceEntity::positionChangeComplete(void)
 {
     OD_LOG_OBJENTER();//####
-    _owner->updateEntityList(this);
-    _selected = _drawDot = false;
+    _panel.getOwner()->updateEntityList(this);
+    _selected = _drawMoveMarker = false;
     // something to do??
     OD_LOG_OBJEXIT();//####
 } // ServiceEntity::positionChangeComplete
