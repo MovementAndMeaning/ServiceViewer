@@ -40,6 +40,7 @@
 //--------------------------------------------------------------------------------------
 
 #include "PortEntry.h"
+#include "ServiceViewerApp.h"
 #include "Utilities.h"
 
 //#include "ODEnableLogging.h"
@@ -297,6 +298,52 @@ void PortEntry::drawTargetAnchor(const AnchorSide anchor,
     }
     OD_LOG_OBJEXIT();//####
 } // PortEntry::drawTargetAnchor
+
+bool PortEntry::mouseDragged(ofMouseEventArgs & args)
+{
+    OD_LOG_OBJENTER();//####
+    OD_LOG_P1("args = ", &args);//####
+    OD_LOG_L1("args.button = ", args.button);//####
+    bool result = false;
+
+    OD_LOG_OBJEXIT_B(result);//####
+    return result;
+} // PortEntry::mouseDragged
+
+bool PortEntry::mouseMoved(ofMouseEventArgs & args)
+{
+//    OD_LOG_OBJENTER();//####
+//    OD_LOG_P1("args = ", &args);//####
+    bool result;
+
+    result = inherited::mouseMoved(args);
+//    OD_LOG_OBJEXIT_B(result);//####
+    return result;
+} // PortEntry::mouseMoved
+
+bool PortEntry::mousePressed(ofMouseEventArgs & args)
+{
+    OD_LOG_OBJENTER();//####
+    OD_LOG_P1("args = ", &args);//####
+    OD_LOG_L1("args.button = ", args.button);//####
+    bool result = false;
+    bool specialClick = false;
+
+    OD_LOG_OBJEXIT_B(result);//####
+    return result;
+} // PortEntry::mousePressed
+
+bool PortEntry::mouseReleased(ofMouseEventArgs & args)
+{
+    OD_LOG_OBJENTER();//####
+    OD_LOG_P1("args = ", &args);//####
+    OD_LOG_L1("args.button = ", args.button);//####
+    bool result = false;
+    bool specialClick = false;
+
+    OD_LOG_OBJEXIT_B(result);//####
+    return result;
+} // PortEntry::mouseReleased
 
 void PortEntry::removeInputConnection(PortEntry * other)
 {

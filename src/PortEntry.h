@@ -59,6 +59,8 @@
 
 //# define SUPPORT_BOTTOM_DIAGONALS_ /* Allow connections to the bottom corners of the port entry. */
 
+class ServiceViewerApp;
+
 /*! @brief A GUI element to represent ports. */
 class PortEntry : public LabelWithShadow
 {
@@ -208,6 +210,26 @@ public:
         return (kPortUsageService == _usage);
     } // isService
     
+    /*! @brief Process a mouse-dragged event.
+     @param args The attributes of the event.
+     @returns @c true if the event was processed and @c false if it can be further propagated. */
+	virtual bool mouseDragged(ofMouseEventArgs & args);
+
+    /*! @brief Process a mouse-moved event.
+     @param args The attributes of the event.
+     @returns @c true if the event was processed and @c false if it can be further propagated. */
+	virtual bool mouseMoved(ofMouseEventArgs & args);
+
+    /*! @brief Process a mouse-pressed event.
+     @param args The attributes of the event.
+     @returns @c true if the event was processed and @c false if it can be further propagated. */
+	virtual bool mousePressed(ofMouseEventArgs & args);
+
+    /*! @brief Process a mouse-released event.
+     @param args The attributes of the event.
+     @returns @c true if the event was processed and @c false if it can be further propagated. */
+	virtual bool mouseReleased(ofMouseEventArgs & args);
+
     /*! @brief Remove an input connection from a port.
      @param other The port that is to be disconnected. */
     void removeInputConnection(PortEntry * other);

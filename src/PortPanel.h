@@ -133,7 +133,13 @@ public:
     {
         return inherited::getNumControls();
     } // getNumPorts
-    
+
+    inline ServiceViewerApp * getOwner(void)
+    const
+    {
+        return _owner;
+    } // getOwner
+
     /*! @brief Returns a port by index.
      @param num The zero-origin index of the port.
      @returns A port or @c NULL if the index is out of range. */
