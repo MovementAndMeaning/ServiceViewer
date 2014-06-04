@@ -44,6 +44,10 @@
 
 # include "LabelWithShadow.h"
 
+// Note that openFrameworks defines a macro called 'check' :( which messes up other header files.
+# undef check
+# include "M+MCommon.h"
+
 # include <set>
 
 # if defined(__APPLE__)
@@ -110,8 +114,14 @@ public:
         kPortUsageOther
     }; // PortUsage
     
+    struct PortConnection
+    {
+        PortEntry *                 _otherPort;
+        MplusM::Common::ChannelMode _connectionMode;
+    }; // PortConnection
+    
     /*! @brief The set of connections to the port. */
-    typedef set<PortEntry *> Connections;
+    typedef vector<PortConnection> Connections;
 
     /*! @brief The constructor.
      @param parent The GUI element containing this element.
@@ -125,12 +135,16 @@ public:
 	virtual ~PortEntry(void);
     
     /*! @brief Add an input connection to the port.
-     @param other The port that is to be connected. */
-    void addInputConnection(PortEntry * other);
+     @param other The port that is to be connected.
+     @param mode The mode of the connection. */
+    void addInputConnection(PortEntry *                 other,
+                            MplusM::Common::ChannelMode mode);
     
     /*! @brief Add an output connection to the port.
-     @param other The port that is to be connected. */
-    void addOutputConnection(PortEntry * other);
+     @param other The port that is to be connected.
+     @param mode The mode of the connection. */
+    void addOutputConnection(PortEntry *                 other,
+                             MplusM::Common::ChannelMode mode);
     
     /*! @brief Determine the anchor point that is the minimum distance from a given point.
      @param result The coordinates of the anchor point.

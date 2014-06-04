@@ -210,6 +210,22 @@ public:
     virtual void windowResized(int w,
                                int h);
     
+    /*! @brief Return the color to be used for markers.
+     @returns The color to be used for markers. */
+    static ofColor getMarkerColor(void);
+    
+    /*! @brief Return the color to be used for non-TCP/non-UDP connections.
+     @returns The color to be used for non-TCP/non-UDP connection. */
+    static ofColor getOtherConnectionColor(void);
+
+    /*! @brief Return the color to be used for TCP connections.
+     @returns The color to be used for TCP connections. */
+    static ofColor getTcpConnectionColor(void);
+    
+    /*! @brief Return the color to be used for UDP connections.
+     @returns The color to be used for UDP connections. */
+    static ofColor getUdpConnectionColor(void);
+    
 private:
     
     /*! @brief The class that this class is derived from. */

@@ -100,9 +100,9 @@ static void addPortConnections(ServiceViewerApp *                    theApp,
     for (size_t ii = 0, mm = detectedPorts.size(); mm > ii; ++ii)
     {
         const MplusM::Utilities::PortDescriptor & aDescriptor = detectedPorts[ii];
-        MplusM::Common::StringVector              inputs;
-        MplusM::Common::StringVector              outputs;
-        PortEntry *                               thisPort = theApp->findPort(aDescriptor._portName);
+        MplusM::Common::ChannelVector inputs;
+        MplusM::Common::ChannelVector outputs;
+        PortEntry *                   thisPort = theApp->findPort(aDescriptor._portName);
         
         if (thisPort)
         {
@@ -110,12 +110,14 @@ static void addPortConnections(ServiceViewerApp *                    theApp,
                                                      MplusM::Utilities::kInputAndOutputOutput, true);
             for (int jj = 0, mm = outputs.size(); mm > jj; ++jj)
             {
-                PortEntry * otherPort = theApp->findPort(outputs[jj]);
+                MplusM::Common::ChannelDescription aConnection = outputs[jj];
+                PortEntry *                        otherPort = theApp->findPort(aConnection._portName);
                 
                 if (otherPort)
                 {
-                    thisPort->addOutputConnection(otherPort);
-                    otherPort->addInputConnection(thisPort);
+                    // need to use _portMode!!!
+                    thisPort->addOutputConnection(otherPort, aConnection._portMode);
+                    otherPort->addInputConnection(thisPort, aConnection._portMode);
                 }
             }
         }
@@ -603,7 +605,7 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort,
                 }
             }
         }
-        else if (shiftIsActive)
+        else if (altIsActive)
         {
             // Process connection add requests.
             PortEntry::PortDirection direction = aPort->getDirection();
@@ -622,10 +624,13 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort,
                         if (firstEntity && secondEntity)
                         {
                             if (MplusM::Utilities::AddConnection(_firstAddPort->getPortName().c_str(),
-                                                                 aPort->getPortName().c_str()))
+                                                                 aPort->getPortName().c_str(), shiftIsActive))
                             {
-                                _firstAddPort->addOutputConnection(aPort);
-                                aPort->addInputConnection(_firstAddPort);
+                                MplusM::Common::ChannelMode mode = (shiftIsActive ? MplusM::Common::kChannelModeUDP :
+                                                                    MplusM::Common::kChannelModeTCP);
+                                
+                                _firstAddPort->addOutputConnection(aPort, mode);
+                                aPort->addInputConnection(_firstAddPort, mode);
                             }
                         }
                     }
@@ -669,7 +674,7 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort,
                 _firstRemovePort = NULL;
             }
         }
-        else if (shiftIsActive)
+        else if (altIsActive)
         {
             // Process connaction add requests.
             if (_firstAddPort)
@@ -781,6 +786,26 @@ void ServiceViewerApp::windowResized(int w,
 #if defined(__APPLE__)
 # pragma mark Accessors
 #endif // defined(__APPLE__)
+
+ofColor ServiceViewerApp::getMarkerColor(void)
+{
+    return ofColor::yellow;
+} // ServiceViewerApp::getMarkerColor
+
+ofColor ServiceViewerApp::getOtherConnectionColor(void)
+{
+    return ofColor::orange;
+} // ServiceViewerApp::getOtherConnectionColor
+
+ofColor ServiceViewerApp::getTcpConnectionColor(void)
+{
+    return ofColor::teal;
+} // ServiceViewerApp::getTcpConnectionColor
+
+ofColor ServiceViewerApp::getUdpConnectionColor(void)
+{
+    return ofColor::purple;
+} // ServiceViewerApp::getUdpConnectionColor
 
 #if defined(__APPLE__)
 # pragma mark Global functions

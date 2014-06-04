@@ -108,26 +108,66 @@ PortEntry::~PortEntry(void)
 
 /*! @brief Add an input connection to the port.
  @param other The port that is to be connected. */
-void PortEntry::addInputConnection(PortEntry * other)
+void PortEntry::addInputConnection(PortEntry *                 other,
+                                   MplusM::Common::ChannelMode mode)
 {
     OD_LOG_OBJENTER();//####
     OD_LOG_P1("other = ", other);//####
     if (other)
     {
-        _inputConnections.insert(other);
+        bool canAdd = true;
+        
+        for (Connections::const_iterator walker(_inputConnections.begin()); _inputConnections.end() != walker;
+             ++walker)
+        {
+            if (walker->_otherPort == other)
+            {
+                canAdd = false;
+                break;
+            }
+            
+        }
+        if (canAdd)
+        {
+            PortConnection newConnection;
+            
+            newConnection._otherPort = other;
+            newConnection._connectionMode = mode;
+            _inputConnections.push_back(newConnection);
+        }
     }
     OD_LOG_OBJEXIT();//####
 } // PortEntry::addInputConnection
 
 /*! @brief Add an output connection to the port.
  @param other The port that is to be connected. */
-void PortEntry::addOutputConnection(PortEntry * other)
+void PortEntry::addOutputConnection(PortEntry *                 other,
+                                    MplusM::Common::ChannelMode mode)
 {
     OD_LOG_OBJENTER();//####
     OD_LOG_P1("other = ", other);//####
     if (other)
     {
-        _outputConnections.insert(other);
+        bool canAdd = true;
+        
+        for (Connections::const_iterator walker(_outputConnections.begin()); _outputConnections.end() != walker;
+             ++walker)
+        {
+            if (walker->_otherPort == other)
+            {
+                canAdd = false;
+                break;
+            }
+            
+        }
+        if (canAdd)
+        {
+            PortConnection newConnection;
+            
+            newConnection._otherPort = other;
+            newConnection._connectionMode = mode;
+            _outputConnections.push_back(newConnection);
+        }
     }
     OD_LOG_OBJEXIT();//####
 } // PortEntry::addOutputConnection
@@ -472,11 +512,19 @@ void PortEntry::removeInputConnection(PortEntry * other)
     OD_LOG_P1("other = ", other);//####
     if (other)
     {
-        Connections::iterator match(_inputConnections.find(other));
+        Connections::iterator walker(_inputConnections.begin());
         
-        if (_inputConnections.end() != match)
+        for ( ; _inputConnections.end() != walker; ++walker)
         {
-            _inputConnections.erase(match);
+            if (walker->_otherPort == other)
+            {
+                break;
+            }
+            
+        }
+        if (_inputConnections.end() != walker)
+        {
+            _inputConnections.erase(walker);
         }
     }
     OD_LOG_OBJEXIT();//####
@@ -488,11 +536,19 @@ void PortEntry::removeOutputConnection(PortEntry * other)
     OD_LOG_P1("other = ", other);//####
     if (other)
     {
-        Connections::iterator match(_outputConnections.find(other));
+        Connections::iterator walker(_outputConnections.begin());
         
-        if (_outputConnections.end() != match)
+        for ( ; _outputConnections.end() != walker; ++walker)
         {
-            _outputConnections.erase(match);
+            if (walker->_otherPort == other)
+            {
+                break;
+            }
+            
+        }
+        if (_outputConnections.end() != walker)
+        {
+            _outputConnections.erase(walker);
         }
     }
     OD_LOG_OBJEXIT();//####
@@ -525,6 +581,7 @@ PortEntry * PortEntry::setup(string      label,
         default:
             tag = "Unk";
             break;
+            
     }
     PortEntry * result = static_cast<PortEntry *>(inherited::setup(tag, label, width, height));
     

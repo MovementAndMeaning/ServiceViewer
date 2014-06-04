@@ -109,22 +109,6 @@ public:
     /*! @brief Display the entity. */
     void draw(void);
     
-    /*! @brief Return the color used for connections from this entity.
-     @returns The color used for connections from this entity. */
-    inline ofColor getConnectionColor(void)
-    const
-    {
-        return _thisConnectionColor;
-    } // getConnectionColor
-    
-    /*! @brief Return the width of connections from this entity.
-     @returns The width of connections from this entity. */
-    inline float getConnectionWidth(void)
-    const
-    {
-        return _thisConnectionWidth;
-    } // getConnectionWidth
-
     /*! @brief Return the name of the entity.
      @returns The name of the entity. */
     inline string getName(void)
@@ -164,20 +148,6 @@ public:
         _selected = true;
     } // select
     
-    /*! @brief Set the color used for connections from this entity.
-     @param color The color to be used for connections from this entity. */
-    inline void setConnectionColor(const ofColor & color)
-    {
-        _thisConnectionColor = color;
-    } // setConnectionColor
-    
-    /*! @brief Set the width of connections from this entity.
-     @param width The width of connections from this entity. */
-    inline void setConnectionWidth(const float width)
-    {
-        _thisConnectionWidth = width;
-    } // setConnectionWidth
-    
     /*! @brief Start displaying the connect marker. */
     inline void setConnectMarker(void)
     {
@@ -207,47 +177,7 @@ public:
                const float xx = 10,
                const float yy = 10);
 
-    /*! @brief Return the default color for connections from entities.
-     @returns The default color for connections from entities. */
-	static ofColor getDefaultConnectionColor(void)
-    {
-        return connectionColor;
-    } // getDefaultConnectionColor
-    
-    /*! @brief Return the default width for connections from entities.
-     @returns The default width for connections from entities. */
-	static float getDefaultConnectionWidth(void)
-    {
-        return connectionWidth;
-    } // getDefaultConnectionWidth
-    
-    /*! @brief Set the default color for connections from entities.
-     @param color The default color for connections from entities. */
-	static void setDefaultConnectionColor(const ofColor & color)
-    {
-        connectionColor = color;
-    } // setDefaultConnectionColor
-        
-    /*! @brief Set the default width for connections from entities.
-     @param width The default width for connections from entities. */
-	static void setDefaultConnectionWidth(const float width)
-    {
-        connectionWidth = width;
-    } // setDefaultConnectionWidth
-    
 protected:
-    
-    /*! @brief The default connection color. */
-	static ofColor connectionColor;
-    
-    /*! @brief The default connection width. */
-    static float   connectionWidth;
-    
-    /*! @brief The connection color for this entity. */
-	ofColor _thisConnectionColor;
-    
-    /*! @brief The connection width for this entity. */
-    float   _thisConnectionWidth;
     
 private:
     

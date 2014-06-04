@@ -46,6 +46,10 @@
 //#include "ODEnableLogging.h"
 #include "ODLogging.h"
 
+// Note that openFrameworks defines a macro called 'check' :( which messes up other header files.
+#undef check
+#include "M+MUtilities.h"
+
 #include "ofGraphics.h"
 
 #if defined(__APPLE__)
@@ -64,10 +68,16 @@
 #endif // defined(__APPLE__)
 
 /*! @brief The scale factor to apply to get the lenght of the control vector. */
-const float kControlLengthScale = 0.25;
+static const float kControlLengthScale = 0.25;
 
 /*! @brief The width and height of the marker displayed during movement. */
-const float kMarkerSide = 12;
+static const float kMarkerSide = 12;
+
+/*! @brief The line width for a normal connection. */
+static const float kNormalConnectionWidth = 2;
+
+/*! @brief The line width for a normal connection. */
+static const float kServiceConnectionWidth = (2 * kNormalConnectionWidth);
 
 #if defined(__APPLE__)
 # pragma mark Local functions
@@ -103,10 +113,6 @@ static void drawBezier(const ofPoint & startPoint,
 # pragma mark Class methods
 #endif // defined(__APPLE__)
 
-float ServiceEntity::connectionWidth(2);
-
-ofColor ServiceEntity::connectionColor(0, 0, 255);
-
 #if defined(__APPLE__)
 # pragma mark Constructors and destructors
 #endif // defined(__APPLE__)
@@ -120,8 +126,6 @@ ServiceEntity::ServiceEntity(const PortPanel::EntityKind kind,
     OD_LOG_ENTER();//####
     OD_LOG_S1("description = ", description.c_str());//####
     OD_LOG_P1("owner = ", owner);//####
-	_thisConnectionColor = connectionColor;
-    _thisConnectionWidth = connectionWidth;
     OD_LOG_EXIT_P(this);//####
 } // ServiceEntity::ServiceEntity
 
@@ -143,7 +147,7 @@ void ServiceEntity::draw(void)
     {
         ofPoint markerPos(_panel.getWidth() / 2, _panel.getHeader());
         
-        ofSetColor(ofColor::yellow);
+        ofSetColor(ServiceViewerApp::getMarkerColor());
         ofFill();
         ofCircle(markerPos + getShape().getTopLeft(), kMarkerSide / 2);
     }
@@ -151,7 +155,7 @@ void ServiceEntity::draw(void)
     {
         ofPoint markerPos(_panel.getWidth() / 2, _panel.getHeader());
         
-        ofSetColor(ofColor::yellow);
+        ofSetColor(ServiceViewerApp::getMarkerColor());
         ofNoFill();
         ofSetLineWidth(2);
         ofCircle(markerPos + getShape().getTopLeft(), kMarkerSide / 2);
@@ -160,12 +164,11 @@ void ServiceEntity::draw(void)
     {
         ofPoint markerPos(_panel.getWidth() / 2, _panel.getHeader());
         
-        ofSetColor(ofColor::yellow);
+        ofSetColor(ServiceViewerApp::getMarkerColor());
         ofFill();
         markerPos += getShape().getTopLeft() - ofPoint(kMarkerSide / 2, kMarkerSide / 2);
         ofRect(markerPos, kMarkerSide, kMarkerSide);
     }
-    ofSetColor(_thisConnectionColor);
     for (int ii = 0, mm = _panel.getNumPorts(); mm > ii; ++ii)
     {
         PortEntry * anEntry = _panel.getPort(ii);
@@ -175,22 +178,38 @@ void ServiceEntity::draw(void)
             ofPoint                        aCentre(anEntry->getCentre());
             const PortEntry::Connections & connex = anEntry->getOutputConnections();
             
-            for (PortEntry::Connections::iterator walker(connex.begin()); connex.end() != walker; ++walker)
+            for (PortEntry::Connections::const_iterator walker(connex.begin()); connex.end() != walker; ++walker)
             {
-                PortEntry *           otherEntry = *walker;
-                ofPoint               otherCentre(otherEntry->getCentre());
-                ofPoint               fromHere;
-                PortEntry::AnchorSide anchorHere = anEntry->calculateClosestAnchor(fromHere, true, otherCentre);
-                ofPoint               toThere;
-                PortEntry::AnchorSide anchorThere = otherEntry->calculateClosestAnchor(toThere, false, aCentre);
+                PortEntry *                 otherEntry = walker->_otherPort;
+                ofPoint                     otherCentre(otherEntry->getCentre());
+                ofPoint                     fromHere;
+                PortEntry::AnchorSide       anchorHere = anEntry->calculateClosestAnchor(fromHere, true, otherCentre);
+                ofPoint                     toThere;
+                PortEntry::AnchorSide       anchorThere = otherEntry->calculateClosestAnchor(toThere, false, aCentre);
+                MplusM::Common::ChannelMode mode = walker->_connectionMode;
                 
                 if (otherEntry->isService())
                 {
-                    ofSetLineWidth(2 * _thisConnectionWidth);
+                    ofSetLineWidth(kServiceConnectionWidth);
                 }
                 else
                 {
-                    ofSetLineWidth(_thisConnectionWidth);
+                    ofSetLineWidth(kNormalConnectionWidth);
+                }
+                switch (mode)
+                {
+                    case MplusM::Common::kChannelModeTCP:
+                        ofSetColor(ServiceViewerApp::getTcpConnectionColor());
+                        break;
+                        
+                    case MplusM::Common::kChannelModeUDP:
+                        ofSetColor(ServiceViewerApp::getUdpConnectionColor());
+                        break;
+                        
+                    default:
+                        ofSetColor(ServiceViewerApp::getOtherConnectionColor());
+                        break;
+                        
                 }
                 drawBezier(fromHere, toThere, aCentre, otherCentre);
                 ofSetLineWidth(1);
