@@ -40,7 +40,6 @@
 //--------------------------------------------------------------------------------------
 
 #include "PortEntry.h"
-#include "PortPanel.h"
 #include "ServiceEntity.h"
 #include "ServiceViewerApp.h"
 #include "Utilities.h"

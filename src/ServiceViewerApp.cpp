@@ -40,7 +40,6 @@
 //--------------------------------------------------------------------------------------
 
 #include "ServiceViewerApp.h"
-#include "PortEntry.h"
 #include "ServiceEntity.h"
 
 //#include "ODEnableLogging.h"
@@ -50,6 +49,7 @@
 #include "ofBitmapFont.h"
 #include "ofGraphics.h"
 #include "ofMesh.h"
+            #include "ofSystemUtils.h"
 
 // Note that openFrameworks defines a macro called 'check' :( which messes up other header files.
 #undef check
@@ -100,9 +100,9 @@ static void addPortConnections(ServiceViewerApp *                    theApp,
     for (size_t ii = 0, mm = detectedPorts.size(); mm > ii; ++ii)
     {
         const MplusM::Utilities::PortDescriptor & aDescriptor = detectedPorts[ii];
-        MplusM::Common::ChannelVector inputs;
-        MplusM::Common::ChannelVector outputs;
-        PortEntry *                   thisPort = theApp->findPort(aDescriptor._portName);
+        MplusM::Common::ChannelVector             inputs;
+        MplusM::Common::ChannelVector             outputs;
+        PortEntry *                               thisPort = theApp->findPort(aDescriptor._portName);
         
         if (thisPort)
         {
@@ -115,7 +115,6 @@ static void addPortConnections(ServiceViewerApp *                    theApp,
                 
                 if (otherPort)
                 {
-                    // need to use _portMode!!!
                     thisPort->addOutputConnection(otherPort, aConnection._portMode);
                     otherPort->addInputConnection(thisPort, aConnection._portMode);
                 }
@@ -244,7 +243,8 @@ static void addServices(ServiceViewerApp *                   theApp,
 
 ServiceViewerApp::ServiceViewerApp(void) :
             inherited(), _firstAddPort(NULL), _firstRemovePort(NULL), _altActive(false), _commandActive(false),
-            _controlActive(false), _networkAvailable(false), _registryAvailable(false), _shiftActive(false)
+            _controlActive(false), _networkAvailable(false), _registryAvailable(false),
+            _shiftActive(false)
 {
     OD_LOG_ENTER();//####
     OD_LOG_EXIT_P(this);//####
@@ -557,11 +557,12 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort,
     
     if (aPort)
     {
+        PortEntry::PortDirection direction = aPort->getDirection();
+        PortEntry::PortUsage     usage = aPort->getUsage();
+        
         if (commandIsActive)
         {
             // Process connection delete requests.
-            PortEntry::PortDirection direction = aPort->getDirection();
-            
             if (_firstRemovePort)
             {
                 ServiceEntity * firstEntity = findEntityForPort(_firstRemovePort);
@@ -593,7 +594,7 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort,
             else
             {
                 // Check if we can start from here.
-                if (PortEntry::kPortDirectionInput != direction)
+                if ((PortEntry::kPortDirectionInput != direction) && (PortEntry::kPortUsageClient != usage))
                 {
                     ServiceEntity * entity = findEntityForPort(aPort);
                     
@@ -608,8 +609,6 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort,
         else if (altIsActive)
         {
             // Process connection add requests.
-            PortEntry::PortDirection direction = aPort->getDirection();
-            
             if (_firstAddPort)
             {
                 // Check if we can end here.
@@ -644,7 +643,7 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort,
             else
             {
                 // Check if we can start from here.
-                if (PortEntry::kPortDirectionInput != direction)
+                if ((PortEntry::kPortDirectionInput != direction) && (PortEntry::kPortUsageClient != usage))
                 {
                     ServiceEntity * entity = findEntityForPort(aPort);
                     
@@ -655,6 +654,10 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort,
                     }
                 }
             }
+        }
+        else
+        {
+            
         }
     }
     else

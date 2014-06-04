@@ -223,6 +223,14 @@ public:
         return _portName;
     } // getPortName
     
+    /*! @brief Return the usage of the port entry.
+     @returns The usage of the port entry. */
+    PortUsage getUsage(void)
+    const
+    {
+        return _usage;
+    } // getUsage
+    
     /*! @brief Returns @c true if the port entry is the bottom-most (last) port entry in a panel and @c false otherwise.
      @returns @c true if the port is the last port entry in a panel and @c false otherwise. */
     inline bool isLastPort(void)

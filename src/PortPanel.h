@@ -76,12 +76,16 @@ public:
     }; // EntityKind
     
     /*! @brief The constructor.
+     @param kind The kind of entity.
+     @param description A description of the entity.
      @param owner The application object that manages this panel. */
 	PortPanel(const EntityKind   kind,
               const string       description,
               ServiceViewerApp * owner);
     
     /*! @brief The constructor.
+     @param kind The kind of entity.
+     @param description A description of the entity.
      @param owner The application object that manages this panel.
      @param parameters The set of named parameters for the panel.
      @param filename The settings file for the panel.
