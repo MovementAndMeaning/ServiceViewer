@@ -211,6 +211,16 @@ private:
     /*! @brief @c true if the entity is selected and @c false otherwise. */
     bool      _selected;
     
+# if defined(__APPLE__)
+#  pragma clang diagnostic push
+#  pragma clang diagnostic ignored "-Wunused-private-field"
+# endif // defined(__APPLE__)
+    /*! @brief Filler to pad to alignment boundary */
+    char      _filler[4];
+# if defined(__APPLE__)
+#  pragma clang diagnostic pop
+# endif // defined(__APPLE__)
+    
 }; // ServiceEntity
 
 #endif // ! defined(__ServiceViewer__ServiceEntity__)

@@ -49,10 +49,10 @@
 #include "ofBitmapFont.h"
 #include "ofGraphics.h"
 #include "ofMesh.h"
-            #include "ofSystemUtils.h"
 
 // Note that openFrameworks defines a macro called 'check' :( which messes up other header files.
 #undef check
+#include "M+MAdapterChannel.h"
 #include "M+MUtilities.h"
 
 #if defined(__APPLE__)
@@ -66,6 +66,7 @@
 # pragma clang diagnostic ignored "-Wweak-vtables"
 #endif // defined(__APPLE__)
 #include <yarp/os/Network.h>
+#include <yarp/os/Port.h>
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
@@ -84,6 +85,13 @@
 #if defined(__APPLE__)
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
+
+/*! @brief @c true if the port direction resources are available. */
+static bool                             lPortsValid = false;
+/*! @brief The port used to determine if a port being checked can be used as an output. */
+static MplusM::Common::AdapterChannel * lInputOnlyPort = NULL;
+/*! @brief The port used to determine if a port being checked can be used as an input. */
+static MplusM::Common::AdapterChannel * lOutputOnlyPort = NULL;
 
 #if defined(__APPLE__)
 # pragma mark Local functions
@@ -169,6 +177,97 @@ static void addPortsWithAssociates(ServiceViewerApp *                    theApp,
     OD_LOG_EXIT();//####
 } // addPortsWithAssociates
 
+/*! @brief Create the resources needed to determine port directions. */
+static void createDirectionTestPorts(void)
+{
+    OD_LOG_ENTER();//####
+    yarp::os::ConstString inName(MplusM::Common::GetRandomChannelName("/checkdirection/channel_"));
+    yarp::os::ConstString outName(MplusM::Common::GetRandomChannelName("/checkdirection/channel_"));
+    
+    lInputOnlyPort = new MplusM::Common::AdapterChannel(false);
+    if (lInputOnlyPort)
+    {
+        lInputOnlyPort->setInputMode(true);
+        lInputOnlyPort->setOutputMode(false);
+        lOutputOnlyPort = new MplusM::Common::AdapterChannel(true);
+        if (lOutputOnlyPort)
+        {
+            lOutputOnlyPort->setInputMode(false);
+            lOutputOnlyPort->setOutputMode(true);
+            if (lInputOnlyPort->openWithRetries(inName) && lOutputOnlyPort->openWithRetries(outName))
+            {
+                lPortsValid = true;
+            }
+        }
+    }
+    OD_LOG_EXIT();//####
+} // createDirectionTestPorts
+
+/*! @brief Release the resources used to determine port directions. */
+static void destroyDirectionTestPorts(void)
+{
+    OD_LOG_ENTER();//####
+    if (lInputOnlyPort)
+    {
+#if defined(MpM_DO_EXPLICIT_CLOSE)
+        lInputOnlyPort->close();
+#endif // defined(MpM_DO_EXPLICIT_CLOSE)
+        MplusM::Common::AdapterChannel::RelinquishChannel(lInputOnlyPort);
+    }
+    if (lOutputOnlyPort)
+    {
+#if defined(MpM_DO_EXPLICIT_CLOSE)
+        lOutputOnlyPort->close();
+#endif // defined(MpM_DO_EXPLICIT_CLOSE)
+        MplusM::Common::AdapterChannel::RelinquishChannel(lOutputOnlyPort);
+    }
+    lPortsValid = false;
+    OD_LOG_EXIT();//####
+} // destroyDirectionTestPorts
+
+/*! @brief Determine whether a port can be used for input and/or output.
+ @param portName The name of the port to check.
+ @returns The allowed directions for the port. */
+static PortEntry::PortDirection determinePortDirection(const yarp::os::ConstString & portName)
+{
+    OD_LOG_ENTER();//####
+    OD_LOG_S1("portName = ", portName.c_str());//####
+    PortEntry::PortDirection result = PortEntry::kPortDirectionUnknown;
+    
+    if (lPortsValid)
+    {
+        bool canDoInput = false;
+        bool canDoOutput = false;
+        
+        if (MplusM::Common::NetworkConnectWithRetries(lOutputOnlyPort->getName(), portName))
+        {
+            canDoInput = true;
+            if (! MplusM::Common::NetworkDisconnectWithRetries(lOutputOnlyPort->getName(), portName))
+            {
+                OD_LOG("(! MplusM::Common::NetworkDisconnectWithRetries(lOutputOnlyPort->getName(), portName))");//####
+            }
+        }
+        if (MplusM::Common::NetworkConnectWithRetries(portName, lInputOnlyPort->getName()))
+        {
+            canDoOutput = true;
+            if (! MplusM::Common::NetworkDisconnectWithRetries(portName, lInputOnlyPort->getName()))
+            {
+                OD_LOG("(! MplusM::Common::NetworkDisconnectWithRetries(portName, lInputOnlyPort->getName()))");//####
+            }
+        }
+        if (canDoInput)
+        {
+            result = (canDoOutput ? PortEntry::kPortDirectionInputOutput : PortEntry::kPortDirectionInput);
+        }
+        else if (canDoOutput)
+        {
+            result = PortEntry::kPortDirectionOutput;
+        }
+    }
+    OD_LOG_EXIT();//####
+    return result;
+} // determinePortDirection
+
 /*! @brief Add regular YARP ports as distinct entities.
  @param theApp The application object.
  @param detectedPorts The set of detected YARP ports. */
@@ -177,6 +276,7 @@ static void addRegularPortEntities(ServiceViewerApp *                    theApp,
 {
     OD_LOG_ENTER();//####
     OD_LOG_P2("theApp = ", theApp, "detectedPorts = ", &detectedPorts);//####
+    createDirectionTestPorts();
     for (size_t ii = 0, mm = detectedPorts.size(); mm > ii; ++ii)
     {
         const MplusM::Utilities::PortDescriptor & aDescriptor = detectedPorts[ii];
@@ -186,10 +286,12 @@ static void addRegularPortEntities(ServiceViewerApp *                    theApp,
             ServiceEntity * anEntity = new ServiceEntity(PortPanel::kEntityKindOther, "", theApp);
             
             anEntity->setup((aDescriptor._portIpAddress + ":" + aDescriptor._portPortNumber).c_str());
-            anEntity->addPort(aDescriptor._portName, PortEntry::kPortUsageOther, PortEntry::kPortDirectionInputOutput);
+            anEntity->addPort(aDescriptor._portName, PortEntry::kPortUsageOther,
+                              determinePortDirection(aDescriptor._portName));
             theApp->addEntity(anEntity);
         }
     }
+    destroyDirectionTestPorts();
     OD_LOG_EXIT();//####
 } // addRegularPortEntities
 

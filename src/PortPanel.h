@@ -287,6 +287,16 @@ private:
     /*! @brief @c true if the panel is being dragged and @c false otherwise. */
 	bool               _grabbed;
     
+# if defined(__APPLE__)
+#  pragma clang diagnostic push
+#  pragma clang diagnostic ignored "-Wunused-private-field"
+# endif // defined(__APPLE__)
+    /*! @brief Filler to pad to alignment boundary */
+    char               _filler[7];
+# if defined(__APPLE__)
+#  pragma clang diagnostic pop
+# endif // defined(__APPLE__)
+    
 }; // PortPanel
 
 #endif // ! defined(__ServiceViewer__PortPanel__)

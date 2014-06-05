@@ -285,6 +285,16 @@ private:
     /*! @brief @c true if the SHIFT modifier key is depressed and @c false otherwise. */
     bool        _shiftActive;
     
+# if defined(__APPLE__)
+#  pragma clang diagnostic push
+#  pragma clang diagnostic ignored "-Wunused-private-field"
+# endif // defined(__APPLE__)
+    /*! @brief Filler to pad to alignment boundary */
+    char        _filler[2];
+# if defined(__APPLE__)
+#  pragma clang diagnostic pop
+# endif // defined(__APPLE__)
+    
 }; // ServiceViewerApp
 
 #endif // ! defined(__ServiceViewer__ServiceViewerApp__)

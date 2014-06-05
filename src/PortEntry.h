@@ -332,6 +332,16 @@ private:
     /*! @brief @c true if the port entry is the bottom-most (last) port entry in a panel and @c false otherwise. */
     bool          _isLastPort;
     
+# if defined(__APPLE__)
+#  pragma clang diagnostic push
+#  pragma clang diagnostic ignored "-Wunused-private-field"
+# endif // defined(__APPLE__)
+    /*! @brief Filler to pad to alignment boundary */
+    char          _filler[7];
+# if defined(__APPLE__)
+#  pragma clang diagnostic pop
+# endif // defined(__APPLE__)
+    
 }; // PortEntry
 
 #endif // ! defined(__ServiceViewer__PortEntry__)
