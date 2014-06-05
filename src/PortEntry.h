@@ -80,6 +80,8 @@ public:
         kAnchorRight,
         /*! @brief The connection is to the bottom edge of the port entry. */
         kAnchorBottomCentre,
+        /*! @brief The connection is to the top edge of the port entry. */
+        kAnchorTopCentre,
 # if defined(SUPPORT_BOTTOM_DIAGONALS_)
         /*! @brief The connection is to the bottom left corner of the port entry. */
         kAnchorBottomLeft,
@@ -169,17 +171,13 @@ public:
                                       const bool      isSource,
                                       const ofPoint & pp);
     
-    /*! @brief Displays an anchor leaving the given location.
-     @param anchor The side to which the anchor is attached.
-     @param anchorPos The coordinates of the anchor point. */
-    void drawSourceAnchor(const AnchorSide anchor,
-                          const ofPoint &  anchorPos);
-    
-    /*! @brief Displays an anchor arriving at the given location.
-     @param anchor The side to which the anchor is attached.
-     @param anchorPos The coordinates of the anchor point. */
-    void drawTargetAnchor(const AnchorSide anchor,
-                          const ofPoint &  anchorPos);
+    /*! @brief Display the 'drag-line' from this port entry to the given coordinates.
+     @param xPos The horizontal coordinate of the destination.
+     @param yPos The vertical coordinate of the destination.
+     @param isUDP @c true if the connection will be UDP and @c false otherwise. */
+    void drawDragLine(const float xPos,
+                      const float yPos,
+                      const bool  isUDP);
     
     /*! @brief Return the location of the centre of the port entry.
      @returns The location of the centre of the port entry. */
@@ -239,6 +237,20 @@ public:
         return _isLastPort;
     } // isLastPort
     
+    /*! @brief Returns @c true if the given point is within the displayed region of the entry and @c false otherwise.
+     @param aPoint The point of interest.
+     @returns @c true if the given point is within the displayed region of the entry and @c false otherwise. */
+    bool isPointInside(const ofPoint & aPoint)
+    const;
+    
+    /*! @brief Returns @c true if the given point is within the displayed region of the entry and @c false otherwise.
+     @param xPos The horizontal coordinate of the point of interest.
+     @param yPos The vertical coordinate of the point of interest.
+     @returns @c true if the given point is within the displayed region of the entry and @c false otherwise. */
+    bool isPointInside(const float xPos,
+                       const float yPos)
+    const;
+    
     /*! @brief Returns @c true if the port entry is part of a service and @c false otherwise.
      @returns @c true if the port is part of a service and @c false otherwise. */
     inline bool isService(void)
@@ -294,6 +306,18 @@ public:
     {
         _isLastPort = false;
     } // unsetAsLastPort
+    
+    /*! @brief Displays an anchor leaving the given location.
+     @param anchor The side to which the anchor is attached.
+     @param anchorPos The coordinates of the anchor point. */
+    static void drawSourceAnchor(const AnchorSide anchor,
+                                 const ofPoint &  anchorPos);
+    
+    /*! @brief Displays an anchor arriving at the given location.
+     @param anchor The side to which the anchor is attached.
+     @param anchorPos The coordinates of the anchor point. */
+    static void drawTargetAnchor(const AnchorSide anchor,
+                                 const ofPoint &  anchorPos);
     
 protected:
     

@@ -72,21 +72,16 @@ public:
      @param anEntity The entity to be added. */
     void addEntity(ServiceEntity * anEntity);
     
-    /*! @brief Returns the state of the ALT/OPTION modifier key.
-     @returns @c true if the ALT/OPTION modifier key is pressed and @c false otherwise. */
-    inline bool altActive(void)
+    /*! @brief Returns @c true if an add-connection operation is active and @c false otherwise.
+     @returns @c true if an add-connection operation is active and @c false otherwise. */
+    inline bool addIsActive(void)
     const
     {
-        return _altActive;
-    } // altActive
+        return _addIsActive;
+    } // addIsActive
     
-    /*! @brief Returns the state of the COMMAND modifier key.
-     @returns @c true if the COMMAND modifier key is pressed and @c false otherwise. */
-    inline bool commandActive(void)
-    const
-    {
-        return _commandActive;
-    } // commandActive
+    /*! @brief Clear any pending drag actions. */
+    void clearDragState(void);
     
     /*! @brief Returns the state of the CONTROL modifier key.
      @returns @c true if the CONTROL modifier key is pressed and @c false otherwise. */
@@ -96,6 +91,14 @@ public:
         return _controlActive;
     } // controlActive
     
+    /*! @brief Returns @c true if a drag operation is active and @c false otherwise.
+     @returns @c true if a drag operation is active and @c false otherwise. */
+    inline bool dragActive(void)
+    const
+    {
+        return _dragActive;
+    } // dragActive
+
     /*! @brief Process a drag event.
      @param dragInfo The attributes of the event. */
     virtual void dragEvent(ofDragInfo dragInfo);
@@ -176,26 +179,26 @@ public:
      @param aPort The port to be added. */
     void rememberPort(PortEntry * aPort);
     
+    /*! @brief Returns @c true if a remove-connection operation is active and @c false otherwise.
+     @returns @c true if a remove-connection operation is active and @c false otherwise. */
+    inline bool removeIsActive(void)
+    const
+    {
+        return _removeIsActive;
+    } // removeIsActive
+    
+    /*! @brief Handle the drag operation for an 'add-connection' operation.
+     @param xPos The current horizontal mouse position.
+     @param yPos The current vertical mouse position. */
+    void reportConnectionDrag(const float xPos,
+                              const float yPos);
+    
     /*! @brief Process a click on a Port Entry with a modifier set.
-     @param aPort The port being handled.
-     @param altIsActive The ALT key is active.
-     @param commandIsActive The COMMAND key is active.
-     @param shiftIsActive The SHIFT key is active. */
-    void reportPortEntryClicked(PortEntry * aPort,
-                                const bool  altIsActive,
-                                const bool  commandIsActive,
-                                const bool  shiftIsActive);
+     @param aPort The port being handled. */
+    void reportPortEntryClicked(PortEntry * aPort);
     
     /*! @brief Setup the parameters of the application. */
     virtual void setup(void);
-    
-    /*! @brief Returns the state of the SHIFT modifier key.
-     @returns @c true if the SHIFT modifier key is pressed and @c false otherwise. */
-    inline bool shiftActive(void)
-    const
-    {
-        return _shiftActive;
-    } // shiftActive
     
     /*! @brief Perform the update step of the update-draw loop. */
     virtual void update(void);
@@ -214,10 +217,22 @@ public:
      @returns The color to be used for markers. */
     static ofColor getMarkerColor(void);
     
+    /*! @brief Return the color to be used for connections being made by dragging.
+     @returns The color to be used for connections being made by dragging. */
+    static ofColor getNewConnectionColor(void);
+    
+    /*! @brief Return the line width for a normal connection.
+     @returns The line width for a normal connection. */
+    static float getNormalConnectionWidth(void);
+    
     /*! @brief Return the color to be used for non-TCP/non-UDP connections.
      @returns The color to be used for non-TCP/non-UDP connection. */
     static ofColor getOtherConnectionColor(void);
 
+    /*! @brief Return the line width for a service connection.
+     @returns The line width for a service connection. */
+    static float getServiceConnectionWidth(void);
+    
     /*! @brief Return the color to be used for TCP connections.
      @returns The color to be used for TCP connections. */
     static ofColor getTcpConnectionColor(void);
@@ -267,6 +282,18 @@ private:
     /*! @brief The starting port for a connection being removed. */
     PortEntry * _firstRemovePort;
     
+    /*! @brief The horizontal coordinate of the current drag location. */
+    float       _dragXpos;
+    
+    /*! @brief The vertical coordinate of the current drag location. */
+    float       _dragYpos;
+    
+    /*! @brief @c true if the connection being added will be UDP and @c false if it will be TCP. */
+    bool        _addingUDPConnection;
+    
+    /*! @brief @c true if a connection is being added and @c false otherwise. */
+    bool        _addIsActive;
+    
     /*! @brief @c true if the ALT/OPTION modifier key is depressed and @c false otherwise. */
     bool        _altActive;
     
@@ -276,11 +303,17 @@ private:
     /*! @brief @c true if the CONTROL modifier key is depressed and @c false otherwise. */
     bool        _controlActive;
     
+    /*! @brief @c true if a connection is being created by dragging between ports and @c false otherwise. */
+    bool        _dragActive;
+    
     /*! @brief @c true if the YARP network is running. */
     bool        _networkAvailable;
     
     /*! @brief @c true if the service registry can be used. */
     bool        _registryAvailable;
+    
+    /*! @brief @c true if a connection is being removed and @c false otherwise. */
+    bool        _removeIsActive;
     
     /*! @brief @c true if the SHIFT modifier key is depressed and @c false otherwise. */
     bool        _shiftActive;
@@ -290,7 +323,7 @@ private:
 #  pragma clang diagnostic ignored "-Wunused-private-field"
 # endif // defined(__APPLE__)
     /*! @brief Filler to pad to alignment boundary */
-    char        _filler[2];
+    char        _filler[6];
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)

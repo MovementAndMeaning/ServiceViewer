@@ -83,18 +83,18 @@
 
 PortPanel::PortPanel(const EntityKind   kind,
                      const string       description,
-                     ServiceViewerApp * owner) :
+                     ServiceViewerApp & owner) :
             inherited(), _tracker(NULL), _owner(owner), _description(description), _kind(kind), _grabbed(false)
 {
     OD_LOG_ENTER();//####
     OD_LOG_S1("description = ", description.c_str());//####
-    OD_LOG_P1("owner = ", owner);//####
+    OD_LOG_P1("owner = ", &owner);//####
     OD_LOG_EXIT_P(this);//####
 } // PortPanel::PortPanel
 
 PortPanel::PortPanel(const EntityKind         kind,
                      const string             description,
-                     ServiceViewerApp *       owner,
+                     ServiceViewerApp &       owner,
                      const ofParameterGroup & parameters,
                      string                   filename,
                      const float              xx,
@@ -104,7 +104,7 @@ PortPanel::PortPanel(const EntityKind         kind,
 {
     OD_LOG_ENTER();//####
     OD_LOG_S2("description = ", description.c_str(), "filename = ", filename.c_str());//####
-    OD_LOG_P2("owner = ", owner, "parameters = ", &parameters);//####
+    OD_LOG_P2("owner = ", &owner, "parameters = ", &parameters);//####
     OD_LOG_D2("xx = ", xx, "yy = ", yy);//####
     OD_LOG_EXIT_P(this);//####
 } // PortPanel::PortPanel
@@ -118,7 +118,7 @@ PortPanel::~PortPanel(void)
         
         if (aPort)
         {
-            _owner->forgetPort(aPort);
+            _owner.forgetPort(aPort);
             delete aPort;
         }
     }
@@ -139,7 +139,7 @@ void PortPanel::addPort(string                         portName,
     PortEntry * aPort = new PortEntry(this, portKind, direction);
     
     add(aPort->setup(portName));
-    _owner->rememberPort(aPort);
+    _owner.rememberPort(aPort);
     if (0 < countBefore)
     {
         aPort = getPort(countBefore - 1);
@@ -169,6 +169,29 @@ PortEntry * PortPanel::getPort(const int num)
     return result;
 } // getPort
 
+bool PortPanel::isPointInside(const ofPoint & aPoint)
+const
+{
+//    OD_LOG_OBJENTER();//####
+//    OD_LOG_P1("aPoint = ", &aPoint);//####
+    bool result = b.inside(aPoint);
+    
+//    OD_LOG_OBJEXIT_B(result);//####
+    return result;
+} // PortPanel::isPointInside
+
+bool PortPanel::isPointInside(const float xPos,
+                              const float yPos)
+const
+{
+//    OD_LOG_OBJENTER();//####
+//    OD_LOG_D2("xPos = ", xPos, "yPos = ", yPos);//####
+    bool result = b.inside(xPos, yPos);
+    
+//    OD_LOG_OBJEXIT_B(result);//####
+    return result;
+} // PortPanel::isPointInside
+
 bool PortPanel::mouseDragged(ofMouseEventArgs & args)
 {
     OD_LOG_OBJENTER();//####
@@ -176,31 +199,25 @@ bool PortPanel::mouseDragged(ofMouseEventArgs & args)
     OD_LOG_L1("args.button = ", args.button);//####
     bool result = false;
     
-    if (_owner)
+    bool addIsActive = _owner.addIsActive();
+    bool controlWasActive = _owner.controlActive();
+    bool removeIsActive = _owner.removeIsActive();
+    
+    OD_LOG_B3("addIsActive = ", addIsActive, "controlWasActive = ", controlWasActive,//####
+              "removeIsActive = ", removeIsActive);//####
+    if (controlWasActive || (OF_MOUSE_BUTTON_3 == args.button))
     {
-        bool altWasActive = _owner->altActive();
-        bool commandWasActive = _owner->commandActive();
-        bool controlWasActive = _owner->controlActive();
-        bool shiftWasActive = _owner->shiftActive();
-        
-        OD_LOG_B4("altWasActive = ", altWasActive, "commandWasActive = ", commandWasActive,//####
-                  "controlWasActive = ", controlWasActive, "shiftWasActive = ", shiftWasActive);//####
-        if (controlWasActive || (OF_MOUSE_BUTTON_3 == args.button))
-        {
-            result = true;
-        }
-        else if (shiftWasActive)
-        {
-            result = true;
-        }
-        else if (commandWasActive)
-        {
-            result = true;
-        }
-        else if (altWasActive)
-        {
-            result = true;
-        }
+        result = true;
+    }
+    else if (removeIsActive)
+    {
+        result = true;
+    }
+    else if (addIsActive)
+    {
+        // If we don't catch the drag, the initially clicked-on panel gets dragged around!
+        _owner.reportConnectionDrag(args.x, args.y);
+        result = true;
     }
     if (! result)
     {
@@ -229,48 +246,44 @@ bool PortPanel::mousePressed(ofMouseEventArgs & args)
     
     if (! result)
     {
-        if (_owner)
+        if (b.inside(args.x, args.y))
         {
-            if (b.inside(args.x, args.y))
+            bool addIsActive = _owner.addIsActive();
+            bool controlWasActive = _owner.controlActive();
+            bool removeIsActive = _owner.removeIsActive();
+            
+            OD_LOG_B3("addIsActive = ", addIsActive, "controlWasActive = ", controlWasActive,//####
+                      "removeIsActive = ", removeIsActive);//####
+            if (OF_MOUSE_BUTTON_3 == args.button)
             {
-                bool altWasActive = _owner->altActive();
-                bool commandWasActive = _owner->commandActive();
-                bool controlWasActive = _owner->controlActive();
-                bool shiftWasActive = _owner->shiftActive();
-
-                OD_LOG_B4("altWasActive = ", altWasActive, "commandWasActive = ", commandWasActive,//####
-                          "controlWasActive = ", controlWasActive, "shiftWasActive = ", shiftWasActive);//####
-                if (OF_MOUSE_BUTTON_3 == args.button)
+                string thePanelDescription;
+                
+                switch (_kind)
                 {
-                    string thePanelDescription;
-                    
-                    switch (_kind)
-                    {
-                        case kEntityKindClientOrAdapter:
-                            thePanelDescription = "A client or adapter";
-                            break;
-                            
-                        case kEntityKindService:
-                            thePanelDescription = _description;
-                            break;
-                            
-                        case kEntityKindOther:
-                            thePanelDescription = "A standard port";
-                            break;
-                            
-                    }
-                    ofSystemAlertDialog(thePanelDescription);
-                    result = true;
+                    case kEntityKindClientOrAdapter:
+                        thePanelDescription = "A client or adapter";
+                        break;
+                        
+                    case kEntityKindService:
+                        thePanelDescription = _description;
+                        break;
+                        
+                    case kEntityKindOther:
+                        thePanelDescription = "A standard port";
+                        break;
+                        
                 }
-                else if (controlWasActive)
-                {
-                    result = true;
-                }
-                else if (altWasActive || commandWasActive || shiftWasActive)
-                {
-                    _owner->reportPortEntryClicked(NULL, altWasActive, commandWasActive, shiftWasActive);
-                    result = true;
-                }
+                ofSystemAlertDialog(thePanelDescription);
+                result = true;
+            }
+            else if (controlWasActive)
+            {
+                result = true;
+            }
+            else if (addIsActive || removeIsActive)
+            {
+                _owner.reportPortEntryClicked(NULL);
+                result = true;
             }
         }
     }
@@ -285,34 +298,42 @@ bool PortPanel::mouseReleased(ofMouseEventArgs & args)
     OD_LOG_L1("args.button = ", args.button);//####
     bool result = false;
     
-    OD_LOG_P1("_owner = ", _owner);//####
-    if (_owner)
+    if (b.inside(args.x, args.y))
     {
-        if (b.inside(args.x, args.y))
+        bool addIsActive = _owner.addIsActive();
+        bool controlWasActive = _owner.controlActive();
+        bool removeIsActive = _owner.removeIsActive();
+        
+        OD_LOG_B3("addIsActive = ", addIsActive, "controlWasActive = ", controlWasActive,//####
+                  "removeIsActive = ", removeIsActive);//####
+        if (controlWasActive || (OF_MOUSE_BUTTON_3 == args.button))
         {
-            bool altWasActive = _owner->altActive();
-            bool commandWasActive = _owner->commandActive();
-            bool controlWasActive = _owner->controlActive();
-            bool shiftWasActive = _owner->shiftActive();
+            result = true;
+        }
+        else if (removeIsActive)
+        {
+            result = true;
+        }
+        else if (addIsActive)
+        {
+            // Check if one of the entries would pick this up, and eat it otherwise.
+            bool wouldHit = false;
             
-            OD_LOG_B4("altWasActive = ", altWasActive, "commandWasActive = ", commandWasActive,//####
-                      "controlWasActive = ", controlWasActive, "shiftWasActive = ", shiftWasActive);//####
-            if (controlWasActive || (OF_MOUSE_BUTTON_3 == args.button))
+            for (int ii = 0, mm = getNumPorts(); (mm > ii) && (! wouldHit); ++ii)
             {
-                result = true;
+                PortEntry * aPort = getPort(ii);
+                
+                if (aPort && aPort->isPointInside(args.x, args.y))
+                {
+                    wouldHit = true;
+                }
             }
-            else if (shiftWasActive)
+            if (! wouldHit)
             {
-                result = true;
+                // If the mouse is released outside a port entry, make sure to stop the drag.
+                _owner.clearDragState();
             }
-            else if (commandWasActive)
-            {
-                result = true;
-            }
-            else if (altWasActive)
-            {
-                result = true;
-            }
+            //result = true;
         }
     }
     if (! result)
@@ -376,25 +397,25 @@ bool PortPanel::setValue(float mx,
 	}
 	else if (bCheck)
     {
-		if (b.inside(mx, my))
+        if (b.inside(mx, my))
         {
-			bGuiActive = true;
+            bGuiActive = true;
 #if defined(CAN_GRAB_OUTSIDE_HEADER_)
             _grabbed = true;
             _grabPt.set(mx - b.x, my - b.y);
 #else // ! defined(CAN_GRAB_OUTSIDE_HEADER_)
-			if ((my > b.y) && (my <= (b.y + getHeader())))
+            if ((my > b.y) && (my <= (b.y + getHeader())))
             {
                 _grabbed = true;
                 _grabPt.set(mx - b.x, my - b.y);
-			}
+            }
             else
             {
-				_grabbed = false;
-			}
+                _grabbed = false;
+            }
 #endif // ! defined(CAN_GRAB_OUTSIDE_HEADER_)
             OD_LOG_B1("_grabbed <- ", _grabbed);//####
-		}
+        }
 	}
     else if (_grabbed)
     {

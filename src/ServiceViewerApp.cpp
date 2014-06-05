@@ -86,6 +86,12 @@
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
 
+/*! @brief The line width for a normal connection. */
+static const float kNormalConnectionWidth = 2;
+
+/*! @brief The line width for a normal connection. */
+static const float kServiceConnectionWidth = (2 * kNormalConnectionWidth);
+
 /*! @brief @c true if the port direction resources are available. */
 static bool                             lPortsValid = false;
 /*! @brief The port used to determine if a port being checked can be used as an output. */
@@ -135,18 +141,18 @@ static void addPortConnections(ServiceViewerApp *                    theApp,
 /*! @brief Add ports that have associates as 'adapter' entities.
  @param theApp The application object.
  @param detectedPorts The set of detected YARP ports. */
-static void addPortsWithAssociates(ServiceViewerApp *                    theApp,
+static void addPortsWithAssociates(ServiceViewerApp &                    theApp,
                                    const MplusM::Utilities::PortVector & detectedPorts)
 {
     OD_LOG_ENTER();//####
-    OD_LOG_P2("theApp = ", theApp, "detectedPorts = ", &detectedPorts);//####
+    OD_LOG_P2("theApp = ", &theApp, "detectedPorts = ", &detectedPorts);//####
     for (int ii = 0, mm = detectedPorts.size(); mm > ii; ++ii)
     {
         const MplusM::Utilities::PortDescriptor & aDescriptor = detectedPorts[ii];
         yarp::os::ConstString                     aPort(aDescriptor._portName);
         
         
-        if (! theApp->findPort(aDescriptor._portName.c_str()))
+        if (! theApp.findPort(aDescriptor._portName.c_str()))
         {
             MplusM::Common::StringVector inputs;
             MplusM::Common::StringVector outputs;
@@ -169,7 +175,7 @@ static void addPortsWithAssociates(ServiceViewerApp *                    theApp,
                     }
                     anEntity->addPort(aDescriptor._portName, PortEntry::kPortUsageClient,
                                       PortEntry::kPortDirectionInputOutput);
-                    theApp->addEntity(anEntity);
+                    theApp.addEntity(anEntity);
                 }
             }
         }
@@ -271,24 +277,24 @@ static PortEntry::PortDirection determinePortDirection(const yarp::os::ConstStri
 /*! @brief Add regular YARP ports as distinct entities.
  @param theApp The application object.
  @param detectedPorts The set of detected YARP ports. */
-static void addRegularPortEntities(ServiceViewerApp *                    theApp,
+static void addRegularPortEntities(ServiceViewerApp &                    theApp,
                                    const MplusM::Utilities::PortVector & detectedPorts)
 {
     OD_LOG_ENTER();//####
-    OD_LOG_P2("theApp = ", theApp, "detectedPorts = ", &detectedPorts);//####
+    OD_LOG_P2("theApp = ", &theApp, "detectedPorts = ", &detectedPorts);//####
     createDirectionTestPorts();
     for (size_t ii = 0, mm = detectedPorts.size(); mm > ii; ++ii)
     {
         const MplusM::Utilities::PortDescriptor & aDescriptor = detectedPorts[ii];
         
-        if (! theApp->findPort(aDescriptor._portName.c_str()))
+        if (! theApp.findPort(aDescriptor._portName.c_str()))
         {
             ServiceEntity * anEntity = new ServiceEntity(PortPanel::kEntityKindOther, "", theApp);
             
             anEntity->setup((aDescriptor._portIpAddress + ":" + aDescriptor._portPortNumber).c_str());
             anEntity->addPort(aDescriptor._portName, PortEntry::kPortUsageOther,
                               determinePortDirection(aDescriptor._portName));
-            theApp->addEntity(anEntity);
+            theApp.addEntity(anEntity);
         }
     }
     destroyDirectionTestPorts();
@@ -298,16 +304,16 @@ static void addRegularPortEntities(ServiceViewerApp *                    theApp,
 /*! @brief Add services as distinct entities.
  @param theApp The application object.
  @param services The set of detected services. */
-static void addServices(ServiceViewerApp *                   theApp,
+static void addServices(ServiceViewerApp &                   theApp,
                         const MplusM::Common::StringVector & services)
 {
     OD_LOG_ENTER();//####
-    OD_LOG_P2("theApp = ", theApp, "services = ", &services);//####
+    OD_LOG_P2("theApp = ", &theApp, "services = ", &services);//####
     for (size_t ii = 0, mm = services.size(); mm > ii; ++ii)
     {
         yarp::os::ConstString aService = services[ii];
         
-        if (! theApp->findEntity(aService.c_str()))
+        if (! theApp.findEntity(aService.c_str()))
         {
             MplusM::Utilities::ServiceDescriptor descriptor;
 
@@ -328,7 +334,7 @@ static void addServices(ServiceViewerApp *                   theApp,
                     anEntity->addPort(descriptor._outputChannels[jj], PortEntry::kPortUsageService,
                                       PortEntry::kPortDirectionOutput);
                 }
-                theApp->addEntity(anEntity);
+                theApp.addEntity(anEntity);
             }
         }
     }
@@ -344,9 +350,9 @@ static void addServices(ServiceViewerApp *                   theApp,
 #endif // defined(__APPLE__)
 
 ServiceViewerApp::ServiceViewerApp(void) :
-            inherited(), _firstAddPort(NULL), _firstRemovePort(NULL), _altActive(false), _commandActive(false),
-            _controlActive(false), _networkAvailable(false), _registryAvailable(false),
-            _shiftActive(false)
+            inherited(), _firstAddPort(NULL), _firstRemovePort(NULL), _addingUDPConnection(false), _addIsActive(false),
+            _altActive(false), _commandActive(false), _controlActive(false), _dragActive(false),
+            _networkAvailable(false), _registryAvailable(false), _removeIsActive(false), _shiftActive(false)
 {
     OD_LOG_ENTER();//####
     OD_LOG_EXIT_P(this);//####
@@ -363,6 +369,13 @@ void ServiceViewerApp::addEntity(ServiceEntity * anEntity)
     _entities.push_back(anEntity);
     OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::addEntity
+
+void ServiceViewerApp::clearDragState(void)
+{
+    OD_LOG_OBJENTER();//####
+    _dragActive = false;
+    OD_LOG_OBJEXIT();//####
+} // ServiceViewerApp::clearDragState
 
 void ServiceViewerApp::dragEvent(ofDragInfo dragInfo)
 {
@@ -393,6 +406,17 @@ void ServiceViewerApp::draw(void)
             if (anEntity && anEntity->isSelected())
             {
                 anEntity->draw();
+            }
+        }
+        if (_dragActive)
+        {
+            if (_firstAddPort)
+            {
+                _firstAddPort->drawDragLine(_dragXpos, _dragYpos, _addingUDPConnection);
+            }
+            else
+            {
+                _dragActive = false;
             }
         }
     }
@@ -528,14 +552,14 @@ void ServiceViewerApp::gatherEntities(void)
     MplusM::Common::StringVector services;
     
     MplusM::Utilities::GetServiceNames(services, true);
-    addServices(this, services);
+    addServices(*this, services);
     MplusM::Utilities::PortVector detectedPorts;
     
     MplusM::Utilities::GetDetectedPortList(detectedPorts);
     // Identify and add ports that have associated ports, as they are adapters
-    addPortsWithAssociates(this, detectedPorts);
+    addPortsWithAssociates(*this, detectedPorts);
     // Add regular YARP ports as distinct entities
-    addRegularPortEntities(this, detectedPorts);
+    addRegularPortEntities(*this, detectedPorts);
     // Add the connections
     addPortConnections(this, detectedPorts);
     OD_LOG_OBJEXIT();//####
@@ -554,11 +578,11 @@ void ServiceViewerApp::keyPressed(int key)
 //    OD_LOG_L1("key = ", key);//####
     if (OF_KEY_ALT == (key & OF_KEY_ALT))
     {
-        _altActive = true;
+        _altActive = _addIsActive = true;
     }
     if (OF_KEY_COMMAND == (key & OF_KEY_COMMAND))
     {
-        _commandActive = true;
+        _commandActive = _removeIsActive = true;
     }
     if (OF_KEY_CONTROL == (key & OF_KEY_CONTROL))
     {
@@ -622,7 +646,7 @@ void ServiceViewerApp::mousePressed(int x,
     OD_LOG_OBJENTER();//####
     OD_LOG_L3("x = ", x, "y = ", y, "button = ", button);//####
     inherited::mousePressed(x, y, button);
-    reportPortEntryClicked(NULL, _altActive, _commandActive, _shiftActive);
+    reportPortEntryClicked(NULL);
     OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::mousePressed
 
@@ -633,6 +657,7 @@ void ServiceViewerApp::mouseReleased(int x,
     OD_LOG_OBJENTER();//####
     OD_LOG_L3("x = ", x, "y = ", y, "button = ", button);//####
     inherited::mouseReleased(x, y, button);
+    clearDragState();
     OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::mouseReleased
 
@@ -647,125 +672,135 @@ void ServiceViewerApp::rememberPort(PortEntry * aPort)
     OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::rememberPort
 
-void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort,
-                                              const bool  altIsActive,
-                                              const bool  commandIsActive,
-                                              const bool  shiftIsActive)
+void ServiceViewerApp::reportConnectionDrag(const float xPos,
+                                            const float yPos)
+{
+    OD_LOG_OBJENTER();//####
+    OD_LOG_D2("xPos = ", xPos, "yPos = ", yPos);//####
+    if (_firstAddPort)
+    {
+        _dragActive = true;
+        _dragXpos = xPos;
+        _dragYpos = yPos;
+    }
+    OD_LOG_OBJEXIT();//####
+} // ServiceViewerApp::reportConnectionDrag
+
+void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort)
 {
     OD_LOG_OBJENTER();//####
     OD_LOG_P1("aPort = ", aPort);//####
-    OD_LOG_B3("altIsActive = ", altIsActive, "commandIsActive = ", commandIsActive, "shiftIsActive = ",//####
-              shiftIsActive);//####
-    
     if (aPort)
     {
         PortEntry::PortDirection direction = aPort->getDirection();
         PortEntry::PortUsage     usage = aPort->getUsage();
         
-        if (commandIsActive)
+        if (_firstRemovePort)
         {
             // Process connection delete requests.
-            if (_firstRemovePort)
-            {
-                ServiceEntity * firstEntity = findEntityForPort(_firstRemovePort);
-                
-                if (_firstRemovePort != aPort)
-                {
-                    // Check if we can end here.
-                    if (PortEntry::kPortDirectionOutput != direction)
-                    {
-                        ServiceEntity * secondEntity = findEntityForPort(aPort);
-                        
-                        if (firstEntity && secondEntity)
-                        {
-                            if (MplusM::Utilities::RemoveConnection(_firstRemovePort->getPortName().c_str(),
-                                                                    aPort->getPortName().c_str()))
-                            {
-                                _firstRemovePort->removeOutputConnection(aPort);
-                                aPort->removeInputConnection(_firstRemovePort);
-                            }
-                        }
-                    }
-                }
-                if (firstEntity)
-                {
-                    firstEntity->clearDisconnectMarker();
-                    _firstRemovePort = NULL;
-                }
-            }
-            else
-            {
-                // Check if we can start from here.
-                if ((PortEntry::kPortDirectionInput != direction) && (PortEntry::kPortUsageClient != usage))
-                {
-                    ServiceEntity * entity = findEntityForPort(aPort);
-                    
-                    if (entity)
-                    {
-                        entity->setDisconnectMarker();
-                        _firstRemovePort = aPort;
-                    }
-                }
-            }
-        }
-        else if (altIsActive)
-        {
-            // Process connection add requests.
-            if (_firstAddPort)
+            ServiceEntity * firstEntity = findEntityForPort(_firstRemovePort);
+            
+            if (_firstRemovePort != aPort)
             {
                 // Check if we can end here.
-                ServiceEntity * firstEntity = findEntityForPort(_firstAddPort);
-                
-                if (_firstAddPort != aPort)
+                if (PortEntry::kPortDirectionOutput != direction)
                 {
-                    if (PortEntry::kPortDirectionOutput != direction)
+                    ServiceEntity * secondEntity = findEntityForPort(aPort);
+                    
+                    if (firstEntity && secondEntity)
                     {
-                        ServiceEntity * secondEntity = findEntityForPort(aPort);
-                        
-                        if (firstEntity && secondEntity)
+                        if (MplusM::Utilities::RemoveConnection(_firstRemovePort->getPortName().c_str(),
+                                                                aPort->getPortName().c_str()))
                         {
-                            if (MplusM::Utilities::AddConnection(_firstAddPort->getPortName().c_str(),
-                                                                 aPort->getPortName().c_str(), shiftIsActive))
-                            {
-                                MplusM::Common::ChannelMode mode = (shiftIsActive ? MplusM::Common::kChannelModeUDP :
-                                                                    MplusM::Common::kChannelModeTCP);
-                                
-                                _firstAddPort->addOutputConnection(aPort, mode);
-                                aPort->addInputConnection(_firstAddPort, mode);
-                            }
+                            _firstRemovePort->removeOutputConnection(aPort);
+                            aPort->removeInputConnection(_firstRemovePort);
                         }
                     }
                 }
-                if (firstEntity)
-                {
-                    firstEntity->clearConnectMarker();
-                    _firstAddPort = NULL;
-                }
             }
-            else
+            if (firstEntity)
             {
-                // Check if we can start from here.
-                if ((PortEntry::kPortDirectionInput != direction) && (PortEntry::kPortUsageClient != usage))
+                firstEntity->clearDisconnectMarker();
+            }
+            _firstRemovePort = NULL;
+            _addIsActive = _removeIsActive = false;
+        }
+        else if (_firstAddPort)
+        {
+            // Process connection add requests.
+            ServiceEntity * firstEntity = findEntityForPort(_firstAddPort);
+            
+            if (_firstAddPort != aPort)
+            {
+                // Check if we can end here.
+                if (PortEntry::kPortDirectionOutput != direction)
                 {
-                    ServiceEntity * entity = findEntityForPort(aPort);
+                    ServiceEntity * secondEntity = findEntityForPort(aPort);
                     
-                    if (entity)
+                    if (firstEntity && secondEntity)
                     {
-                        entity->setConnectMarker();
-                        _firstAddPort = aPort;
+                        if (MplusM::Utilities::AddConnection(_firstAddPort->getPortName().c_str(),
+                                                             aPort->getPortName().c_str(), _addingUDPConnection))
+                        {
+                            MplusM::Common::ChannelMode mode = (_addingUDPConnection ?
+                                                                MplusM::Common::kChannelModeUDP :
+                                                                MplusM::Common::kChannelModeTCP);
+                            
+                            _firstAddPort->addOutputConnection(aPort, mode);
+                            aPort->addInputConnection(_firstAddPort, mode);
+                        }
                     }
                 }
             }
+            if (firstEntity)
+            {
+                firstEntity->clearConnectMarker();
+            }
+            _firstAddPort = NULL;
+            _addIsActive = _removeIsActive = false;
+        }
+        else if (_commandActive)
+        {
+            // Check if we can start from here.
+            if ((PortEntry::kPortDirectionInput != direction) && (PortEntry::kPortUsageClient != usage))
+            {
+                ServiceEntity * entity = findEntityForPort(aPort);
+                
+                if (entity)
+                {
+                    entity->setDisconnectMarker();
+                    _firstRemovePort = aPort;
+                }
+            }
+            _addIsActive = false;
+            _removeIsActive = (NULL != _firstRemovePort);
+        }
+        else if (_altActive)
+        {
+            // Check if we can start from here.
+            if ((PortEntry::kPortDirectionInput != direction) && (PortEntry::kPortUsageClient != usage))
+            {
+                ServiceEntity * entity = findEntityForPort(aPort);
+                
+                if (entity)
+                {
+                    entity->setConnectMarker();
+                    _firstAddPort = aPort;
+                    _addingUDPConnection = _shiftActive;
+                }
+            }
+            _addIsActive = (NULL != _firstAddPort);
+            _removeIsActive = false;
         }
         else
         {
-            
+            _addIsActive = _removeIsActive = false;
         }
     }
     else
     {
         // Operation being cleared.
-        if (commandIsActive)
+        if (_commandActive || _removeIsActive)
         {
             // Process connection delete requests.
             if (_firstRemovePort)
@@ -779,9 +814,9 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort,
                 _firstRemovePort = NULL;
             }
         }
-        else if (altIsActive)
+        else if (_altActive || _addIsActive)
         {
-            // Process connaction add requests.
+            // Process connection add requests.
             if (_firstAddPort)
             {
                 ServiceEntity * entity = findEntityForPort(_firstAddPort);
@@ -793,6 +828,7 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort,
                 _firstAddPort = NULL;
             }
         }
+        _addIsActive = _removeIsActive = false;
     }
     OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::reportPortEntryClicked
@@ -897,10 +933,25 @@ ofColor ServiceViewerApp::getMarkerColor(void)
     return ofColor::yellow;
 } // ServiceViewerApp::getMarkerColor
 
+ofColor ServiceViewerApp::getNewConnectionColor(void)
+{
+    return ofColor::gold;
+} // ServiceViewerApp::getNewConnectionColor
+
+float ServiceViewerApp::getNormalConnectionWidth(void)
+{
+    return kNormalConnectionWidth;
+} // ServiceViewerApp::getNormalConnectionWidth
+
 ofColor ServiceViewerApp::getOtherConnectionColor(void)
 {
     return ofColor::orange;
 } // ServiceViewerApp::getOtherConnectionColor
+
+float ServiceViewerApp::getServiceConnectionWidth(void)
+{
+    return kServiceConnectionWidth;
+} // ServiceViewerApp::getServiceConnectionWidth
 
 ofColor ServiceViewerApp::getTcpConnectionColor(void)
 {

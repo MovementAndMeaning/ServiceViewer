@@ -76,6 +76,21 @@ public:
     /*! @brief The destructor. */
 	virtual ~IconlessPanel(void);
     
+    /*! @brief Return the height of the header for the panel.
+     @returns The height of the header for the panel. */
+    inline float getHeader(void)
+    const
+    {
+        return inherited::header;
+    } // getHeader
+    
+    /*! @brief Return the width of the panel.
+     @returns The width of the panel. */
+	inline float getWidth(void)
+    {
+        return inherited::getWidth();
+    } // getWidth
+    
     /*! @brief Set the parameters of the panel.
      @param collectionName The name of the panel.
      @param filename The settings file for the panel.
@@ -95,21 +110,6 @@ public:
                           string                   filename = "settings.xml",
                           const float              xx = 10,
                           const float              yy = 10);
-    
-    /*! @brief Return the height of the header for the panel.
-     @returns The height of the header for the panel. */
-    inline float getHeader(void)
-    const
-    {
-        return inherited::header;
-    } // getHeader
-    
-    /*! @brief Return the width of the panel.
-     @returns The width of the panel. */
-	inline float getWidth(void)
-    {
-        return inherited::getWidth();
-    } // getWidth
     
     /*! @brief Change the width of the panel.
      @param newWidth The new width for the panel. */

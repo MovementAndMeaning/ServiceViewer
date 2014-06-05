@@ -81,7 +81,7 @@ public:
      @param owner The application object that manages this panel. */
 	PortPanel(const EntityKind   kind,
               const string       description,
-              ServiceViewerApp * owner);
+              ServiceViewerApp & owner);
     
     /*! @brief The constructor.
      @param kind The kind of entity.
@@ -93,7 +93,7 @@ public:
      @param yy The initial vertical position of the panel. */
 	PortPanel(const EntityKind         kind,
               const string             description,
-              ServiceViewerApp *       owner,
+              ServiceViewerApp &       owner,
               const ofParameterGroup & parameters,
               string                   filename = "settings.xml",
               const float              xx = 10,
@@ -153,7 +153,7 @@ public:
         return inherited::getNumControls();
     } // getNumPorts
 
-    inline ServiceViewerApp * getOwner(void)
+    inline ServiceViewerApp & getOwner(void)
     const
     {
         return _owner;
@@ -177,6 +177,20 @@ public:
     {
         return inherited::getWidth();
     } // getWidth
+    
+    /*! @brief Returns @c true if the given point is within the displayed region of the entry and @c false otherwise.
+     @param aPoint The point of interest.
+     @returns @c true if the given point is within the displayed region of the entry and @c false otherwise. */
+    bool isPointInside(const ofPoint & aPoint)
+    const;
+    
+    /*! @brief Returns @c true if the given point is within the displayed region of the entry and @c false otherwise.
+     @param xPos The horizontal coordinate of the point of interest.
+     @param yPos The vertical coordinate of the point of interest.
+     @returns @c true if the given point is within the displayed region of the entry and @c false otherwise. */
+    bool isPointInside(const float xPos,
+                       const float yPos)
+    const;
     
     /*! @brief Process a mouse-dragged event.
      @param args The attributes of the event.
@@ -276,7 +290,7 @@ private:
     MovementTracker *  _tracker;
 
     /*! @brief The application object that manages the panel. */
-    ServiceViewerApp * _owner;
+    ServiceViewerApp & _owner;
 
     /*! @brief The description of the entity, if it is a service. */
     string             _description;

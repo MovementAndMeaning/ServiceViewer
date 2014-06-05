@@ -44,6 +44,9 @@
 //#include "ODEnableLogging.h"
 #include "ODLogging.h"
 
+#include "ofGraphics.h"
+#include "ofxGui.h"
+
 #if defined(__APPLE__)
 # pragma clang diagnostic push
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
@@ -58,6 +61,9 @@
 #if defined(__APPLE__)
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
+
+/*! @brief The scale factor to apply to get the length of the control vector. */
+static const float kControlLengthScale = 0.25;
 
 #if defined(__APPLE__)
 # pragma mark Local functions
@@ -150,3 +156,29 @@ void CalculateTextMeshDimensions(const ofMesh & textMesh,
     dimensions.set(maxX - minX, maxY - minY);
     OD_LOG_EXIT();//####
 } // CalculateTextMeshDimensions
+
+/*! @brief Draw a bezier curve between two points.
+ @param startPoint The beginning of the curve.
+ @param endPoint The end of the curve.
+ @param startCentre A reference point for the beginning of the curve, used to calculate the beginning tangent.
+ @param endCentre A reference point for the end of the curve, used to calculate the ending tangent. */
+void DrawBezier(const ofPoint & startPoint,
+                const ofPoint & endPoint,
+                const ofPoint & startCentre,
+                const ofPoint & endCentre)
+{
+//    OD_LOG_ENTER();//####
+//    OD_LOG_P4("startPoint = ", &startPoint, "endPoint = ", &endPoint, "startCentre = ", &startCentre,//####
+//              "endCentre = ", &endCentre);//####
+    ofPolyline bLine;
+    float      controlLength = (ofDist(startPoint.x, startPoint.y, endPoint.x, endPoint.y) * kControlLengthScale);
+    float      startAngle = atan2(startPoint.y - startCentre.y, startPoint.x - startCentre.x);
+    float      endAngle = atan2(endPoint.y - endCentre.y, endPoint.x - endCentre.x);
+    ofPoint    controlPoint1(controlLength * cos(startAngle), controlLength * sin(startAngle));
+    ofPoint    controlPoint2(controlLength * cos(endAngle), controlLength * sin(endAngle));
+    
+    bLine.addVertex(startPoint);
+    bLine.bezierTo(startPoint + controlPoint1, endPoint + controlPoint2, endPoint);
+    bLine.draw();
+//    OD_LOG_EXIT();//####
+} // DrawBezier

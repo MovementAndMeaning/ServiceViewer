@@ -72,7 +72,7 @@ public:
      @param owner The application object that manages this entity. */
 	ServiceEntity(const PortPanel::EntityKind kind,
                   const string                description,
-                  ServiceViewerApp *          owner);
+                  ServiceViewerApp &          owner);
     
     /*! @brief The destructor. */
 	virtual ~ServiceEntity(void);

@@ -67,47 +67,12 @@
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
 
-/*! @brief The scale factor to apply to get the lenght of the control vector. */
-static const float kControlLengthScale = 0.25;
-
 /*! @brief The width and height of the marker displayed during movement. */
 static const float kMarkerSide = 12;
-
-/*! @brief The line width for a normal connection. */
-static const float kNormalConnectionWidth = 2;
-
-/*! @brief The line width for a normal connection. */
-static const float kServiceConnectionWidth = (2 * kNormalConnectionWidth);
 
 #if defined(__APPLE__)
 # pragma mark Local functions
 #endif // defined(__APPLE__)
-
-/*! @brief Draw a bezier curve between two points.
- @param startPoint The beginning of the curve.
- @param endPoint The end of the curve.
- @param startCentre A reference point for the beginning of the curve, used to calculate the beginning tangent.
- @param endCentre A reference point for the end of the curve, used to calculate the ending tangent. */
-static void drawBezier(const ofPoint & startPoint,
-                       const ofPoint & endPoint,
-                       const ofPoint & startCentre,
-                       const ofPoint & endCentre)
-{
-    OD_LOG_ENTER();//####
-    OD_LOG_P4("startPoint = ", &startPoint, "endPoint = ", &endPoint, "startCentre = ", &startCentre,//####
-              "endCentre = ", &endCentre);//####
-    ofPolyline bLine;
-    float      controlLength = (ofDist(startPoint.x, startPoint.y, endPoint.x, endPoint.y) * kControlLengthScale);
-    float      startAngle = atan2(startPoint.y - startCentre.y, startPoint.x - startCentre.x);
-    float      endAngle = atan2(endPoint.y - endCentre.y, endPoint.x - endCentre.x);
-    ofPoint    controlPoint1(controlLength * cos(startAngle), controlLength * sin(startAngle));
-    ofPoint    controlPoint2(controlLength * cos(endAngle), controlLength * sin(endAngle));
-    
-    bLine.addVertex(startPoint);
-    bLine.bezierTo(startPoint + controlPoint1, endPoint + controlPoint2, endPoint);
-    bLine.draw();
-    OD_LOG_EXIT();//####
-} // drawBezier
 
 #if defined(__APPLE__)
 # pragma mark Class methods
@@ -119,13 +84,13 @@ static void drawBezier(const ofPoint & startPoint,
 
 ServiceEntity::ServiceEntity(const PortPanel::EntityKind kind,
                              const string                description,
-                             ServiceViewerApp *          owner) :
+                             ServiceViewerApp &          owner) :
             inherited(), _panel(kind, description, owner), _drawConnectMarker(false), _drawDisconnectMarker(false),
             _drawMoveMarker(false), _selected(false)
 {
     OD_LOG_ENTER();//####
     OD_LOG_S1("description = ", description.c_str());//####
-    OD_LOG_P1("owner = ", owner);//####
+    OD_LOG_P1("owner = ", &owner);//####
     OD_LOG_EXIT_P(this);//####
 } // ServiceEntity::ServiceEntity
 
@@ -141,7 +106,9 @@ ServiceEntity::~ServiceEntity(void)
 
 void ServiceEntity::draw(void)
 {
-    OD_LOG_OBJENTER();//####
+//    OD_LOG_OBJENTER();//####
+    ServiceViewerApp & owner = _panel.getOwner();
+    
     _panel.draw();
     if (_drawConnectMarker)
     {
@@ -190,11 +157,11 @@ void ServiceEntity::draw(void)
                 
                 if (otherEntry->isService())
                 {
-                    ofSetLineWidth(kServiceConnectionWidth);
+                    ofSetLineWidth(owner.getServiceConnectionWidth());
                 }
                 else
                 {
-                    ofSetLineWidth(kNormalConnectionWidth);
+                    ofSetLineWidth(owner.getNormalConnectionWidth());
                 }
                 switch (mode)
                 {
@@ -211,14 +178,14 @@ void ServiceEntity::draw(void)
                         break;
                         
                 }
-                drawBezier(fromHere, toThere, aCentre, otherCentre);
+                DrawBezier(fromHere, toThere, aCentre, otherCentre);
                 ofSetLineWidth(1);
-                anEntry->drawSourceAnchor(anchorHere, fromHere);
-                otherEntry->drawTargetAnchor(anchorThere, toThere);
+                PortEntry::drawSourceAnchor(anchorHere, fromHere);
+                PortEntry::drawTargetAnchor(anchorThere, toThere);
             }
         }
     }
-    OD_LOG_OBJEXIT();//####
+//    OD_LOG_OBJEXIT();//####
 } // ServiceEntity::draw
 
 void ServiceEntity::handlePositionChange(void)
@@ -252,7 +219,7 @@ bool ServiceEntity::hasPort(const PortEntry * aPort)
 void ServiceEntity::positionChangeComplete(void)
 {
     OD_LOG_OBJENTER();//####
-    _panel.getOwner()->updateEntityList(this);
+    _panel.getOwner().updateEntityList(this);
     _selected = _drawMoveMarker = false;
     // something to do??
     OD_LOG_OBJEXIT();//####
