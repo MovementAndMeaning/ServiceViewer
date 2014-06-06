@@ -257,22 +257,18 @@ private:
     ServiceViewerApp & operator=(const ServiceViewerApp & other);
 
     /*! @brief Add connections between detected ports in the to-be-displayed list.
-     @param theApp The application object.
      @param detectedPorts The set of detected YARP ports. */
     void addPortConnectionsToBackground(const MplusM::Utilities::PortVector & detectedPorts);
     
     /*! @brief Add ports that have associates as 'adapter' entities to the to-be-displayed list.
-     @param theApp The application object.
      @param detectedPorts The set of detected YARP ports. */
     void addPortsWithAssociatesToBackground(const MplusM::Utilities::PortVector & detectedPorts);
     
     /*! @brief Add regular YARP ports as distinct entities to the to-be-displayed list.
-     @param theApp The application object.
      @param detectedPorts The set of detected YARP ports. */
     void addRegularPortEntitiesToBackground(const MplusM::Utilities::PortVector & detectedPorts);
     
     /*! @brief Add services as distinct entities to the to-be-displayed list.
-     @param theApp The application object.
      @param services The set of detected services. */
     void addServicesToBackground(const MplusM::Common::StringVector & services);
     
