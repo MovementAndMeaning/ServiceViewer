@@ -80,12 +80,13 @@ public:
     /*! @brief Add a port to the panel.
      @param portName The name of the port.
      @param portKind What the port will be used for.
-     @param direction The primary direction of the port. */
-    inline void addPort(string                         portName,
-                        const PortEntry::PortUsage     portKind,
-                        const PortEntry::PortDirection direction = PortEntry::kPortDirectionInputOutput)
+     @param direction The primary direction of the port.
+     @returns The newly-created port. */
+    inline PortEntry * addPort(string                         portName,
+                               const PortEntry::PortUsage     portKind,
+                               const PortEntry::PortDirection direction = PortEntry::kPortDirectionInputOutput)
     {
-        _panel.addPort(portName, portKind, direction);
+        return _panel.addPort(portName, portKind, direction);
     } // addPort
     
     /*! @brief Stop displaying the connect marker. */

@@ -129,9 +129,9 @@ PortPanel::~PortPanel(void)
 # pragma mark Actions
 #endif // defined(__APPLE__)
 
-void PortPanel::addPort(string                         portName,
-                        const PortEntry::PortUsage     portKind,
-                        const PortEntry::PortDirection direction)
+PortEntry * PortPanel::addPort(string                         portName,
+                               const PortEntry::PortUsage     portKind,
+                               const PortEntry::PortDirection direction)
 {
     OD_LOG_OBJENTER();//####
     OD_LOG_S1("portName = ", portName.c_str());//####
@@ -139,16 +139,17 @@ void PortPanel::addPort(string                         portName,
     PortEntry * aPort = new PortEntry(this, portKind, direction);
     
     add(aPort->setup(portName));
-    _owner.rememberPort(aPort);
     if (0 < countBefore)
     {
-        aPort = getPort(countBefore - 1);
-        if (aPort)
+        PortEntry * bPort = getPort(countBefore - 1);
+
+        if (bPort)
         {
-            aPort->unsetAsLastPort();
+            bPort->unsetAsLastPort();
         }
     }
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT_P(aPort);//####
+    return aPort;
 } // PortPanel::addPort
 
 PortEntry * PortPanel::getPort(const int num)

@@ -192,6 +192,7 @@ void ServiceEntity::handlePositionChange(void)
 {
     OD_LOG_OBJENTER();//####
     // Here we re-adjust any lines attached to the entity.
+    _panel.getOwner().movementStarted();
     _selected = _drawMoveMarker = true;
     OD_LOG_OBJEXIT();//####
 } // ServiceEntity::handlePositionChange
@@ -219,7 +220,7 @@ bool ServiceEntity::hasPort(const PortEntry * aPort)
 void ServiceEntity::positionChangeComplete(void)
 {
     OD_LOG_OBJENTER();//####
-    _panel.getOwner().updateEntityList(this);
+    _panel.getOwner().moveEntityToEndOfForegroundList(this);
     _selected = _drawMoveMarker = false;
     // something to do??
     OD_LOG_OBJEXIT();//####

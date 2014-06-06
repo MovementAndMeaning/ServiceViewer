@@ -44,6 +44,12 @@
 
 # include "ofBaseApp.h"
 # include "ofxGui.h"
+
+// Note that openFrameworks defines a macro called 'check' :( which messes up other header files.
+# undef check
+# include "M+MCommon.h"
+# include "M+MUtilities.h"
+
 # include <list>
 
 # if defined(__APPLE__)
@@ -68,9 +74,13 @@ public:
     /*! @brief The constructor. */
     ServiceViewerApp(void);
     
-    /*! @brief Add an entity to the list of displayed entities.
+    /*! @brief Add an entity to the list of next-to-be-displayed entities.
      @param anEntity The entity to be added. */
-    void addEntity(ServiceEntity * anEntity);
+    void addEntityToBackground(ServiceEntity * anEntity);
+    
+    /*! @brief Add an entity to the list of currently displayed entities.
+     @param anEntity The entity to be added. */
+    void addEntityToForeground(ServiceEntity * anEntity);
     
     /*! @brief Returns @c true if an add-connection operation is active and @c false otherwise.
      @returns @c true if an add-connection operation is active and @c false otherwise. */
@@ -108,26 +118,6 @@ public:
     
     /*! @brief Handle an exit request. */
     virtual void exit(void);
-    
-    /*! @brief Find an entity by name.
-     @param name The name of the entity.
-     @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
-    ServiceEntity * findEntity(string name);
-    
-    /*! @brief Find an entity by the name of a port within it.
-     @param name The name of the port.
-     @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
-    ServiceEntity * findEntityForPort(string name);
-    
-    /*! @brief Find an entity by a port within it.
-     @param aPort The port of interest.
-     @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
-    ServiceEntity * findEntityForPort(const PortEntry * aPort);
-    
-    /*! @brief Find a port by name.
-     @param name The name of the port.
-     @returns @c NULL if the port cannot be found and non-@c NULL if it is found. */
-    PortEntry * findPort(string name);
     
     /*! @brief Remove a port from the set of known ports.
      @param aPort The port to be removed. */
@@ -175,9 +165,15 @@ public:
                                int y,
                                int button);
     
-    /*! @brief Add a port to the set of known ports.
-     @param aPort The port to be added. */
-    void rememberPort(PortEntry * aPort);
+    /*! @brief Move an entity to the end of the entity list so that it will be the last drawn.
+     @param anEntity The entity to be moved. */
+    void moveEntityToEndOfForegroundList(ServiceEntity * anEntity);
+    
+    /*! @brief Indicate that an entity move has begun. */
+    inline void movementStarted(void)
+    {
+        _movementActive = true;
+    } // movementStarted
     
     /*! @brief Returns @c true if a remove-connection operation is active and @c false otherwise.
      @returns @c true if a remove-connection operation is active and @c false otherwise. */
@@ -202,10 +198,6 @@ public:
     
     /*! @brief Perform the update step of the update-draw loop. */
     virtual void update(void);
-    
-    /*! @brief Add an entity to the entity collection.
-     @param anEntity The entity to be added. */
-    void updateEntityList(ServiceEntity * anEntity);
     
     /*! @brief Process a window-resized event.
      @param w The new window width.
@@ -251,7 +243,7 @@ private:
 
     /*! @brief A mapping from strings to ports. */
     typedef map<string, PortEntry *> PortMap;
-
+    
     /*! @brief Copy constructor.
      
      Note - not implemented and private, to prevent unexpected copying.
@@ -264,59 +256,140 @@ private:
      @param other Another object to construct from. */
     ServiceViewerApp & operator=(const ServiceViewerApp & other);
 
+    /*! @brief Add connections between detected ports in the to-be-displayed list.
+     @param theApp The application object.
+     @param detectedPorts The set of detected YARP ports. */
+    void addPortConnectionsToBackground(const MplusM::Utilities::PortVector & detectedPorts);
+    
+    /*! @brief Add ports that have associates as 'adapter' entities to the to-be-displayed list.
+     @param theApp The application object.
+     @param detectedPorts The set of detected YARP ports. */
+    void addPortsWithAssociatesToBackground(const MplusM::Utilities::PortVector & detectedPorts);
+    
+    /*! @brief Add regular YARP ports as distinct entities to the to-be-displayed list.
+     @param theApp The application object.
+     @param detectedPorts The set of detected YARP ports. */
+    void addRegularPortEntitiesToBackground(const MplusM::Utilities::PortVector & detectedPorts);
+    
+    /*! @brief Add services as distinct entities to the to-be-displayed list.
+     @param theApp The application object.
+     @param services The set of detected services. */
+    void addServicesToBackground(const MplusM::Common::StringVector & services);
+    
+    /*! @brief Find an entity in the to-be-displayed list by name.
+     @param name The name of the entity.
+     @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
+    ServiceEntity * findBackgroundEntity(string name);
+    
+    /*! @brief Find a port in the to-be-displayed list by name.
+     @param name The name of the port.
+     @returns @c NULL if the port cannot be found and non-@c NULL if it is found. */
+    PortEntry * findBackgroundPort(string name);
+    
+    /*! @brief Find an entity in the currently-displayed list by name.
+     @param name The name of the entity.
+     @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
+    ServiceEntity * findForegroundEntity(string name);
+    
+    /*! @brief Find an entity by the name of a port within it.
+     @param name The name of the port.
+     @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
+    ServiceEntity * findForegroundEntityForPort(string name);
+    
+    /*! @brief Find an entity by a port within it.
+     @param aPort The port of interest.
+     @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
+    ServiceEntity * findForegroundEntityForPort(const PortEntry * aPort);
+    
+    /*! @brief Find a port in the currently-displayed list by name.
+     @param name The name of the port.
+     @returns @c NULL if the port cannot be found and non-@c NULL if it is found. */
+    PortEntry * findForegroundPort(string name);
+    
     /*! @brief Identify the YARP network entities. */
-    void gatherEntities(void);
+    void gatherEntitiesInBackground(void);
+    
+    /*! @brief Add a port to the set of known ports in the to-be-displayed list.
+     @param aPort The port to be added. */
+    void rememberPortInBackground(PortEntry * aPort);
     
     /*! @brief Setup the entity positions. */
     void setInitialEntityPositions(void);
     
-    /*! @brief The collection of visible services and ports. */
-    EntityList  _entities;
+    /*! @brief Swap the background and foreground data structures. */
+    void swapBackgroundAndForeground(void);
+    
+    /*! @brief A collection of visible services and ports. */
+    EntityList   _entities1;
 
-    /*! @brief The set of known ports. */
-    PortMap     _ports;
+    /*! @brief A collection of visible services and ports. */
+    EntityList   _entities2;
+    
+    /*! @brief A set of known ports. */
+    PortMap      _ports1;
+    
+    /*! @brief A set of known ports. */
+    PortMap      _ports2;
+    
+    /*! @brief Control access to the currently-displayed lists. */
+    ofMutex      _foregroundLock;
+    
+    /*! @brief The background set of known entities. */
+    EntityList * _backgroundEntities;
+    
+    /*! @brief The foreground set of known entities. */
+    EntityList * _foregroundEntities;
+    
+    /*! @brief The background set of known ports. */
+    PortMap *    _backgroundPorts;
+
+    /*! @brief The foreground set of known ports. */
+    PortMap *    _foregroundPorts;
     
     /*! @brief The starting port for a connection being added. */
-    PortEntry * _firstAddPort;
+    PortEntry *  _firstAddPort;
     
     /*! @brief The starting port for a connection being removed. */
-    PortEntry * _firstRemovePort;
+    PortEntry *  _firstRemovePort;
     
     /*! @brief The horizontal coordinate of the current drag location. */
-    float       _dragXpos;
+    float        _dragXpos;
     
     /*! @brief The vertical coordinate of the current drag location. */
-    float       _dragYpos;
+    float        _dragYpos;
     
     /*! @brief @c true if the connection being added will be UDP and @c false if it will be TCP. */
-    bool        _addingUDPConnection;
+    bool         _addingUDPConnection;
     
     /*! @brief @c true if a connection is being added and @c false otherwise. */
-    bool        _addIsActive;
+    bool         _addIsActive;
     
     /*! @brief @c true if the ALT/OPTION modifier key is depressed and @c false otherwise. */
-    bool        _altActive;
+    bool         _altActive;
     
     /*! @brief @c true if the COMMAND modifier key is depressed and @c false otherwise. */
-    bool        _commandActive;
+    bool         _commandActive;
     
     /*! @brief @c true if the CONTROL modifier key is depressed and @c false otherwise. */
-    bool        _controlActive;
+    bool         _controlActive;
     
     /*! @brief @c true if a connection is being created by dragging between ports and @c false otherwise. */
-    bool        _dragActive;
+    bool         _dragActive;
+    
+    /*! @brief @c true if an entity is being moved. */
+    bool         _movementActive;
     
     /*! @brief @c true if the YARP network is running. */
-    bool        _networkAvailable;
+    bool         _networkAvailable;
     
     /*! @brief @c true if the service registry can be used. */
-    bool        _registryAvailable;
+    bool         _registryAvailable;
     
     /*! @brief @c true if a connection is being removed and @c false otherwise. */
-    bool        _removeIsActive;
+    bool         _removeIsActive;
     
     /*! @brief @c true if the SHIFT modifier key is depressed and @c false otherwise. */
-    bool        _shiftActive;
+    bool         _shiftActive;
     
 # if defined(__APPLE__)
 #  pragma clang diagnostic push

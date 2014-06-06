@@ -105,10 +105,11 @@ public:
     /*! @brief Add a port to the panel.
      @param portName The name of the port.
      @param portKind What the port will be used for.
-     @param direction The primary direction of the port. */
-    void addPort(string                         portName,
-                 const PortEntry::PortUsage     portKind = PortEntry::kPortUsageOther,
-                 const PortEntry::PortDirection direction = PortEntry::kPortDirectionInputOutput);
+     @param direction The primary direction of the port.
+     @returns The newly-created port. */
+    PortEntry *  addPort(string                         portName,
+                         const PortEntry::PortUsage     portKind = PortEntry::kPortUsageOther,
+                         const PortEntry::PortDirection direction = PortEntry::kPortDirectionInputOutput);
     
     /*! @brief Draw the panel. */
 	inline void draw(void)
