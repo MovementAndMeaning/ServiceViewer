@@ -58,14 +58,14 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);..\..\..\addons\ofxGui\libs;..\..\..\addons\ofxGui\src;$(ACE_ROOT);$(YARP_DIR)/generated_include;$(YARP_DIR)/src/libYARP_OS/include;$(YARP_DIR)/src/libYARP_sig/include;$(YARP_DIR)/src/libYARP_dev/include;$(YARP_DIR)/src/libYARP_name/include;$(YARP_DIR)/src/yarpmanager/libymanager/include;$(YARP_DIR)/src/yarpserver/include;D:\dev\MPlusM\Common;D:\dev\MPlusM\Logging;D:\dev\MPlusM\RegistryService</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);..\..\..\addons\ofxGui\libs;..\..\..\addons\ofxGui\src;$(ACE_ROOT);$(YARP_DIR)/generated_include;$(YARP_DIR)/src/libYARP_OS/include;$(YARP_DIR)/src/libYARP_sig/include;$(YARP_DIR)/src/libYARP_dev/include;$(YARP_DIR)/src/libYARP_name/include;$(YARP_DIR)/src/yarpmanager/libymanager/include;$(YARP_DIR)/src/yarpserver/include;D:\dev\MPlusM\Common;D:\dev\MPlusM\Logging;D:\dev\MPlusM\RegistryService;D:\dev\OGDF</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <AdditionalDependencies>$(ACE_ROOT)\lib\ACEd.lib;$(YARP_DIR)\lib\Debug\YARP_OSd.lib;$(YARP_DIR)\lib\Debug\YARP_initd.lib;D:\dev\MPlusM\Common\Debug\mpmCommon.lib;D:\dev\MPlusM\Logging\Debug\odLogging.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ACE_ROOT)\lib\ACEd.lib;$(YARP_DIR)\lib\Debug\YARP_OSd.lib;$(YARP_DIR)\lib\Debug\YARP_initd.lib;D:\dev\MPlusM\Common\Debug\mpmCommon.lib;D:\dev\MPlusM\Logging\Debug\odLogging.lib;D:\dev\OGDF\Win32\Debug\ogdf.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -75,7 +75,7 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);..\..\..\addons\ofxGui\libs;..\..\..\addons\ofxGui\src;$(ACE_ROOT);$(YARP_DIR)/generated_include;$(YARP_DIR)/src/libYARP_OS/include;$(YARP_DIR)/src/libYARP_sig/include;$(YARP_DIR)/src/libYARP_dev/include;$(YARP_DIR)/src/libYARP_name/include;$(YARP_DIR)/src/yarpmanager/libymanager/include;$(YARP_DIR)/src/yarpserver/include;D:\dev\MPlusM\Common;D:\dev\MPlusM\Logging;D:\dev\MPlusM\RegistryService</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);..\..\..\addons\ofxGui\libs;..\..\..\addons\ofxGui\src;$(ACE_ROOT);$(YARP_DIR)/generated_include;$(YARP_DIR)/src/libYARP_OS/include;$(YARP_DIR)/src/libYARP_sig/include;$(YARP_DIR)/src/libYARP_dev/include;$(YARP_DIR)/src/libYARP_name/include;$(YARP_DIR)/src/yarpmanager/libymanager/include;$(YARP_DIR)/src/yarpserver/include;D:\dev\MPlusM\Common;D:\dev\MPlusM\Logging;D:\dev\MPlusM\RegistryService;D:\dev\OGDF</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
@@ -85,7 +85,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <AdditionalDependencies>$(ACE_ROOT)\lib\ACE.lib;$(YARP_DIR)\lib\Release\YARP_OS.lib;$(YARP_DIR)\lib\Release\YARP_init.lib;D:\dev\MPlusM\Common\Release\mpmCommon.lib;D:\dev\MPlusM\Logging\Release\odLogging.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ACE_ROOT)\lib\ACE.lib;$(YARP_DIR)\lib\Release\YARP_OS.lib;$(YARP_DIR)\lib\Release\YARP_init.lib;D:\dev\MPlusM\Common\Release\mpmCommon.lib;D:\dev\MPlusM\Logging\Release\odLogging.lib;D:\dev\OGDF\Win32\Release\ogdf.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
