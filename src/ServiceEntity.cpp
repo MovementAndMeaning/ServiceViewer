@@ -85,8 +85,8 @@ static const float kMarkerSide = 12;
 ServiceEntity::ServiceEntity(const PortPanel::EntityKind kind,
                              const string                description,
                              ServiceViewerApp &          owner) :
-            inherited(), _panel(kind, description, owner), _drawConnectMarker(false), _drawDisconnectMarker(false),
-            _drawMoveMarker(false), _selected(false)
+            inherited(), _panel(kind, description, owner, *this), _node(NULL), _drawConnectMarker(false),
+            _drawDisconnectMarker(false), _drawMoveMarker(false), _selected(false)
 {
     OD_LOG_ENTER();//####
     OD_LOG_S1("description = ", description.c_str());//####

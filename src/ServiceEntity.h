@@ -47,6 +47,8 @@
 
 # include "ofxGui.h"
 
+# include <ogdf/basic/Graph.h>
+
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
 #  pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
@@ -117,6 +119,29 @@ public:
         return _panel.getName();
     } // getName
     
+    /*! @brief Return the node corresponding to the entity.
+     @returns The node corresponding to the entity. */
+    inline ogdf::node getNode(void)
+    const
+    {
+        return _node;
+    } // getNode
+    
+    /*! @brief Returns the number of ports in this entity.
+     @returns The number of ports in this entity. */
+    inline int getNumPorts(void)
+    {
+        return _panel.getNumPorts();
+    } // getNumPorts
+    
+    /*! @brief Returns a port by index.
+     @param num The zero-origin index of the port.
+     @returns A port or @c NULL if the index is out of range. */
+    PortEntry * getPort(const int num)
+    {
+        return _panel.getPort(num);
+    } // getPort
+    
     /*! @brief Return the bounding box for the entity.
      @returns The bounding box for the entity. */
     inline ofRectangle getShape(void)
@@ -161,6 +186,13 @@ public:
         _drawDisconnectMarker = true;
     } // setDisconnectMarker
     
+    /*! @brief Sets the node corresponding to the entity.
+     @param newNode The new value for the node corresponding to the entity. */
+    inline void setNode(ogdf::node newNode)
+    {
+        _node = newNode;
+    } // setNode
+    
     /*! @brief Move the entity to a new location on the display.
      @param xx The new horizontal position of the entity.
      @param yy The new vertical position of the entity. */
@@ -199,6 +231,9 @@ private:
     
     /*! @brief The GUI object that represents the entity. */
     PortPanel _panel;
+    
+    /*! @brief The node corresponding to the entity. */
+    ogdf::node _node;
     
     /*! @brief @c true if the connect marker is to be displayed and @c false otherwise. */
     bool      _drawConnectMarker;

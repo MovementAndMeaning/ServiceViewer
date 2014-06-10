@@ -57,6 +57,7 @@
 # endif // defined(__APPLE__)
 
 class MovementTracker;
+class ServiceEntity;
 class ServiceViewerApp;
 
 /*! @brief A GUI element to represent a set of ports. */
@@ -78,15 +79,18 @@ public:
     /*! @brief The constructor.
      @param kind The kind of entity.
      @param description A description of the entity.
-     @param owner The application object that manages this panel. */
+     @param owner The application object that manages this panel.
+     @param within The entity that contains this panel. */
 	PortPanel(const EntityKind   kind,
               const string       description,
-              ServiceViewerApp & owner);
+              ServiceViewerApp & owner,
+              ServiceEntity &    within);
     
     /*! @brief The constructor.
      @param kind The kind of entity.
      @param description A description of the entity.
      @param owner The application object that manages this panel.
+     @param within The entity that contains this panel.
      @param parameters The set of named parameters for the panel.
      @param filename The settings file for the panel.
      @param xx The initial horizontal position of the panel.
@@ -94,6 +98,7 @@ public:
 	PortPanel(const EntityKind         kind,
               const string             description,
               ServiceViewerApp &       owner,
+              ServiceEntity &          within,
               const ofParameterGroup & parameters,
               string                   filename = "settings.xml",
               const float              xx = 10,
@@ -117,6 +122,14 @@ public:
         inherited::draw();
     } // draw
 
+    /*! @brief Returns the entity that contains thie panel.
+     @returns The entity that contains this panel. */
+    ServiceEntity & getContainer(void)
+    const
+    {
+        return _within;
+    } // getContainer
+    
     /*! @brief Return the height of the vertical gap between panel elements.
      @returns The vertical gap between panel elements. */
     inline float getGapHeight(void)
@@ -293,6 +306,9 @@ private:
     /*! @brief The application object that manages the panel. */
     ServiceViewerApp & _owner;
 
+    /*! @brief The entity that contains this panel. */
+    ServiceEntity &    _within;
+    
     /*! @brief The description of the entity, if it is a service. */
     string             _description;
     

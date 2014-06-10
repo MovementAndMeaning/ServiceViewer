@@ -50,6 +50,9 @@
 #include "ofGraphics.h"
 #include "ofMesh.h"
 
+#include <ogdf/basic/GraphAttributes.h>
+#include <ogdf/energybased/FMMMLayout.h>
+
 // Note that openFrameworks defines a macro called 'check' :( which messes up other header files.
 #undef check
 #include "M+MAdapterChannel.h"
@@ -85,6 +88,9 @@
 #if defined(__APPLE__)
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
+
+/*! @brief The fraction of the window dimensions that is used for edge length. */
+static const float kEdgeFactor = 42;
 
 /*! @brief The line width for a normal connection. */
 static const float kNormalConnectionWidth = 2;
@@ -937,10 +943,11 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort)
 void ServiceViewerApp::setInitialEntityPositions(void)
 {
     OD_LOG_OBJENTER();//####
-//#if defined(TEST_GRAPHICS_)
     float fullHeight = ofGetHeight();
     float fullWidth = ofGetWidth();
+    float diagonal = sqrt((fullHeight * fullHeight) + (fullWidth * fullWidth));
     
+#if defined(TEST_GRAPHICS_)
     for (EntityList::iterator it(_backgroundEntities->begin()); _backgroundEntities->end() != it; ++it)
     {
         ServiceEntity * anEntity = *it;
@@ -965,8 +972,98 @@ void ServiceViewerApp::setInitialEntityPositions(void)
             }
         }
     }
-//#else // ! defined(TEST_GRAPHICS_)
-//#endif // ! defined(TEST_GRAPHICS_)
+#else // ! defined(TEST_GRAPHICS_)
+    ogdf::Graph           gg;
+    ogdf::GraphAttributes ga(gg);
+    
+    ga.directed(true);
+    for (EntityList::iterator it(_backgroundEntities->begin()); _backgroundEntities->end() != it; ++it)
+    {
+        ServiceEntity * anEntity = *it;
+        
+        if (anEntity)
+        {
+            ofRectangle     entityShape(anEntity->getShape());
+            ogdf::node      aNode = gg.newNode();
+            ServiceEntity * olderVersion = findForegroundEntity(anEntity->getName());
+            
+            ga.width(aNode) = entityShape.width;
+            ga.height(aNode) = entityShape.height;
+            anEntity->setNode(aNode);
+            if (olderVersion)
+            {
+                ofRectangle oldShape(olderVersion->getShape());
+                
+                ga.x(aNode) = oldShape.getX();
+                ga.y(aNode) = oldShape.getY();
+            }
+        }
+    }
+    // Set up the edges (connections)
+    for (EntityList::iterator it(_backgroundEntities->begin()); _backgroundEntities->end() != it; ++it)
+    {
+        ServiceEntity * anEntity = *it;
+        
+        if (anEntity)
+        {
+            ogdf::node thisNode = anEntity->getNode();
+            
+            // Add edges between entities that are connected via their entries
+            for (int ii = 0, mm = anEntity->getNumPorts(); mm > ii; ++ii)
+            {
+                PortEntry * aPort = anEntity->getPort(ii);
+                
+                if (aPort)
+                {
+                    const PortEntry::Connections & outputs(aPort->getOutputConnections());
+                    
+                    for (int jj = 0, nn = outputs.size(); nn > jj; ++jj)
+                    {
+                        PortEntry * otherPort = outputs[jj]._otherPort;
+                        
+                        if (otherPort)
+                        {
+                            PortPanel * otherParent = otherPort->getParent();
+                            
+                            if (otherParent)
+                            {
+                                ServiceEntity & otherEntity = otherParent->getContainer();
+                                ogdf::node      otherNode = otherEntity.getNode();
+                                ogdf::edge      ee = gg.newEdge(thisNode, otherNode);
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    // Apply an energy-based layout
+    ogdf::FMMMLayout fmmm;
+    
+	fmmm.useHighLevelOptions(true);
+	fmmm.newInitialPlacement(true);
+	fmmm.qualityVersusSpeed(ogdf::FMMMLayout::qvsGorgeousAndEfficient);
+    fmmm.allowedPositions(ogdf::FMMMLayout::apAll);
+    fmmm.initialPlacementMult(ogdf::FMMMLayout::ipmAdvanced);
+    fmmm.initialPlacementForces(ogdf::FMMMLayout::ipfUniformGrid); // ipfKeepPositions??
+    fmmm.repForcesStrength(2.0);
+	fmmm.call(ga);
+    for (EntityList::iterator it(_backgroundEntities->begin()); _backgroundEntities->end() != it; ++it)
+    {
+        ServiceEntity * anEntity = *it;
+        
+        if (anEntity)
+        {
+            ogdf::node aNode = anEntity->getNode();
+            
+            if (aNode)
+            {
+                anEntity->setPosition(ga.x(aNode), ga.y(aNode));
+            }
+        }
+    }
+#endif // ! defined(TEST_GRAPHICS_)
     OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::setInitialEntityPositions
 

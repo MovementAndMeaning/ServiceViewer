@@ -83,28 +83,31 @@
 
 PortPanel::PortPanel(const EntityKind   kind,
                      const string       description,
-                     ServiceViewerApp & owner) :
-            inherited(), _tracker(NULL), _owner(owner), _description(description), _kind(kind), _grabbed(false)
+                     ServiceViewerApp & owner,
+                     ServiceEntity &    within) :
+            inherited(), _tracker(NULL), _owner(owner), _within(within), _description(description), _kind(kind),
+            _grabbed(false)
 {
     OD_LOG_ENTER();//####
     OD_LOG_S1("description = ", description.c_str());//####
-    OD_LOG_P1("owner = ", &owner);//####
+    OD_LOG_P2("owner = ", &owner, "within = ", &within);//####
     OD_LOG_EXIT_P(this);//####
 } // PortPanel::PortPanel
 
 PortPanel::PortPanel(const EntityKind         kind,
                      const string             description,
                      ServiceViewerApp &       owner,
+                     ServiceEntity &          within,
                      const ofParameterGroup & parameters,
                      string                   filename,
                      const float              xx,
                      const float              yy) :
-            inherited(parameters, filename, xx, yy), _tracker(NULL), _owner(owner), _description(description),
-            _kind(kind), _grabbed(false)
+            inherited(parameters, filename, xx, yy), _tracker(NULL), _owner(owner), _within(within),
+            _description(description), _kind(kind), _grabbed(false)
 {
     OD_LOG_ENTER();//####
     OD_LOG_S2("description = ", description.c_str(), "filename = ", filename.c_str());//####
-    OD_LOG_P2("owner = ", &owner, "parameters = ", &parameters);//####
+    OD_LOG_P3("owner = ", &owner, "within = ", &within, "parameters = ", &parameters);//####
     OD_LOG_D2("xx = ", xx, "yy = ", yy);//####
     OD_LOG_EXIT_P(this);//####
 } // PortPanel::PortPanel
