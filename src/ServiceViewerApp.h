@@ -309,8 +309,8 @@ private:
      @param aPort The port to be added. */
     void rememberPortInBackground(PortEntry * aPort);
     
-    /*! @brief Setup the entity positions. */
-    void setInitialEntityPositions(void);
+    /*! @brief Set the entity positions. */
+    void setEntityPositions(void);
     
     /*! @brief Swap the background and foreground data structures. */
     void swapBackgroundAndForeground(void);

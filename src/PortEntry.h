@@ -61,8 +61,6 @@
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
-//# define SUPPORT_BOTTOM_DIAGONALS_ /* Allow connections to the bottom corners of the port entry. */
-
 class PortPanel;
 class ServiceViewerApp;
 
@@ -82,12 +80,6 @@ public:
         kAnchorBottomCentre,
         /*! @brief The connection is to the top edge of the port entry. */
         kAnchorTopCentre,
-# if defined(SUPPORT_BOTTOM_DIAGONALS_)
-        /*! @brief The connection is to the bottom left corner of the port entry. */
-        kAnchorBottomLeft,
-        /*! @brief The connection is to the bottom right corner of the port entry. */
-        kAnchorBottomRight,
-# endif // defined(SUPPORT_BOTTOM_DIAGONALS_)
         /*! @brief The connection point is unknown. */
         kAnchorUnknown
     }; // AnchorSide
@@ -151,24 +143,28 @@ public:
     /*! @brief Determine the anchor point that is the minimum distance from a given point.
      @param result The coordinates of the anchor point.
      @param isSource @c true if the anchor is for an outgoing line and @c false otherwise.
+     @param disallowBottom @c true if the anchor cannot be bottom-centre.
      @param xx The horizontal coordinate for the point of interest.
      @param yy The vertical coordinate for the point of interest.
      @returns The side to which the anchor is attached. */
     inline AnchorSide calculateClosestAnchor(ofPoint &   result,
                                              const bool  isSource,
+                                             const bool  disallowBottom,
                                              const float xx,
                                              const float yy)
     {
-        return calculateClosestAnchor(result, isSource, ofPoint(xx, yy));
+        return calculateClosestAnchor(result, isSource, disallowBottom, ofPoint(xx, yy));
     } // calculateClosestAnchor
     
     /*! @brief Determine the anchor point that is the minimum distance from a given point.
      @param result The coordinates of the anchor point.
      @param isSource @c true if the anchor is for an outgoing line and @c false otherwise.
+     @param disallowBottom @c true if the anchor cannot be bottom-centre.
      @param pp The point of interest.
      @returns The side to which the anchor is attached. */
     AnchorSide calculateClosestAnchor(ofPoint &       result,
                                       const bool      isSource,
+                                      const bool      disallowBottom,
                                       const ofPoint & pp);
     
     /*! @brief Display the 'drag-line' from this port entry to the given coordinates.

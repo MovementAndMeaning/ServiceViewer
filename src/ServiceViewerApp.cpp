@@ -408,6 +408,17 @@ void ServiceViewerApp::addServicesToBackground(const MplusM::Common::StringVecto
 void ServiceViewerApp::clearDragState(void)
 {
     OD_LOG_OBJENTER();//####
+    if (_firstAddPort)
+    {
+        // Process connection add requests.
+        ServiceEntity * firstEntity = findForegroundEntityForPort(_firstAddPort);
+        
+        if (firstEntity)
+        {
+            firstEntity->clearConnectMarker();
+        }
+        _firstAddPort = NULL;
+    }
     _dragActive = false;
     OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::clearDragState
@@ -940,9 +951,10 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort)
     OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::reportPortEntryClicked
 
-void ServiceViewerApp::setInitialEntityPositions(void)
+void ServiceViewerApp::setEntityPositions(void)
 {
     OD_LOG_OBJENTER();//####
+    bool  positionsNeedUpdate = false;
     float fullHeight = ofGetHeight();
     float fullWidth = ofGetWidth();
     float diagonal = sqrt((fullHeight * fullHeight) + (fullWidth * fullWidth));
@@ -997,75 +1009,87 @@ void ServiceViewerApp::setInitialEntityPositions(void)
                 ga.x(aNode) = oldShape.getX();
                 ga.y(aNode) = oldShape.getY();
             }
+            else
+            {
+                float newX = ofRandom(fullWidth - entityShape.width);
+                float newY = ofRandom(fullHeight - entityShape.height);
+                
+                ga.x(aNode) = newX;
+                ga.y(aNode) = newY;
+                positionsNeedUpdate = true;
+            }
         }
     }
-    // Set up the edges (connections)
-    for (EntityList::iterator it(_backgroundEntities->begin()); _backgroundEntities->end() != it; ++it)
+    if (positionsNeedUpdate)
     {
-        ServiceEntity * anEntity = *it;
-        
-        if (anEntity)
+        // Set up the edges (connections)
+        for (EntityList::iterator it(_backgroundEntities->begin()); _backgroundEntities->end() != it; ++it)
         {
-            ogdf::node thisNode = anEntity->getNode();
+            ServiceEntity * anEntity = *it;
             
-            // Add edges between entities that are connected via their entries
-            for (int ii = 0, mm = anEntity->getNumPorts(); mm > ii; ++ii)
+            if (anEntity)
             {
-                PortEntry * aPort = anEntity->getPort(ii);
+                ogdf::node thisNode = anEntity->getNode();
                 
-                if (aPort)
+                // Add edges between entities that are connected via their entries
+                for (int ii = 0, mm = anEntity->getNumPorts(); mm > ii; ++ii)
                 {
-                    const PortEntry::Connections & outputs(aPort->getOutputConnections());
+                    PortEntry * aPort = anEntity->getPort(ii);
                     
-                    for (int jj = 0, nn = outputs.size(); nn > jj; ++jj)
+                    if (aPort)
                     {
-                        PortEntry * otherPort = outputs[jj]._otherPort;
+                        const PortEntry::Connections & outputs(aPort->getOutputConnections());
                         
-                        if (otherPort)
+                        for (int jj = 0, nn = outputs.size(); nn > jj; ++jj)
                         {
-                            PortPanel * otherParent = otherPort->getParent();
+                            PortEntry * otherPort = outputs[jj]._otherPort;
                             
-                            if (otherParent)
+                            if (otherPort)
                             {
-                                ServiceEntity & otherEntity = otherParent->getContainer();
-                                ogdf::node      otherNode = otherEntity.getNode();
-                                ogdf::edge      ee = gg.newEdge(thisNode, otherNode);
-
+                                PortPanel * otherParent = otherPort->getParent();
+                                
+                                if (otherParent)
+                                {
+                                    ServiceEntity & otherEntity = otherParent->getContainer();
+                                    ogdf::node      otherNode = otherEntity.getNode();
+                                    ogdf::edge      ee = gg.newEdge(thisNode, otherNode);
+                                    
+                                }
                             }
                         }
                     }
                 }
             }
         }
-    }
-    // Apply an energy-based layout
-    ogdf::FMMMLayout fmmm;
-    
-	fmmm.useHighLevelOptions(true);
-	fmmm.newInitialPlacement(true);
-	fmmm.qualityVersusSpeed(ogdf::FMMMLayout::qvsGorgeousAndEfficient);
-    fmmm.allowedPositions(ogdf::FMMMLayout::apAll);
-    fmmm.initialPlacementMult(ogdf::FMMMLayout::ipmAdvanced);
-    fmmm.initialPlacementForces(ogdf::FMMMLayout::ipfUniformGrid); // ipfKeepPositions??
-    fmmm.repForcesStrength(2.0);
-	fmmm.call(ga);
-    for (EntityList::iterator it(_backgroundEntities->begin()); _backgroundEntities->end() != it; ++it)
-    {
-        ServiceEntity * anEntity = *it;
+        // Apply an energy-based layout
+        ogdf::FMMMLayout fmmm;
         
-        if (anEntity)
+        fmmm.useHighLevelOptions(true);
+        fmmm.newInitialPlacement(true);
+        fmmm.qualityVersusSpeed(ogdf::FMMMLayout::qvsGorgeousAndEfficient);
+        fmmm.allowedPositions(ogdf::FMMMLayout::apAll);
+        fmmm.initialPlacementMult(ogdf::FMMMLayout::ipmAdvanced);
+        fmmm.initialPlacementForces(ogdf::FMMMLayout::ipfKeepPositions);
+        fmmm.repForcesStrength(2.0);
+        fmmm.call(ga);
+        for (EntityList::iterator it(_backgroundEntities->begin()); _backgroundEntities->end() != it; ++it)
         {
-            ogdf::node aNode = anEntity->getNode();
+            ServiceEntity * anEntity = *it;
             
-            if (aNode)
+            if (anEntity)
             {
-                anEntity->setPosition(ga.x(aNode), ga.y(aNode));
+                ogdf::node aNode = anEntity->getNode();
+                
+                if (aNode)
+                {
+                    anEntity->setPosition(ga.x(aNode), ga.y(aNode));
+                }
             }
         }
     }
 #endif // ! defined(TEST_GRAPHICS_)
     OD_LOG_OBJEXIT();//####
-} // ServiceViewerApp::setInitialEntityPositions
+} // ServiceViewerApp::setEntityPositions
 
 void ServiceViewerApp::setup(void)
 {
@@ -1079,7 +1103,7 @@ void ServiceViewerApp::setup(void)
     {
         _networkAvailable = true;
         gatherEntitiesInBackground();
-        setInitialEntityPositions();
+        setEntityPositions();
         swapBackgroundAndForeground();
     }
 #if CheckNetworkWorks_

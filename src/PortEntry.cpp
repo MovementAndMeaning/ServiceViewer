@@ -81,10 +81,12 @@ static const float kTargetBoxScale = 0.25;
 
 /*! @brief Determine the anchor point that is the minimum distance from a given point.
  @param newCentre The synthesized centre for the target point.
+ @param disallowBottom @c true if the anchor cannot be bottom-centre.
  @param targetPoint The target point.
  @param refCentre The reference point.
  @returns The side to which the anchor is attached. */
 static PortEntry::AnchorSide calculateAnchorForPoint(ofPoint &       newCentre,
+                                                     const bool      disallowBottom,
                                                      const ofPoint & targetPoint,
                                                      const ofPoint & refCentre)
 {
@@ -106,7 +108,7 @@ static PortEntry::AnchorSide calculateAnchorForPoint(ofPoint &       newCentre,
         anchor = PortEntry::kAnchorRight;
         newCentre = targetPoint + ofPoint(- boxSize, 0);
     }
-    if (CalculateMinDistance(soFar, refCentre, box.x + (boxSize / 2), box.y + boxSize, tempPoint))
+    if ((! disallowBottom) && CalculateMinDistance(soFar, refCentre, box.x + (boxSize / 2), box.y + boxSize, tempPoint))
     {
         anchor = PortEntry::kAnchorBottomCentre;
         newCentre = targetPoint + ofPoint(0, - boxSize);
@@ -217,6 +219,7 @@ void PortEntry::addOutputConnection(PortEntry *                 other,
 
 PortEntry::AnchorSide PortEntry::calculateClosestAnchor(ofPoint &       result,
                                                         const bool      isSource,
+                                                        const bool      disallowBottom,
                                                         const ofPoint & pp)
 {
 //    OD_LOG_OBJENTER();//####
@@ -245,7 +248,7 @@ PortEntry::AnchorSide PortEntry::calculateClosestAnchor(ofPoint &       result,
             result.x += kArrowSize;
         }
     }
-    if (_isLastPort)
+    if (_isLastPort && (! disallowBottom))
     {
         if (CalculateMinDistance(soFar, pp, outer.x + (outer.width / 2), outer.y + outer.height, result))
         {
@@ -256,28 +259,6 @@ PortEntry::AnchorSide PortEntry::calculateClosestAnchor(ofPoint &       result,
                 result.y += kArrowSize;
             }
         }
-#if defined(SUPPORT_BOTTOM_DIAGONALS_)
-        if (CalculateMinDistance(soFar, pp, outer.x, outer.y + outer.height, result))
-        {
-            anchor = kAnchorBottomLeft;
-            if (isSource)
-            {
-                // Adjust the anchor position if an output.
-                result.x -= kArrowSize;
-                result.y += kArrowSize;
-            }
-        }
-        if (CalculateMinDistance(soFar, pp, outer.x + outer.width, outer.y + outer.height, result))
-        {
-            anchor = kAnchorBottomRight;
-            if (isSource)
-            {
-                // Adjust the anchor position if an output.
-                result.x += kArrowSize;
-                result.y += kArrowSize;
-            }
-        }
-#endif // defined(SUPPORT_BOTTOM_DIAGONALS_)
     }
 //    OD_LOG_OBJEXIT_L(static_cast<int>(anchor));//####
     return anchor;
@@ -294,13 +275,26 @@ void PortEntry::drawDragLine(const float xPos,
     
     if (! theParent->isPointInside(xPos, yPos))
     {
+        PortEntry::AnchorSide anchorHere;
+        PortEntry::AnchorSide anchorThere;
         ofPoint               aCentre(getCentre());
         ofPoint               toThere(xPos, yPos);
         ofPoint               fromHere;
-        PortEntry::AnchorSide anchorHere = calculateClosestAnchor(fromHere, true, toThere);
         ofPoint               newCentre;
-        PortEntry::AnchorSide anchorThere = calculateAnchorForPoint(newCentre, toThere, aCentre);
         
+        // Check if the destination is above the source, in which case we determine the anchors in the reverse
+        // order.
+        if (aCentre.y < yPos)
+        {
+            anchorHere = calculateClosestAnchor(fromHere, true, false, toThere);
+            anchorThere = calculateAnchorForPoint(newCentre, PortEntry::kAnchorBottomCentre == anchorHere, toThere,
+                                                  aCentre);
+        }
+        else
+        {
+            anchorThere = calculateAnchorForPoint(newCentre, false, toThere, aCentre);
+            anchorHere = calculateClosestAnchor(fromHere, true, PortEntry::kAnchorBottomCentre == anchorThere, toThere);
+        }
         if (isUDP)
         {
             ofSetColor(ServiceViewerApp::getUdpConnectionColor());
@@ -349,20 +343,6 @@ void PortEntry::drawSourceAnchor(const AnchorSide anchor,
             second = anchorPos + ofPoint(kArrowSize, kArrowSize);
             break;
             
-#if defined(SUPPORT_BOTTOM_DIAGONALS_)
-        case kAnchorBottomLeft:
-            first = anchorPos + ofPoint(0, - kArrowSize);
-            second = anchorPos + ofPoint(kArrowSize, 0);
-            break;
-#endif // defined(SUPPORT_BOTTOM_DIAGONALS_)
-            
-#if defined(SUPPORT_BOTTOM_DIAGONALS_)
-        case kAnchorBottomRight:
-            first = anchorPos + ofPoint(- kArrowSize, 0);
-            second = anchorPos + ofPoint(0, kArrowSize);
-            break;
-#endif // defined(SUPPORT_BOTTOM_DIAGONALS_)
-            
         default:
             break;
             
@@ -405,20 +385,6 @@ void PortEntry::drawTargetAnchor(const AnchorSide anchor,
             first = anchorPos + ofPoint(- kArrowSize, - kArrowSize);
             second = anchorPos + ofPoint(kArrowSize, - kArrowSize);
             break;
-            
-#if defined(SUPPORT_BOTTOM_DIAGONALS_)
-        case kAnchorBottomLeft:
-            first = anchorPos + ofPoint(- kArrowSize, 0);
-            second = anchorPos + ofPoint(0, kArrowSize);
-            break;
-#endif // defined(SUPPORT_BOTTOM_DIAGONALS_)
-            
-#if defined(SUPPORT_BOTTOM_DIAGONALS_)
-        case kAnchorBottomRight:
-            first = anchorPos + ofPoint(kArrowSize, 0);
-            second = anchorPos + ofPoint(0, kArrowSize);
-            break;
-#endif // defined(SUPPORT_BOTTOM_DIAGONALS_)
             
         default:
             break;

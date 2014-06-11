@@ -147,14 +147,30 @@ void ServiceEntity::draw(void)
             
             for (PortEntry::Connections::const_iterator walker(connex.begin()); connex.end() != walker; ++walker)
             {
+                PortEntry::AnchorSide       anchorHere;
+                PortEntry::AnchorSide       anchorThere;
+                MplusM::Common::ChannelMode mode = walker->_connectionMode;
                 PortEntry *                 otherEntry = walker->_otherPort;
                 ofPoint                     otherCentre(otherEntry->getCentre());
                 ofPoint                     fromHere;
-                PortEntry::AnchorSide       anchorHere = anEntry->calculateClosestAnchor(fromHere, true, otherCentre);
                 ofPoint                     toThere;
-                PortEntry::AnchorSide       anchorThere = otherEntry->calculateClosestAnchor(toThere, false, aCentre);
-                MplusM::Common::ChannelMode mode = walker->_connectionMode;
                 
+                // Check if the destination is above the source, in which case we determine the anchors in the reverse
+                // order.
+                if (aCentre.y < otherCentre.y)
+                {
+                    anchorHere = anEntry->calculateClosestAnchor(fromHere, true, false, otherCentre);
+                    anchorThere = otherEntry->calculateClosestAnchor(toThere, false,
+                                                                     PortEntry::kAnchorBottomCentre == anchorHere,
+                                                                     aCentre);
+                }
+                else
+                {
+                    anchorThere = otherEntry->calculateClosestAnchor(toThere, false, false, aCentre);
+                    anchorHere = anEntry->calculateClosestAnchor(fromHere, true,
+                                                                 PortEntry::kAnchorBottomCentre == anchorThere,
+                                                                 otherCentre);
+                }
                 if (otherEntry->isService())
                 {
                     ofSetLineWidth(owner.getServiceConnectionWidth());
