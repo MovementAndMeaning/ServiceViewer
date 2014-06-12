@@ -115,6 +115,7 @@ PortPanel::PortPanel(const EntityKind         kind,
 PortPanel::~PortPanel(void)
 {
     OD_LOG_OBJENTER();//####
+    unregisterMouseEvents();
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         PortEntry * aPort = getPort(ii);

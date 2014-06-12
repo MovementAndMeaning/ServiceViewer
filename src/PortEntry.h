@@ -40,7 +40,7 @@
 //--------------------------------------------------------------------------------------
 
 #if (! defined(__ServiceViewer__PortEntry__))
-# define __ServiceViewer__PortEntry__
+# define __ServiceViewer__PortEntry__ /* Header guard */
 
 # include "LabelWithShadow.h"
 

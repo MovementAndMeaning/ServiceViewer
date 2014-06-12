@@ -40,7 +40,7 @@
 //--------------------------------------------------------------------------------------
 
 #if (! defined(__ServiceViewer__LabelWithShadow__))
-# define __ServiceViewer__LabelWithShadow__
+# define __ServiceViewer__LabelWithShadow__ /* Header guard */
 
 # include "ofxLabel.h"
 

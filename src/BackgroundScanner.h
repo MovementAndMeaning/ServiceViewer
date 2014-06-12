@@ -1,10 +1,11 @@
 //--------------------------------------------------------------------------------------
 //
-//  File:       MovementTracker.h
+//  File:       BackgroundScanner.h
 //
 //  Project:    M+M
 //
-//  Contains:   The class declaration for a mixin class to handle movements of GUI elements.
+//  Contains:   The class declaration for a thread class to handle background port
+//              scanning.
 //
 //  Written by: Norman Jaffe
 //
@@ -35,12 +36,14 @@
 //              (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 //              OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-//  Created:    2014-05-09
+//  Created:    2014-06-11
 //
 //--------------------------------------------------------------------------------------
 
-#if (! defined(__ServiceViewer__MovementTracker__))
-# define __ServiceViewer__MovementTracker__ /* Header guard */
+#if (! defined(__ServiceViewer__BackgroundScanner__))
+# define __ServiceViewer__BackgroundScanner__ /* Header guard */
+
+# include "ofThread.h"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -48,44 +51,75 @@
 # endif // defined(__APPLE__)
 /*! @file
  
- @brief The class declaration for a mixin class to handle movements of GUI elements. */
+ @brief The class declaration for a thread class to handle background port scanning. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
-/*! @brief A mixin class to handle movements of GUI elements. */
-class MovementTracker
+class ServiceViewerApp;
+
+/*! @brief A thread class to handle background port scanning. */
+class BackgroundScanner : public ofThread
 {
 public:
     
-    /*! @brief The constructor. */
-    MovementTracker(void);
+    /*! @brief The constructor.
+     @param owner The application object that manages this thread.
+     @param minScanInterval The minimum number of seconds between scans. */
+    BackgroundScanner(ServiceViewerApp & owner,
+                      const float        minScanInterval);
     
     /*! @brief The destructor. */
-	virtual ~MovementTracker(void);
+	virtual ~BackgroundScanner(void);
     
-    /*! @brief Handle a position change notification for the GUI element. */
-    virtual void handlePositionChange(void) = 0;
+    /*! @brief The next scan can be initiated. */
+    void enableScan(void);
     
-    /*! @brief The GUI element has completed its movement. */
-    virtual void positionChangeComplete(void) = 0;
-
+    /*! @brief Returns @c true if the scan data is available and @c false otherwise.
+     @returns @c true if the scan data is available and @c false otherwise. */
+    inline bool scanComplete(void)
+    const
+    {
+        return _scanComplete;
+    } // scanComplete
+    
 protected:
     
+    /*! @brief The thread run function. */
+    virtual void threadedFunction(void);
+
 private:
+    
+    /*! @brief The class that this class is derived from. */
+    typedef ofThread inherited;
     
     /*! @brief Copy constructor.
      
      Note - not implemented and private, to prevent unexpected copying.
      @param other Another object to construct from. */
-    MovementTracker(const MovementTracker & other);
+    BackgroundScanner(const BackgroundScanner & other);
     
     /*! @brief Assignment operator.
      
      Note - not implemented and private, to prevent unexpected copying.
      @param other Another object to construct from. */
-    MovementTracker & operator=(const MovementTracker & other);
+    BackgroundScanner & operator=(const BackgroundScanner & other);
     
-}; // MovementTracker
+    /*! @brief The application object that manages the thread. */
+    ServiceViewerApp & _owner;
+    
+    /*! @brief The time when the last scan occurred. */
+    float _lastScanTime;
+    
+    /*! @brief The minimum number of seconds between scans. */
+    float _scanInterval;
+    
+    /*! @brief @c true if the scan has been finished and the data is available, @c false otherwise. */
+    bool _scanComplete;
+    
+    /*! @brief @c true if the scan can be started and @c false otherwise. */
+    bool _scanEnabled;
+    
+}; // BackgroundScanner
 
-#endif // ! defined(__ServiceViewer__MovementTracker__)
+#endif // ! defined(__ServiceViewer__BackgroundScanner__)

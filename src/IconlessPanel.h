@@ -40,7 +40,7 @@
 //--------------------------------------------------------------------------------------
 
 #if (! defined(__ServiceViewer__IconlessPanel__))
-# define __ServiceViewer__IconlessPanel__
+# define __ServiceViewer__IconlessPanel__ /* Header guard */
 
 # include "ofxGuiGroup.h"
 

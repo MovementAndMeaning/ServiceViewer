@@ -26,6 +26,7 @@
 		DF498687192567B8000EB074 /* libACE.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF498686192567B8000EB074 /* libACE.dylib */; };
 		DF656FB319364D6E00A39DA6 /* libodLogging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF656FB219364D6E00A39DA6 /* libodLogging.a */; };
 		DFA9893619461B48005F10EB /* libOGDF.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DFA9893519461B48005F10EB /* libOGDF.a */; };
+		DFA9893A1948B549005F10EB /* BackgroundScanner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DFA989381948B549005F10EB /* BackgroundScanner.cpp */; };
 		DFCEE154191D4AD7003EE453 /* IconlessPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DFCEE152191D4AD7003EE453 /* IconlessPanel.cpp */; };
 		DFCEE157191D5AE4003EE453 /* ServiceEntity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DFCEE155191D5AE4003EE453 /* ServiceEntity.cpp */; };
 		DFCEE15A191D86EC003EE453 /* MovementTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DFCEE158191D86EC003EE453 /* MovementTracker.cpp */; };
@@ -113,6 +114,8 @@
 		DF498686192567B8000EB074 /* libACE.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libACE.dylib; path = /usr/local/lib/libACE.dylib; sourceTree = "<absolute>"; };
 		DF656FB219364D6E00A39DA6 /* libodLogging.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libodLogging.a; path = ../../../../../../usr/local/lib/libodLogging.a; sourceTree = "<group>"; };
 		DFA9893519461B48005F10EB /* libOGDF.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOGDF.a; path = /usr/local/lib/libOGDF.a; sourceTree = "<absolute>"; };
+		DFA989381948B549005F10EB /* BackgroundScanner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BackgroundScanner.cpp; sourceTree = "<group>"; };
+		DFA989391948B549005F10EB /* BackgroundScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackgroundScanner.h; sourceTree = "<group>"; };
 		DFCEE152191D4AD7003EE453 /* IconlessPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IconlessPanel.cpp; path = src/IconlessPanel.cpp; sourceTree = SOURCE_ROOT; };
 		DFCEE153191D4AD7003EE453 /* IconlessPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IconlessPanel.h; path = src/IconlessPanel.h; sourceTree = SOURCE_ROOT; };
 		DFCEE155191D5AE4003EE453 /* ServiceEntity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ServiceEntity.cpp; path = src/ServiceEntity.cpp; sourceTree = SOURCE_ROOT; };
@@ -335,11 +338,13 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
+				DFA989381948B549005F10EB /* BackgroundScanner.cpp */,
+				DFA989391948B549005F10EB /* BackgroundScanner.h */,
 				DFCEE152191D4AD7003EE453 /* IconlessPanel.cpp */,
 				DFCEE153191D4AD7003EE453 /* IconlessPanel.h */,
 				DFCEE15B19213653003EE453 /* LabelWithShadow.cpp */,
 				DFCEE15C19213653003EE453 /* LabelWithShadow.h */,
+				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				DFCEE158191D86EC003EE453 /* MovementTracker.cpp */,
 				DFCEE159191D86EC003EE453 /* MovementTracker.h */,
 				DFCEE16119214FB3003EE453 /* PortEntry.cpp */,
@@ -454,6 +459,7 @@
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* ServiceViewerApp.cpp in Sources */,
+				DFA9893A1948B549005F10EB /* BackgroundScanner.cpp in Sources */,
 				856AA354D08AB4B323081444 /* ofxBaseGui.cpp in Sources */,
 				DFCEE15A191D86EC003EE453 /* MovementTracker.cpp in Sources */,
 				5CBB2AB3A60F65431D7B555D /* ofxButton.cpp in Sources */,

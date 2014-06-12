@@ -40,7 +40,7 @@
 //--------------------------------------------------------------------------------------
 
 #if (! defined(__ServiceViewer__PortPanel__))
-# define __ServiceViewer__PortPanel__
+# define __ServiceViewer__PortPanel__ /* Header guard */
 
 # include "IconlessPanel.h"
 # include "PortEntry.h"

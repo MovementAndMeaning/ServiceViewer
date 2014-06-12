@@ -40,7 +40,7 @@
 //--------------------------------------------------------------------------------------
 
 #if (! defined(__ServiceViewer__ServiceEntity__))
-# define __ServiceViewer__ServiceEntity__
+# define __ServiceViewer__ServiceEntity__ /* Header guard */
 
 # include "MovementTracker.h"
 # include "PortPanel.h"

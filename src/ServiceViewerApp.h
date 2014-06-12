@@ -40,7 +40,9 @@
 //--------------------------------------------------------------------------------------
 
 #if (! defined(__ServiceViewer__ServiceViewerApp__))
-# define __ServiceViewer__ServiceViewerApp__
+# define __ServiceViewer__ServiceViewerApp__ /* Header guard */
+
+# include "PortEntry.h"
 
 # include "ofBaseApp.h"
 # include "ofxGui.h"
@@ -51,6 +53,7 @@
 # include "M+MUtilities.h"
 
 # include <list>
+# include <set>
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -63,7 +66,10 @@
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
-class PortEntry;
+/*! @brief The minimum time for a thread to sleep, in milliseconds. */
+# define SHORT_SLEEP 100
+
+class BackgroundScanner;
 class ServiceEntity;
 
 /*! @brief The service viewer application class. */
@@ -122,6 +128,9 @@ public:
     /*! @brief Remove a port from the set of known ports.
      @param aPort The port to be removed. */
     void forgetPort(PortEntry * aPort);
+    
+    /*! @brief Identify the YARP network entities. */
+    void gatherEntitiesInBackground(void);
     
     /*! @brief Process a message event.
      @param msg The message details. */
@@ -238,11 +247,46 @@ private:
     /*! @brief The class that this class is derived from. */
     typedef ofBaseApp inherited;
     
+    /*! @brief The information for a connection. */
+    struct ConnectionDetails
+    {
+        /*! @brief The name of the destination port. */
+        string                      _inPortName;
+        /*! @brief The name of the source port. */
+        string                      _outPortName;
+        /*! @brief The mode of the connection. */
+        MplusM::Common::ChannelMode _mode;
+    }; // ConnectionDetails
+    
+    /*! @brief The name and direction for a port. */
+    struct NameAndDirection
+    {
+        /*! @brief The name of the port. */
+        string                   _name;
+        /*! @brief The direction of the port. */
+        PortEntry::PortDirection _direction;
+    }; // NameAndDirection
+    
+    /*! @brief A mapping from port names to associates. */
+    typedef std::map<string, MplusM::Utilities::PortAssociation>   AssociatesMap;
+    
+    /*! @brief A collection of connections. */
+    typedef std::vector<ConnectionDetails>                         ConnectionList;
+    
     /*! @brief A collection of services and ports. */
-    typedef list<ServiceEntity *>    EntityList;
+    typedef std::list<ServiceEntity *>                             EntityList;
 
     /*! @brief A mapping from strings to ports. */
-    typedef map<string, PortEntry *> PortMap;
+    typedef std::map<string, PortEntry *>                          PortEntryMap;
+    
+    /*! @brief A collection of port names. */
+    typedef std::map<string, NameAndDirection>                     PortMap;
+    
+    /*! @brief A collection of port names. */
+    typedef std::set<string>                                       PortSet;
+    
+    /*! @brief A mapping from strings to service descriptions. */
+    typedef std::map<string, MplusM::Utilities::ServiceDescriptor> ServiceMap;
     
     /*! @brief Copy constructor.
      
@@ -272,11 +316,6 @@ private:
      @param services The set of detected services. */
     void addServicesToBackground(const MplusM::Common::StringVector & services);
     
-    /*! @brief Find an entity in the to-be-displayed list by name.
-     @param name The name of the entity.
-     @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
-    ServiceEntity * findBackgroundEntity(string name);
-    
     /*! @brief Find a port in the to-be-displayed list by name.
      @param name The name of the port.
      @returns @c NULL if the port cannot be found and non-@c NULL if it is found. */
@@ -302,9 +341,6 @@ private:
      @returns @c NULL if the port cannot be found and non-@c NULL if it is found. */
     PortEntry * findForegroundPort(string name);
     
-    /*! @brief Identify the YARP network entities. */
-    void gatherEntitiesInBackground(void);
-    
     /*! @brief Add a port to the set of known ports in the to-be-displayed list.
      @param aPort The port to be added. */
     void rememberPortInBackground(PortEntry * aPort);
@@ -316,76 +352,94 @@ private:
     void swapBackgroundAndForeground(void);
     
     /*! @brief A collection of visible services and ports. */
-    EntityList   _entities1;
+    EntityList          _entities1;
 
     /*! @brief A collection of visible services and ports. */
-    EntityList   _entities2;
+    EntityList          _entities2;
     
     /*! @brief A set of known ports. */
-    PortMap      _ports1;
+    PortEntryMap        _ports1;
     
     /*! @brief A set of known ports. */
-    PortMap      _ports2;
+    PortEntryMap        _ports2;
+    
+    /*! @brief A set of known services. */
+    ServiceMap          _detectedServices;
+    
+    /*! @brief A set of known ports. */
+    PortSet             _rememberedPorts;
+    
+    /*! @brief A set of associated ports. */
+    AssociatesMap       _associatedPorts;
+    
+    /*! @brief A set of standalone ports. */
+    PortMap             _standalonePorts;
+    
+    /*! @brief A set of connections. */
+    ConnectionList      _connections;
     
     /*! @brief Control access to the currently-displayed lists. */
-    ofMutex      _foregroundLock;
+    ofMutex             _foregroundLock;
     
     /*! @brief The background set of known entities. */
-    EntityList * _backgroundEntities;
+    EntityList *        _backgroundEntities;
     
     /*! @brief The foreground set of known entities. */
-    EntityList * _foregroundEntities;
+    EntityList *        _foregroundEntities;
     
     /*! @brief The background set of known ports. */
-    PortMap *    _backgroundPorts;
+    PortEntryMap *      _backgroundPorts;
 
     /*! @brief The foreground set of known ports. */
-    PortMap *    _foregroundPorts;
+    PortEntryMap *      _foregroundPorts;
     
     /*! @brief The starting port for a connection being added. */
-    PortEntry *  _firstAddPort;
+    PortEntry *         _firstAddPort;
     
     /*! @brief The starting port for a connection being removed. */
-    PortEntry *  _firstRemovePort;
+    PortEntry *         _firstRemovePort;
+    
+    /*! @brief The background port scanner. */
+    BackgroundScanner * _scanner;
     
     /*! @brief The horizontal coordinate of the current drag location. */
-    float        _dragXpos;
+    float               _dragXpos;
     
     /*! @brief The vertical coordinate of the current drag location. */
-    float        _dragYpos;
+    float               _dragYpos;
     
     /*! @brief @c true if the connection being added will be UDP and @c false if it will be TCP. */
-    bool         _addingUDPConnection;
+    bool                _addingUDPConnection;
     
     /*! @brief @c true if a connection is being added and @c false otherwise. */
-    bool         _addIsActive;
+    bool                _addIsActive;
     
     /*! @brief @c true if the ALT/OPTION modifier key is depressed and @c false otherwise. */
-    bool         _altActive;
+    bool                _altActive;
     
     /*! @brief @c true if the COMMAND modifier key is depressed and @c false otherwise. */
-    bool         _commandActive;
+    bool                _commandActive;
     
     /*! @brief @c true if the CONTROL modifier key is depressed and @c false otherwise. */
-    bool         _controlActive;
+    bool                _controlActive;
     
     /*! @brief @c true if a connection is being created by dragging between ports and @c false otherwise. */
-    bool         _dragActive;
+    bool                _dragActive;
     
     /*! @brief @c true if an entity is being moved. */
-    bool         _movementActive;
+    bool                _movementActive;
     
     /*! @brief @c true if the YARP network is running. */
-    bool         _networkAvailable;
+    bool                _networkAvailable;
     
     /*! @brief @c true if the service registry can be used. */
-    bool         _registryAvailable;
+    bool                _registryAvailable;
     
     /*! @brief @c true if a connection is being removed and @c false otherwise. */
-    bool         _removeIsActive;
+    bool                _removeIsActive;
     
     /*! @brief @c true if the SHIFT modifier key is depressed and @c false otherwise. */
-    bool         _shiftActive;
+    bool                _shiftActive;
     
 # if defined(__APPLE__)
 #  pragma clang diagnostic push

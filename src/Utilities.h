@@ -40,7 +40,7 @@
 //--------------------------------------------------------------------------------------
 
 #if (! defined(__ServiceViewer__Utilities__))
-# define __ServiceViewer__Utilities__
+# define __ServiceViewer__Utilities__ /* Header guard */
 
 # include "ofMesh.h"
 # include "ofPoint.h"
