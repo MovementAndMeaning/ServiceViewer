@@ -91,7 +91,7 @@
 #endif // defined(__APPLE__)
 
 /*! @brief The minimum time between background scans. */
-static const float kMinScanInterval = 3;
+static const float kMinScanInterval = 5;
 
 /*! @brief The line width for a normal connection. */
 static const float kNormalConnectionWidth = 2;
@@ -131,8 +131,8 @@ static void createDirectionTestPorts(void)
         {
             lOutputOnlyPort->setInputMode(false);
             lOutputOnlyPort->setOutputMode(true);
-            if (lInputOnlyPort->openWithRetries(lInputOnlyPortName) &&
-                lOutputOnlyPort->openWithRetries(lOutputOnlyPortName))
+            if (lInputOnlyPort->openWithRetries(lInputOnlyPortName, STANDARD_WAIT_TIME) &&
+                lOutputOnlyPort->openWithRetries(lOutputOnlyPortName, STANDARD_WAIT_TIME))
             {
                 lPortsValid = true;
             }
@@ -177,22 +177,44 @@ static PortEntry::PortDirection determinePortDirection(const yarp::os::ConstStri
         bool canDoInput = false;
         bool canDoOutput = false;
         
-        if (MplusM::Common::NetworkConnectWithRetries(lOutputOnlyPortName, portName))
+#if 0
+        // Note that we don't use the utility version with retries, as we want a quick answer.
+        if (yarp::os::Network::connect(lOutputOnlyPortName, portName))
         {
             canDoInput = true;
-            if (! MplusM::Common::NetworkDisconnectWithRetries(lOutputOnlyPortName, portName))
+            if (! yarp::os::Network::disconnect(lOutputOnlyPortName, portName))
             {
-                OD_LOG("(! MplusM::Common::NetworkDisconnectWithRetries(lOutputOnlyPortName, portName))");//####
+                OD_LOG("(! yarp::os::Network::disconnect(lOutputOnlyPortName, portName))");//####
             }
         }
-        if (MplusM::Common::NetworkConnectWithRetries(portName, lInputOnlyPortName))
+        if (yarp::os::Network::connect(portName, lInputOnlyPortName))
         {
             canDoOutput = true;
-            if (! MplusM::Common::NetworkDisconnectWithRetries(portName, lInputOnlyPortName))
+            if (! yarp::os::Network::disconnect(portName, lInputOnlyPortName))
             {
-                OD_LOG("(! MplusM::Common::NetworkDisconnectWithRetries(portName, lInputOnlyPortName))");//####
+                OD_LOG("(! yarp::os::Network::disconnect(portName, lInputOnlyPortName))");//####
             }
         }
+#else//1
+        if (MplusM::Common::NetworkConnectWithRetries(lOutputOnlyPortName, portName, STANDARD_WAIT_TIME, false))
+        {
+            canDoInput = true;
+            if (! MplusM::Common::NetworkDisconnectWithRetries(lOutputOnlyPortName, portName, STANDARD_WAIT_TIME))
+            {
+                OD_LOG("(! MplusM::Common::NetworkDisconnectWithRetries(lOutputOnlyPortName, portName, "//####
+                       "STANDARD_WAIT_TIME / 2))");//####
+            }
+        }
+        if (MplusM::Common::NetworkConnectWithRetries(portName, lInputOnlyPortName, STANDARD_WAIT_TIME, false))
+        {
+            canDoOutput = true;
+            if (! MplusM::Common::NetworkDisconnectWithRetries(portName, lInputOnlyPortName, STANDARD_WAIT_TIME))
+            {
+                OD_LOG("(! MplusM::Common::NetworkDisconnectWithRetries(portName, lInputOnlyPortName, "//####
+                       "STANDARD_WAIT_TIME / 2))");//####
+            }
+        }
+#endif//1
         if (canDoInput)
         {
             result = (canDoOutput ? PortEntry::kPortDirectionInputOutput : PortEntry::kPortDirectionInput);
@@ -202,7 +224,7 @@ static PortEntry::PortDirection determinePortDirection(const yarp::os::ConstStri
             result = PortEntry::kPortDirectionOutput;
         }
     }
-    OD_LOG_EXIT();//####
+    OD_LOG_EXIT_L(static_cast<long>(result));//####
     return result;
 } // determinePortDirection
 
@@ -285,23 +307,25 @@ void ServiceViewerApp::addPortsWithAssociatesToBackground(const MplusM::Utilitie
     {
         if (_rememberedPorts.end() == _rememberedPorts.find(outer->_portName))
         {
-            MplusM::Utilities::PortAssociation associates;
+            PortAndAssociates associates;
             
-            if (MplusM::Utilities::GetAssociatedPorts(outer->_portName, associates, true))
+            if (MplusM::Utilities::GetAssociatedPorts(outer->_portName, associates._associates, STANDARD_WAIT_TIME,
+                                                      true))
             {
-                if (associates._primary)
+                if (associates._associates._primary)
                 {
                     yarp::os::ConstString caption(outer->_portIpAddress + ":" + outer->_portPortNumber);
                     
+                    associates._name = outer->_portName;
                     _associatedPorts.insert(AssociatesMap::value_type(caption.c_str(), associates));
                     _rememberedPorts.insert(outer->_portName);
-                    for (MplusM::Common::StringVector::const_iterator inner(associates._inputs.begin());
-                         associates._inputs.end() != inner; ++inner)
+                    for (MplusM::Common::StringVector::const_iterator inner(associates._associates._inputs.begin());
+                         associates._associates._inputs.end() != inner; ++inner)
                     {
                         _rememberedPorts.insert(*inner);
                     }
-                    for (MplusM::Common::StringVector::const_iterator inner(associates._outputs.begin());
-                         associates._outputs.end() != inner; ++inner)
+                    for (MplusM::Common::StringVector::const_iterator inner(associates._associates._outputs.begin());
+                         associates._associates._outputs.end() != inner; ++inner)
                     {
                         _rememberedPorts.insert(*inner);
                     }
@@ -343,7 +367,7 @@ void ServiceViewerApp::addServicesToBackground(const MplusM::Common::StringVecto
         {
             MplusM::Utilities::ServiceDescriptor descriptor;
             
-            if (MplusM::Utilities::GetNameAndDescriptionForService(*outer, descriptor))
+            if (MplusM::Utilities::GetNameAndDescriptionForService(*outer, descriptor, STANDARD_WAIT_TIME))
             {
                 _detectedServices.insert(ServiceMap::value_type(outer->c_str(), descriptor));
                 _rememberedPorts.insert(descriptor._channelName);
@@ -804,7 +828,8 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort)
                     if (firstEntity && secondEntity)
                     {
                         if (MplusM::Utilities::AddConnection(_firstAddPort->getPortName().c_str(),
-                                                             aPort->getPortName().c_str(), _addingUDPConnection))
+                                                             aPort->getPortName().c_str(), STANDARD_WAIT_TIME,
+                                                             _addingUDPConnection))
                         {
                             MplusM::Common::ChannelMode mode = (_addingUDPConnection ?
                                                                 MplusM::Common::kChannelModeUDP :
@@ -961,7 +986,7 @@ void ServiceViewerApp::setEntityPositions(void)
             {
                 newX = ofRandom(fullWidth - entityShape.width);
                 newY = ofRandom(fullHeight - entityShape.height);
-//                positionsNeedUpdate = true;
+                positionsNeedUpdate = true;
             }
             ga.x(aNode) = newX;
             ga.y(aNode) = newY;
@@ -1138,8 +1163,8 @@ void ServiceViewerApp::update(void)
                 ServiceEntity * anEntity = new ServiceEntity(PortPanel::kEntityKindClientOrAdapter, "", *this);
                 
                 anEntity->setup(outer->first.c_str());
-                for (MplusM::Common::StringVector::const_iterator inner(outer->second._inputs.begin());
-                     outer->second._inputs.end() != inner; ++inner)
+                for (MplusM::Common::StringVector::const_iterator inner(outer->second._associates._inputs.begin());
+                     outer->second._associates._inputs.end() != inner; ++inner)
                 {
                     aPort = anEntity->addPort(*inner, PortEntry::kPortUsageOther,
                                               PortEntry::kPortDirectionInput);
@@ -1148,8 +1173,8 @@ void ServiceViewerApp::update(void)
                         rememberPortInBackground(aPort);
                     }
                 }
-                for (MplusM::Common::StringVector::const_iterator inner(outer->second._outputs.begin());
-                     outer->second._outputs.end() != inner; ++inner)
+                for (MplusM::Common::StringVector::const_iterator inner(outer->second._associates._outputs.begin());
+                     outer->second._associates._outputs.end() != inner; ++inner)
                 {
                     aPort = anEntity->addPort(*inner, PortEntry::kPortUsageOther,
                                               PortEntry::kPortDirectionOutput);
@@ -1158,7 +1183,7 @@ void ServiceViewerApp::update(void)
                         rememberPortInBackground(aPort);
                     }
                 }
-                aPort = anEntity->addPort(outer->first, PortEntry::kPortUsageClient,
+                aPort = anEntity->addPort(outer->second._name, PortEntry::kPortUsageClient,
                                           PortEntry::kPortDirectionInputOutput);
                 if (aPort)
                 {

@@ -267,8 +267,17 @@ private:
         PortEntry::PortDirection _direction;
     }; // NameAndDirection
     
+    /*! @brief The name and associates for a port. */
+    struct PortAndAssociates
+    {
+        /*! @brief The name of the port. */
+        string                             _name;
+        /*! @brief The associates of the port. */
+        MplusM::Utilities::PortAssociation _associates;
+    }; // PortAndAssociates
+    
     /*! @brief A mapping from port names to associates. */
-    typedef std::map<string, MplusM::Utilities::PortAssociation>   AssociatesMap;
+    typedef std::map<string, PortAndAssociates>                    AssociatesMap;
     
     /*! @brief A collection of connections. */
     typedef std::vector<ConnectionDetails>                         ConnectionList;
