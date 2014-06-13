@@ -57,7 +57,6 @@
 // Note that openFrameworks defines a macro called 'check' :( which messes up other header files.
 #undef check
 #include "M+MAdapterChannel.h"
-#include "M+MUtilities.h"
 
 #if defined(__APPLE__)
 # pragma clang diagnostic push

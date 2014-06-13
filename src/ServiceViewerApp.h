@@ -49,11 +49,9 @@
 
 // Note that openFrameworks defines a macro called 'check' :( which messes up other header files.
 # undef check
-# include "M+MCommon.h"
 # include "M+MUtilities.h"
 
 # include <list>
-# include <set>
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -255,8 +253,10 @@ private:
     {
         /*! @brief The name of the destination port. */
         string                      _inPortName;
+        
         /*! @brief The name of the source port. */
         string                      _outPortName;
+        
         /*! @brief The mode of the connection. */
         MplusM::Common::ChannelMode _mode;
     }; // ConnectionDetails
@@ -266,6 +266,7 @@ private:
     {
         /*! @brief The name of the port. */
         string                   _name;
+        
         /*! @brief The direction of the port. */
         PortEntry::PortDirection _direction;
     }; // NameAndDirection
@@ -275,6 +276,7 @@ private:
     {
         /*! @brief The name of the port. */
         string                             _name;
+        
         /*! @brief The associates of the port. */
         MplusM::Utilities::PortAssociation _associates;
     }; // PortAndAssociates

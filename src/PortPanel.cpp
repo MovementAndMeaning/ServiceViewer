@@ -48,10 +48,6 @@
 
 #include "ofSystemUtils.h"
 
-// Note that openFrameworks defines a macro called 'check' :( which messes up other header files.
-#undef check
-#include "M+MUtilities.h"
-
 #define CAN_GRAB_OUTSIDE_HEADER_ /* */
 
 #if defined(__APPLE__)

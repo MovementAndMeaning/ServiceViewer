@@ -74,12 +74,16 @@ public:
     {
         /*! @brief The connection is to the left edge of the port entry. */
         kAnchorLeft,
+        
         /*! @brief The connection is to the right edge of the port entry. */
         kAnchorRight,
+        
         /*! @brief The connection is to the bottom edge of the port entry. */
         kAnchorBottomCentre,
+        
         /*! @brief The connection is to the top edge of the port entry. */
         kAnchorTopCentre,
+        
         /*! @brief The connection point is unknown. */
         kAnchorUnknown
     }; // AnchorSide
@@ -89,10 +93,13 @@ public:
     {
         /*! @brief The port direction is input. */
         kPortDirectionInput,
+        
         /*! @brief The port direction is both input and output. */
         kPortDirectionInputOutput,
+        
         /*! @brief The port direction is output. */
         kPortDirectionOutput,
+        
         /*! @brief The port direction is unknown. */
         kPortDirectionUnknown
     }; // PortDirection
@@ -102,15 +109,21 @@ public:
     {
         /*! @brief The port is for a client or adapter. */
         kPortUsageClient,
+        
         /*! @brief The port is for a service. */
         kPortUsageService,
+        
         /*! @brief The port has no specific characterization. */
         kPortUsageOther
     }; // PortUsage
     
+    /*! @brief The form of a connection. */
     struct PortConnection
     {
+        /*! @brief The 'other-end' of a connection. */
         PortEntry *                 _otherPort;
+        
+        /*! @brief The kind of connection. */
         MplusM::Common::ChannelMode _connectionMode;
     }; // PortConnection
     

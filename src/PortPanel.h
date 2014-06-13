@@ -70,8 +70,10 @@ public:
     {
         /*! @brief The entity is a client or adapter. */
         kEntityKindClientOrAdapter,
+        
         /*! @brief The entity is a service. */
         kEntityKindService,
+        
         /*! @brief The entity is neither a serice nor a client nor an adapter. */
         kEntityKindOther
     }; // EntityKind

@@ -46,10 +46,6 @@
 
 #include "ofAppRunner.h"
 
-// Note that openFrameworks defines a macro called 'check' :( which messes up other header files.
-#undef check
-#include "M+MCommon.h"
-
 #if defined(__APPLE__)
 # pragma clang diagnostic push
 # pragma clang diagnostic ignored "-Wc++11-extensions"

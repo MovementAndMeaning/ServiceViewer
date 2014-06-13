@@ -46,10 +46,6 @@
 //#include "ODEnableLogging.h"
 #include "ODLogging.h"
 
-// Note that openFrameworks defines a macro called 'check' :( which messes up other header files.
-#undef check
-#include "M+MUtilities.h"
-
 #include "ofGraphics.h"
 
 #if defined(__APPLE__)

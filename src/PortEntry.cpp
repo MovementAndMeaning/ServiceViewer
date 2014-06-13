@@ -39,7 +39,7 @@
 //
 //--------------------------------------------------------------------------------------
 
-#include "PortEntry.h"
+//#include "PortEntry.h"
 #include "ServiceEntity.h"
 #include "ServiceViewerApp.h"
 #include "Utilities.h"
@@ -49,10 +49,6 @@
 
 #include "ofGraphics.h"
 #include "ofSystemUtils.h"
-
-// Note that openFrameworks defines a macro called 'check' :( which messes up other header files.
-#undef check
-#include "M+MUtilities.h"
 
 #if defined(__APPLE__)
 # pragma clang diagnostic push
