@@ -147,16 +147,16 @@ static void destroyDirectionTestPorts(void)
     OD_LOG_ENTER();//####
     if (lInputOnlyPort)
     {
-#if defined(MpM_DO_EXPLICIT_CLOSE)
+#if defined(MpM_DoExplicitClose)
         lInputOnlyPort->close();
-#endif // defined(MpM_DO_EXPLICIT_CLOSE)
+#endif // defined(MpM_DoExplicitClose)
         MplusM::Common::AdapterChannel::RelinquishChannel(lInputOnlyPort);
     }
     if (lOutputOnlyPort)
     {
-#if defined(MpM_DO_EXPLICIT_CLOSE)
+#if defined(MpM_DoExplicitClose)
         lOutputOnlyPort->close();
-#endif // defined(MpM_DO_EXPLICIT_CLOSE)
+#endif // defined(MpM_DoExplicitClose)
         MplusM::Common::AdapterChannel::RelinquishChannel(lOutputOnlyPort);
     }
     lPortsValid = false;
@@ -176,45 +176,45 @@ static PortEntry::PortDirection determinePortDirection(const yarp::os::ConstStri
     {
         bool canDoInput = false;
         bool canDoOutput = false;
-        
-#if 0
-        // Note that we don't use the utility version with retries, as we want a quick answer.
-        if (yarp::os::Network::connect(lOutputOnlyPortName, portName))
+
+        // First, check if we are looking at a client port - because of how they are constructed, attempting to connect
+        // to them will result in a hang, so we just treat them as I/O.
+        switch (MplusM::Utilities::GetPortKind(portName))
         {
-            canDoInput = true;
-            if (! yarp::os::Network::disconnect(lOutputOnlyPortName, portName))
-            {
-                OD_LOG("(! yarp::os::Network::disconnect(lOutputOnlyPortName, portName))");//####
-            }
+            case MplusM::Utilities::kPortKindClient:
+                canDoInput = canDoOutput = true;
+                break;
+                
+            case MplusM::Utilities::kPortKindService:
+            case MplusM::Utilities::kPortKindServiceRegistry:
+                canDoInput = true;
+                break;
+                
+            default:
+                // Determine by doing a test connection.
+                if (MplusM::Common::NetworkConnectWithRetries(lOutputOnlyPortName, portName, STANDARD_WAIT_TIME, false))
+                {
+                    canDoInput = true;
+                    if (! MplusM::Common::NetworkDisconnectWithRetries(lOutputOnlyPortName, portName,
+                                                                       STANDARD_WAIT_TIME))
+                    {
+                        OD_LOG("(! MplusM::Common::NetworkDisconnectWithRetries(lOutputOnlyPortName, portName, "//####
+                               "STANDARD_WAIT_TIME))");//####
+                    }
+                }
+                if (MplusM::Common::NetworkConnectWithRetries(portName, lInputOnlyPortName, STANDARD_WAIT_TIME, false))
+                {
+                    canDoOutput = true;
+                    if (! MplusM::Common::NetworkDisconnectWithRetries(portName, lInputOnlyPortName,
+                                                                       STANDARD_WAIT_TIME))
+                    {
+                        OD_LOG("(! MplusM::Common::NetworkDisconnectWithRetries(portName, lInputOnlyPortName, "//####
+                               "STANDARD_WAIT_TIME))");//####
+                    }
+                }
+                break;
+                
         }
-        if (yarp::os::Network::connect(portName, lInputOnlyPortName))
-        {
-            canDoOutput = true;
-            if (! yarp::os::Network::disconnect(portName, lInputOnlyPortName))
-            {
-                OD_LOG("(! yarp::os::Network::disconnect(portName, lInputOnlyPortName))");//####
-            }
-        }
-#else//1
-        if (MplusM::Common::NetworkConnectWithRetries(lOutputOnlyPortName, portName, STANDARD_WAIT_TIME, false))
-        {
-            canDoInput = true;
-            if (! MplusM::Common::NetworkDisconnectWithRetries(lOutputOnlyPortName, portName, STANDARD_WAIT_TIME))
-            {
-                OD_LOG("(! MplusM::Common::NetworkDisconnectWithRetries(lOutputOnlyPortName, portName, "//####
-                       "STANDARD_WAIT_TIME / 2))");//####
-            }
-        }
-        if (MplusM::Common::NetworkConnectWithRetries(portName, lInputOnlyPortName, STANDARD_WAIT_TIME, false))
-        {
-            canDoOutput = true;
-            if (! MplusM::Common::NetworkDisconnectWithRetries(portName, lInputOnlyPortName, STANDARD_WAIT_TIME))
-            {
-                OD_LOG("(! MplusM::Common::NetworkDisconnectWithRetries(portName, lInputOnlyPortName, "//####
-                       "STANDARD_WAIT_TIME / 2))");//####
-            }
-        }
-#endif//1
         if (canDoInput)
         {
             result = (canDoOutput ? PortEntry::kPortDirectionInputOutput : PortEntry::kPortDirectionInput);
@@ -1194,11 +1194,27 @@ void ServiceViewerApp::update(void)
             // Convert the detected standalone ports into entities in the background list.
             for (PortMap::const_iterator walker(_standalonePorts.begin()); _standalonePorts.end() != walker; ++walker)
             {
-                ServiceEntity * anEntity = new ServiceEntity(PortPanel::kEntityKindOther, "", *this);
+                ServiceEntity *      anEntity = new ServiceEntity(PortPanel::kEntityKindOther, "", *this);
+                PortEntry::PortUsage usage;
                 
                 anEntity->setup(walker->first.c_str());
-                PortEntry * aPort = anEntity->addPort(walker->second._name, PortEntry::kPortUsageOther,
-                                                      walker->second._direction);
+                switch (MplusM::Utilities::GetPortKind(walker->second._name))
+                {
+                    case MplusM::Utilities::kPortKindClient:
+                        usage = PortEntry::kPortUsageClient;
+                        break;
+                        
+                    case MplusM::Utilities::kPortKindService:
+                    case MplusM::Utilities::kPortKindServiceRegistry:
+                        usage = PortEntry::kPortUsageService;
+                        break;
+                        
+                    default:
+                        usage = PortEntry::kPortUsageOther;
+                        break;
+                        
+                }
+                PortEntry * aPort = anEntity->addPort(walker->second._name, usage, walker->second._direction);
                 
                 if (aPort)
                 {

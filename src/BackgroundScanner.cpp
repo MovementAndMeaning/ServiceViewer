@@ -63,6 +63,9 @@
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
 
+/*! @brief The number of milliseconds in a second. */
+#define MILLISECONDS_PER_SECOND 1000
+
 #if defined(__APPLE__)
 # pragma mark Local functions
 #endif // defined(__APPLE__)
@@ -126,7 +129,7 @@ void BackgroundScanner::threadedFunction(void)
 
                 if (0 < sleepTime)
                 {
-                    sleep(sleepTime);
+                    sleep(sleepTime * MILLISECONDS_PER_SECOND);
                 }
                 else
                 {
@@ -136,6 +139,7 @@ void BackgroundScanner::threadedFunction(void)
                 _owner.gatherEntitiesInBackground();
                 for (bool locked = lock(); ! locked; )
                 {
+                    sleep(MIDDLE_SLEEP);
                     yield();
                 }
                 _scanComplete = true;

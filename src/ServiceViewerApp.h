@@ -66,8 +66,11 @@
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
+/*! @brief A slightly longer sleep, in milliseconds. */
+# define MIDDLE_SLEEP 110
+
 /*! @brief The minimum time for a thread to sleep, in milliseconds. */
-# define SHORT_SLEEP 100
+# define SHORT_SLEEP  100
 
 class BackgroundScanner;
 class ServiceEntity;

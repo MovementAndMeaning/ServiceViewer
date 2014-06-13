@@ -119,13 +119,13 @@ int main(int      argc,
 #if MAC_OR_LINUX_
 # pragma unused(argc)
 #endif // MAC_OR_LINUX_
-#if defined(MpM_SERVICES_LOG_TO_STDERR)
+#if defined(MpM_ServicesLogToStandardError)
     OD_LOG_INIT(*argv, kODLoggingOptionIncludeProcessID | kODLoggingOptionIncludeThreadID |//####
                 kODLoggingOptionWriteToStderr | kODLoggingOptionEnableThreadSupport);//####
-#else // ! defined(MpM_SERVICES_LOG_TO_STDERR)
+#else // ! defined(MpM_ServicesLogToStandardError)
     OD_LOG_INIT(*argv, kODLoggingOptionIncludeProcessID | kODLoggingOptionIncludeThreadID |//####
                 kODLoggingOptionEnableThreadSupport);//####
-#endif // ! defined(MpM_SERVICES_LOG_TO_STDERR)
+#endif // ! defined(MpM_ServicesLogToStandardError)
     OD_LOG_ENTER();//####
     yarp::os::Network yarp; // This is necessary to establish any connection to the YARP infrastructure
     
