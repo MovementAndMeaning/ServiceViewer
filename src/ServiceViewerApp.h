@@ -100,6 +100,9 @@ public:
     /*! @brief Clear any pending drag actions. */
     void clearDragState(void);
     
+    /*! @brief Clear out the background data. */
+    void clearOutBackgroundData(void);
+    
     /*! @brief Returns the state of the CONTROL modifier key.
      @returns @c true if the CONTROL modifier key is pressed and @c false otherwise. */
     inline bool controlActive(void)
@@ -440,6 +443,9 @@ private:
     /*! @brief @c true if a connection is being created by dragging between ports and @c false otherwise. */
     bool                _dragActive;
     
+    /*! @brief @c true if the next scan will be ignored and @c false otherwise. */
+    bool                _ignoreNextScan;
+    
     /*! @brief @c true if an entity is being moved. */
     bool                _movementActive;
     
@@ -460,7 +466,7 @@ private:
 #  pragma clang diagnostic ignored "-Wunused-private-field"
 # endif // defined(__APPLE__)
     /*! @brief Filler to pad to alignment boundary */
-    char        _filler[6];
+    char        _filler[4];
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)

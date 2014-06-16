@@ -75,6 +75,14 @@ public:
     /*! @brief The next scan can be initiated. */
     void enableScan(void);
     
+    /*! @brief Returns @c true if scanning is active and @c false otherwise.
+     @returns @c true if scanning is active and @c false otherwise. */
+    inline bool isScanning(void)
+    const
+    {
+        return false;
+    } // isScanning
+    
     /*! @brief Returns @c true if the scan data is available and @c false otherwise.
      @returns @c true if the scan data is available and @c false otherwise. */
     inline bool scanComplete(void)
@@ -114,12 +122,24 @@ private:
     /*! @brief The minimum number of seconds between scans. */
     float _scanInterval;
     
+    /*! @brief @c true if the scan is active and @c false otherwise. */
+    bool _scanActive;
+    
     /*! @brief @c true if the scan has been finished and the data is available, @c false otherwise. */
     bool _scanComplete;
     
     /*! @brief @c true if the scan can be started and @c false otherwise. */
     bool _scanEnabled;
     
+# if defined(__APPLE__)
+#  pragma clang diagnostic push
+#  pragma clang diagnostic ignored "-Wunused-private-field"
+# endif // defined(__APPLE__)
+    /*! @brief Filler to pad to alignment boundary */
+    char _filler[5];
+# if defined(__APPLE__)
+#  pragma clang diagnostic pop
+# endif // defined(__APPLE__)
 }; // BackgroundScanner
 
 #endif // ! defined(__ServiceViewer__BackgroundScanner__)

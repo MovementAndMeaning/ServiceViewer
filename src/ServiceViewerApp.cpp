@@ -240,8 +240,8 @@ ServiceViewerApp::ServiceViewerApp(void) :
             _foregroundEntities(&_entities2), _backgroundPorts(&_ports1), _foregroundPorts(&_ports2),
             _firstAddPort(NULL), _firstRemovePort(NULL), _scanner(new BackgroundScanner(*this, kMinScanInterval)),
             _addingUDPConnection(false), _addIsActive(false), _altActive(false), _commandActive(false),
-            _controlActive(false), _dragActive(false), _movementActive(false), _networkAvailable(false),
-            _registryAvailable(false), _removeIsActive(false), _shiftActive(false)
+            _controlActive(false), _dragActive(false), _ignoreNextScan(false), _movementActive(false),
+            _networkAvailable(false), _registryAvailable(false), _removeIsActive(false), _shiftActive(false)
 {
     OD_LOG_ENTER();//####
     OD_LOG_EXIT_P(this);//####
@@ -404,6 +404,29 @@ void ServiceViewerApp::clearDragState(void)
     OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::clearDragState
 
+void ServiceViewerApp::clearOutBackgroundData(void)
+{
+    OD_LOG_OBJENTER();//####
+    for (EntityList::const_iterator it(_backgroundEntities->begin()); _backgroundEntities->end() != it; ++it)
+    {
+        ServiceEntity * anEntity = *it;
+        
+        if (anEntity)
+        {
+            delete anEntity;
+        }
+    }
+    _backgroundEntities->clear();
+    // Note that the ports will have been deleted by the deletion of the entities.
+    _backgroundPorts->clear();
+    _detectedServices.clear();
+    _rememberedPorts.clear();
+    _associatedPorts.clear();
+    _standalonePorts.clear();
+    _connections.clear();
+    OD_LOG_OBJEXIT();//####
+} // ServiceViewerApp::clearOutBackgroundData
+
 void ServiceViewerApp::dragEvent(ofDragInfo dragInfo)
 {
     OD_LOG_OBJENTER();//####
@@ -474,6 +497,7 @@ void ServiceViewerApp::exit(void)
         _scanner->stopThread();
     }
     destroyDirectionTestPorts();
+    clearOutBackgroundData();
     inherited::exit();
     OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::exit
@@ -642,10 +666,12 @@ void ServiceViewerApp::keyPressed(int key)
 //    OD_LOG_L1("key = ", key);//####
     if (OF_KEY_ALT == (key & OF_KEY_ALT))
     {
+        // Note that the key state will be cleared by a mouse click, so we need to remember it with a secondary flag.
         _altActive = _addIsActive = true;
     }
     if (OF_KEY_COMMAND == (key & OF_KEY_COMMAND))
     {
+        // Note that the key state will be cleared by a mouse click, so we need to remember it with a secondary flag.
         _commandActive = _removeIsActive = true;
     }
     if (OF_KEY_CONTROL == (key & OF_KEY_CONTROL))
@@ -809,7 +835,7 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort)
             {
                 firstEntity->clearDisconnectMarker();
             }
-            _firstRemovePort = NULL;
+            _firstAddPort = _firstRemovePort = NULL;
             _addIsActive = _removeIsActive = false;
         }
         else if (_firstAddPort)
@@ -844,7 +870,7 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort)
             {
                 firstEntity->clearConnectMarker();
             }
-            _firstAddPort = NULL;
+            _firstAddPort = _firstRemovePort = NULL;
             _addIsActive = _removeIsActive = false;
         }
         else if (_commandActive)
@@ -861,6 +887,7 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort)
                 }
             }
             _addIsActive = false;
+            _firstAddPort = NULL;
             _removeIsActive = (NULL != _firstRemovePort);
         }
         else if (_altActive)
@@ -879,9 +906,11 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort)
             }
             _addIsActive = (NULL != _firstAddPort);
             _removeIsActive = false;
+            _firstRemovePort = NULL;
         }
         else
         {
+            _firstAddPort = _firstRemovePort = NULL;
             _addIsActive = _removeIsActive = false;
         }
     }
@@ -899,7 +928,6 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort)
                 {
                     entity->clearDisconnectMarker();
                 }
-                _firstRemovePort = NULL;
             }
         }
         else if (_altActive || _addIsActive)
@@ -913,10 +941,10 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort)
                 {
                     entity->clearConnectMarker();
                 }
-                _firstAddPort = NULL;
             }
         }
         _addIsActive = _removeIsActive = false;
+        _firstAddPort = _firstRemovePort = NULL;
     }
     OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::reportPortEntryClicked
@@ -1117,143 +1145,140 @@ void ServiceViewerApp::update(void)
         _scanner->unlock();
         if (scanDataReady)
         {
-            // Convert the detected services into entities in the background list.
-            for (ServiceMap::const_iterator outer(_detectedServices.begin()); _detectedServices.end() != outer;
-                 ++outer)
+            if (_firstAddPort || _firstRemovePort || _movementActive)
             {
-                MplusM::Utilities::ServiceDescriptor descriptor(outer->second);
-                ServiceEntity *                      anEntity = new ServiceEntity(PortPanel::kEntityKindService,
-                                                                                  descriptor._description.c_str(),
-                                                                                  *this);
-                
-                anEntity->setup(descriptor._canonicalName);
-                PortEntry * aPort = anEntity->addPort(descriptor._channelName, PortEntry::kPortUsageService,
-                                                      PortEntry::kPortDirectionInput);
-                
-                if (aPort)
+                _ignoreNextScan = true;
+            }
+            else if (_ignoreNextScan)
+            {
+                _ignoreNextScan = false;
+            }
+            else
+            {
+                // We have no GUI activity, so we can use the results of the scan. Convert the detected services into
+                // entities in the background list.
+                for (ServiceMap::const_iterator outer(_detectedServices.begin()); _detectedServices.end() != outer;
+                     ++outer)
                 {
-                    rememberPortInBackground(aPort);
-                }
-                for (MplusM::Common::StringVector::const_iterator inner(descriptor._inputChannels.begin());
-                     descriptor._inputChannels.end() != inner; ++inner)
-                {
-                    aPort = anEntity->addPort(*inner, PortEntry::kPortUsageService, PortEntry::kPortDirectionInput);
+                    MplusM::Utilities::ServiceDescriptor descriptor(outer->second);
+                    ServiceEntity *                      anEntity = new ServiceEntity(PortPanel::kEntityKindService,
+                                                                                      descriptor._description.c_str(),
+                                                                                      *this);
+                    
+                    anEntity->setup(descriptor._canonicalName);
+                    PortEntry * aPort = anEntity->addPort(descriptor._channelName, PortEntry::kPortUsageService,
+                                                          PortEntry::kPortDirectionInput);
+                    
                     if (aPort)
                     {
                         rememberPortInBackground(aPort);
                     }
+                    for (MplusM::Common::StringVector::const_iterator inner(descriptor._inputChannels.begin());
+                         descriptor._inputChannels.end() != inner; ++inner)
+                    {
+                        aPort = anEntity->addPort(*inner, PortEntry::kPortUsageService, PortEntry::kPortDirectionInput);
+                        if (aPort)
+                        {
+                            rememberPortInBackground(aPort);
+                        }
+                    }
+                    for (MplusM::Common::StringVector::const_iterator inner(descriptor._outputChannels.begin());
+                         descriptor._outputChannels.end() != inner; ++inner)
+                    {
+                        aPort = anEntity->addPort(*inner, PortEntry::kPortUsageService,
+                                                  PortEntry::kPortDirectionOutput);
+                        if (aPort)
+                        {
+                            rememberPortInBackground(aPort);
+                        }
+                    }
+                    addEntityToBackground(anEntity);
                 }
-                for (MplusM::Common::StringVector::const_iterator inner(descriptor._outputChannels.begin());
-                     descriptor._outputChannels.end() != inner; ++inner)
+                // Convert the detected ports with associates into entities in the background list.
+                for (AssociatesMap::const_iterator outer(_associatedPorts.begin()); _associatedPorts.end() != outer;
+                     ++outer)
                 {
-                    aPort = anEntity->addPort(*inner, PortEntry::kPortUsageService, PortEntry::kPortDirectionOutput);
+                    PortEntry *     aPort;
+                    ServiceEntity * anEntity = new ServiceEntity(PortPanel::kEntityKindClientOrAdapter, "", *this);
+                    
+                    anEntity->setup(outer->first.c_str());
+                    for (MplusM::Common::StringVector::const_iterator inner(outer->second._associates._inputs.begin());
+                         outer->second._associates._inputs.end() != inner; ++inner)
+                    {
+                        aPort = anEntity->addPort(*inner, PortEntry::kPortUsageOther,
+                                                  PortEntry::kPortDirectionInput);
+                        if (aPort)
+                        {
+                            rememberPortInBackground(aPort);
+                        }
+                    }
+                    for (MplusM::Common::StringVector::const_iterator inner(outer->second._associates._outputs.begin());
+                         outer->second._associates._outputs.end() != inner; ++inner)
+                    {
+                        aPort = anEntity->addPort(*inner, PortEntry::kPortUsageOther,
+                                                  PortEntry::kPortDirectionOutput);
+                        if (aPort)
+                        {
+                            rememberPortInBackground(aPort);
+                        }
+                    }
+                    aPort = anEntity->addPort(outer->second._name, PortEntry::kPortUsageClient,
+                                              PortEntry::kPortDirectionInputOutput);
                     if (aPort)
                     {
                         rememberPortInBackground(aPort);
                     }
+                    addEntityToBackground(anEntity);
                 }
-                addEntityToBackground(anEntity);
-            }
-            // Convert the detected ports with associates into entities in the background list.
-            for (AssociatesMap::const_iterator outer(_associatedPorts.begin()); _associatedPorts.end() != outer;
-                 ++outer)
-            {
-                PortEntry *     aPort;
-                ServiceEntity * anEntity = new ServiceEntity(PortPanel::kEntityKindClientOrAdapter, "", *this);
-                
-                anEntity->setup(outer->first.c_str());
-                for (MplusM::Common::StringVector::const_iterator inner(outer->second._associates._inputs.begin());
-                     outer->second._associates._inputs.end() != inner; ++inner)
+                // Convert the detected standalone ports into entities in the background list.
+                for (PortMap::const_iterator walker(_standalonePorts.begin()); _standalonePorts.end() != walker;
+                     ++walker)
                 {
-                    aPort = anEntity->addPort(*inner, PortEntry::kPortUsageOther,
-                                              PortEntry::kPortDirectionInput);
+                    ServiceEntity *      anEntity = new ServiceEntity(PortPanel::kEntityKindOther, "", *this);
+                    PortEntry::PortUsage usage;
+                    
+                    anEntity->setup(walker->first.c_str());
+                    switch (MplusM::Utilities::GetPortKind(walker->second._name))
+                    {
+                        case MplusM::Utilities::kPortKindClient:
+                            usage = PortEntry::kPortUsageClient;
+                            break;
+                            
+                        case MplusM::Utilities::kPortKindService:
+                        case MplusM::Utilities::kPortKindServiceRegistry:
+                            usage = PortEntry::kPortUsageService;
+                            break;
+                            
+                        default:
+                            usage = PortEntry::kPortUsageOther;
+                            break;
+                            
+                    }
+                    PortEntry * aPort = anEntity->addPort(walker->second._name, usage, walker->second._direction);
+                    
                     if (aPort)
                     {
                         rememberPortInBackground(aPort);
                     }
+                    addEntityToBackground(anEntity);
                 }
-                for (MplusM::Common::StringVector::const_iterator inner(outer->second._associates._outputs.begin());
-                     outer->second._associates._outputs.end() != inner; ++inner)
+                // Convert the detected connections into connections in the background list.
+                for (ConnectionList::const_iterator walker(_connections.begin()); _connections.end() != walker;
+                     ++walker)
                 {
-                    aPort = anEntity->addPort(*inner, PortEntry::kPortUsageOther,
-                                              PortEntry::kPortDirectionOutput);
-                    if (aPort)
+                    PortEntry * thisPort = findBackgroundPort(walker->_outPortName);
+                    PortEntry * otherPort = findBackgroundPort(walker->_inPortName);
+                    
+                    if (thisPort && otherPort)
                     {
-                        rememberPortInBackground(aPort);
+                        thisPort->addOutputConnection(otherPort, walker->_mode);
+                        otherPort->addInputConnection(thisPort, walker->_mode);
                     }
                 }
-                aPort = anEntity->addPort(outer->second._name, PortEntry::kPortUsageClient,
-                                          PortEntry::kPortDirectionInputOutput);
-                if (aPort)
-                {
-                    rememberPortInBackground(aPort);
-                }
-                addEntityToBackground(anEntity);
+                setEntityPositions();
+                swapBackgroundAndForeground();
             }
-            // Convert the detected standalone ports into entities in the background list.
-            for (PortMap::const_iterator walker(_standalonePorts.begin()); _standalonePorts.end() != walker; ++walker)
-            {
-                ServiceEntity *      anEntity = new ServiceEntity(PortPanel::kEntityKindOther, "", *this);
-                PortEntry::PortUsage usage;
-                
-                anEntity->setup(walker->first.c_str());
-                switch (MplusM::Utilities::GetPortKind(walker->second._name))
-                {
-                    case MplusM::Utilities::kPortKindClient:
-                        usage = PortEntry::kPortUsageClient;
-                        break;
-                        
-                    case MplusM::Utilities::kPortKindService:
-                    case MplusM::Utilities::kPortKindServiceRegistry:
-                        usage = PortEntry::kPortUsageService;
-                        break;
-                        
-                    default:
-                        usage = PortEntry::kPortUsageOther;
-                        break;
-                        
-                }
-                PortEntry * aPort = anEntity->addPort(walker->second._name, usage, walker->second._direction);
-                
-                if (aPort)
-                {
-                    rememberPortInBackground(aPort);
-                }
-                addEntityToBackground(anEntity);
-            }
-            // Convert the detected connections into connections in the background list.
-            for (ConnectionList::const_iterator walker(_connections.begin()); _connections.end() != walker; ++walker)
-            {
-                PortEntry * thisPort = findBackgroundPort(walker->_outPortName);
-                PortEntry * otherPort = findBackgroundPort(walker->_inPortName);
-                
-                if (thisPort && otherPort)
-                {
-                    thisPort->addOutputConnection(otherPort, walker->_mode);
-                    otherPort->addInputConnection(thisPort, walker->_mode);
-                }
-            }
-            setEntityPositions();
-            swapBackgroundAndForeground();
-            // Clear out old data:
-            for (EntityList::const_iterator it(_backgroundEntities->begin()); _backgroundEntities->end() != it; ++it)
-            {
-                ServiceEntity * anEntity = *it;
-                
-                if (anEntity)
-                {
-                    delete anEntity;
-                }
-            }
-            _backgroundEntities->clear();
-            // Note that the ports will have been deleted by the deletion of the entities.
-            _backgroundPorts->clear();
-            _detectedServices.clear();
-            _rememberedPorts.clear();
-            // Ignore our test ports!
-            _associatedPorts.clear();
-            _standalonePorts.clear();
-            _connections.clear();
+            clearOutBackgroundData();
             _scanner->enableScan();
         }
     }

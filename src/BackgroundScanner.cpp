@@ -80,7 +80,8 @@
 
 BackgroundScanner::BackgroundScanner(ServiceViewerApp & owner,
                                      const float        minScanInterval) :
-        inherited(), _owner(owner), _scanInterval(minScanInterval), _scanComplete(false), _scanEnabled(false)
+        inherited(), _owner(owner), _scanActive(false), _scanInterval(minScanInterval), _scanComplete(false),
+        _scanEnabled(false)
 {
     OD_LOG_ENTER();//####
     _lastScanTime = ofGetElapsedTimef();
@@ -119,11 +120,10 @@ void BackgroundScanner::threadedFunction(void)
     {
         if (lock())
         {
-            bool canScan = _scanEnabled;
-            
+            _scanActive = _scanEnabled;
             _scanEnabled = false;
             unlock();
-            if (canScan)
+            if (_scanActive)
             {
                 float sleepTime = _scanInterval - (ofGetElapsedTimef() - _lastScanTime);
 
@@ -143,6 +143,7 @@ void BackgroundScanner::threadedFunction(void)
                     yield();
                 }
                 _scanComplete = true;
+                _scanActive = false;
                 unlock();
                 sleep(SHORT_SLEEP);
             }
