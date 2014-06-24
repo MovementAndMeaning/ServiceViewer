@@ -370,16 +370,39 @@ void ServiceViewerApp::addServicesToBackground(const MplusM::Common::StringVecto
             {
                 _detectedServices.insert(ServiceMap::value_type(outer->c_str(), descriptor));
                 _rememberedPorts.insert(descriptor._channelName);
-                for (MplusM::Common::StringVector::const_iterator inner(descriptor._inputChannels.begin());
+                for (MplusM::Common::ChannelVector::const_iterator inner(descriptor._inputChannels.begin());
                      descriptor._inputChannels.end() != inner; ++inner)
                 {
-                    _rememberedPorts.insert(*inner);
+                    MplusM::Common::ChannelDescription aChannel(*inner);
+                    
+                    _rememberedPorts.insert(aChannel._portName);                    
                 }
-                for (MplusM::Common::StringVector::const_iterator inner(descriptor._outputChannels.begin());
+                for (MplusM::Common::ChannelVector::const_iterator inner(descriptor._outputChannels.begin());
                      descriptor._outputChannels.end() != inner; ++inner)
                 {
-                    _rememberedPorts.insert(*inner);
+                    MplusM::Common::ChannelDescription aChannel(*inner);
+                    
+                    _rememberedPorts.insert(aChannel._portName);
                 }
+#if 0
+                MplusM::Common::ServiceKind kind = MplusM::Utilities::MapStringToServiceKind(descriptor._kind);
+                
+                switch (kind)
+                {
+                    case MplusM::Common::kServiceKindInput:
+                        break;
+                        
+                    case MplusM::Common::kServiceKindOutput:
+                        break;
+                        
+                    case MplusM::Common::kServiceKindFilter:
+                        break;
+                        
+                    default:
+                        break;
+                        
+                }
+#endif//0
             }
         }
     }
@@ -1173,19 +1196,24 @@ void ServiceViewerApp::update(void)
                     {
                         rememberPortInBackground(aPort);
                     }
-                    for (MplusM::Common::StringVector::const_iterator inner(descriptor._inputChannels.begin());
+                    for (MplusM::Common::ChannelVector::const_iterator inner(descriptor._inputChannels.begin());
                          descriptor._inputChannels.end() != inner; ++inner)
                     {
-                        aPort = anEntity->addPort(*inner, PortEntry::kPortUsageService, PortEntry::kPortDirectionInput);
+                        MplusM::Common::ChannelDescription aChannel(*inner);
+                        
+                        aPort = anEntity->addPort(aChannel._portName, PortEntry::kPortUsageService,
+                                                  PortEntry::kPortDirectionInput);
                         if (aPort)
                         {
                             rememberPortInBackground(aPort);
                         }
                     }
-                    for (MplusM::Common::StringVector::const_iterator inner(descriptor._outputChannels.begin());
+                    for (MplusM::Common::ChannelVector::const_iterator inner(descriptor._outputChannels.begin());
                          descriptor._outputChannels.end() != inner; ++inner)
                     {
-                        aPort = anEntity->addPort(*inner, PortEntry::kPortUsageService,
+                        MplusM::Common::ChannelDescription aChannel(*inner);
+                        
+                        aPort = anEntity->addPort(aChannel._portName, PortEntry::kPortUsageService,
                                                   PortEntry::kPortDirectionOutput);
                         if (aPort)
                         {
