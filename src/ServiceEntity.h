@@ -83,7 +83,7 @@ public:
     
     /*! @brief Add a port to the panel.
      @param portName The name of the port.
-     @param portProtcol The protocol of the port.
+     @param portProtocol The protocol of the port.
      @param portKind What the port will be used for.
      @param direction The primary direction of the port.
      @returns The newly-created port. */
