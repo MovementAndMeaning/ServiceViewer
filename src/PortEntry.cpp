@@ -127,12 +127,14 @@ static PortEntry::AnchorSide calculateAnchorForPoint(ofPoint &       newCentre,
 #endif // defined(__APPLE__)
 
 PortEntry::PortEntry(IconlessPanel *     parent,
+                     const string &      portProtocol,
                      const PortUsage     portKind,
                      const PortDirection direction) :
-            inherited(parent), _direction(direction), _usage(portKind), _isLastPort(true)
+            inherited(parent), _portProtocol(portProtocol), _direction(direction), _usage(portKind), _isLastPort(true)
 {
     OD_LOG_ENTER();//####
     OD_LOG_P1("parent = ", parent);//####
+    OD_LOG_S1("portProtocol = ", portProtocol);//####
     OD_LOG_L2("portKind = ", portKind, "direction = ", direction);//####
     OD_LOG_EXIT_P(this);//####
 } // PortEntry::PortEntry
@@ -485,32 +487,37 @@ bool PortEntry::mousePressed(ofMouseEventArgs & args)
                       removeIsActive);//####
             if (OF_MOUSE_BUTTON_3 == args.button)
             {
-                string thePortKind;
+                string prefix;
+                string suffix;
                 
                 switch (MplusM::Utilities::GetPortKind(_portName.c_str()))
                 {
                     case MplusM::Utilities::kPortKindAdapter:
-                        thePortKind = "Adapter port ";
+                        prefix = "Adapter port ";
                         break;
                         
                     case MplusM::Utilities::kPortKindClient:
-                        thePortKind = "Client port ";
+                        prefix = "Client port ";
                         break;
                         
                     case MplusM::Utilities::kPortKindService:
-                        thePortKind = "Service port ";
+                        prefix = "Service port ";
                         break;
                         
                     case MplusM::Utilities::kPortKindServiceRegistry:
-                        thePortKind = "Service Registry port ";
+                        prefix = "Service Registry port ";
                         break;
                         
                     case MplusM::Utilities::kPortKindStandard:
-                        thePortKind = "Standard port ";
+                        prefix = "Standard port ";
                         break;
                         
                 }
-                ofSystemAlertDialog(thePortKind + _portName);
+                if (0 < _portProtocol.size())
+                {
+                    suffix = "\nProtocol = '" + _portProtocol + "'";
+                }
+                ofSystemAlertDialog(prefix + _portName + suffix);
                 result = true;
             }
             else if (controlWasActive)

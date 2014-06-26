@@ -69,7 +69,7 @@ public:
      @param xx The initial horizontal position of the panel.
      @param yy The initial vertical position of the panel. */
 	IconlessPanel(const ofParameterGroup & parameters,
-                  string                   filename = "settings.xml",
+                  const string &           filename = "settings.xml",
                   const float              xx = 10,
                   const float              yy = 10);
     

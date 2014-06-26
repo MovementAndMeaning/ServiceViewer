@@ -87,7 +87,7 @@ IconlessPanel::IconlessPanel(void) :
 } // IconlessPanel::IconlessPanel
 
 IconlessPanel::IconlessPanel(const ofParameterGroup & parameters,
-                             string                   filename,
+                             const string &           filename,
                              const float              xx,
                              const float              yy) :
             inherited(parameters, filename, xx, yy)

@@ -70,10 +70,12 @@ public:
     
     /*! @brief The constructor.
      @param kind The kind of entity.
+     @param behaviour The behavioural model if a service.
      @param description The description, if this is a service.
      @param owner The application object that manages this entity. */
 	ServiceEntity(const PortPanel::EntityKind kind,
-                  const string                description,
+                  const string &              behaviour,
+                  const string &              description,
                   ServiceViewerApp &          owner);
     
     /*! @brief The destructor. */
@@ -81,14 +83,16 @@ public:
     
     /*! @brief Add a port to the panel.
      @param portName The name of the port.
+     @param portProtcol The protocol of the port.
      @param portKind What the port will be used for.
      @param direction The primary direction of the port.
      @returns The newly-created port. */
-    inline PortEntry * addPort(string                         portName,
+    inline PortEntry * addPort(const string &                 portName,
+                               const string &                 portProtocol,
                                const PortEntry::PortUsage     portKind,
                                const PortEntry::PortDirection direction = PortEntry::kPortDirectionInputOutput)
     {
-        return _panel.addPort(portName, portKind, direction);
+        return _panel.addPort(portName, portProtocol, portKind, direction);
     } // addPort
     
     /*! @brief Stop displaying the connect marker. */

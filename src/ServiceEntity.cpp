@@ -79,13 +79,14 @@ static const float kMarkerSide = 12;
 #endif // defined(__APPLE__)
 
 ServiceEntity::ServiceEntity(const PortPanel::EntityKind kind,
-                             const string                description,
+                             const string &              behaviour,
+                             const string &              description,
                              ServiceViewerApp &          owner) :
-            inherited(), _panel(kind, description, owner, *this), _node(NULL), _drawConnectMarker(false),
+            inherited(), _panel(kind, behaviour, description, owner, *this), _node(NULL), _drawConnectMarker(false),
             _drawDisconnectMarker(false), _drawMoveMarker(false), _selected(false)
 {
     OD_LOG_ENTER();//####
-    OD_LOG_S1("description = ", description.c_str());//####
+    OD_LOG_S2("behaviour = ", behaviour.c_str(), "description = ", description.c_str());//####
     OD_LOG_P1("owner = ", &owner);//####
     OD_LOG_EXIT_P(this);//####
 } // ServiceEntity::ServiceEntity

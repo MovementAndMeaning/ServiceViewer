@@ -42,6 +42,7 @@
 #include "PortPanel.h"
 #include "MovementTracker.h"
 #include "ServiceViewerApp.h"
+#include "Utilities.h"
 
 //#include "ODEnableLogging.h"
 #include "ODLogging.h"
@@ -78,20 +79,22 @@
 #endif // defined(__APPLE__)
 
 PortPanel::PortPanel(const EntityKind   kind,
-                     const string       description,
+                     const string &     behaviour,
+                     const string &     description,
                      ServiceViewerApp & owner,
                      ServiceEntity &    within) :
-            inherited(), _tracker(NULL), _owner(owner), _within(within), _description(description), _kind(kind),
-            _grabbed(false)
+            inherited(), _tracker(NULL), _owner(owner), _within(within), _behaviour(behaviour),
+            _description(description), _kind(kind), _grabbed(false)
 {
     OD_LOG_ENTER();//####
-    OD_LOG_S1("description = ", description.c_str());//####
+    OD_LOG_S2("behaviour = ", behaviour.c_str(), "description = ", description.c_str());//####
     OD_LOG_P2("owner = ", &owner, "within = ", &within);//####
     OD_LOG_EXIT_P(this);//####
 } // PortPanel::PortPanel
 
 PortPanel::PortPanel(const EntityKind         kind,
-                     const string             description,
+                     const string &           behaviour,
+                     const string &           description,
                      ServiceViewerApp &       owner,
                      ServiceEntity &          within,
                      const ofParameterGroup & parameters,
@@ -99,10 +102,11 @@ PortPanel::PortPanel(const EntityKind         kind,
                      const float              xx,
                      const float              yy) :
             inherited(parameters, filename, xx, yy), _tracker(NULL), _owner(owner), _within(within),
-            _description(description), _kind(kind), _grabbed(false)
+            _behaviour(behaviour), _description(description), _kind(kind), _grabbed(false)
 {
     OD_LOG_ENTER();//####
-    OD_LOG_S2("description = ", description.c_str(), "filename = ", filename.c_str());//####
+    OD_LOG_S3("behaviour = ", behaviour.c_str(), "description = ", description.c_str(), "filename = ",//####
+              filename.c_str());//####
     OD_LOG_P3("owner = ", &owner, "within = ", &within, "parameters = ", &parameters);//####
     OD_LOG_D2("xx = ", xx, "yy = ", yy);//####
     OD_LOG_EXIT_P(this);//####
@@ -129,14 +133,15 @@ PortPanel::~PortPanel(void)
 # pragma mark Actions
 #endif // defined(__APPLE__)
 
-PortEntry * PortPanel::addPort(string                         portName,
+PortEntry * PortPanel::addPort(const string &                 portName,
+                               const string &                 portProtocol,
                                const PortEntry::PortUsage     portKind,
                                const PortEntry::PortDirection direction)
 {
     OD_LOG_OBJENTER();//####
-    OD_LOG_S1("portName = ", portName.c_str());//####
+    OD_LOG_S2("portName = ", portName.c_str(), "portProtocol = ", portProtocol.c_str());//####
     int         countBefore = getNumPorts();
-    PortEntry * aPort = new PortEntry(this, portKind, direction);
+    PortEntry * aPort = new PortEntry(this, portProtocol, portKind, direction);
     
     add(aPort->setup(portName));
     if (0 < countBefore)
@@ -356,6 +361,34 @@ bool PortPanel::mouseReleased(ofMouseEventArgs & args)
     OD_LOG_OBJEXIT_B(result);//####
     return result;
 } // PortPanel::mouseReleased
+
+void PortPanel::setName(string name)
+{
+    OD_LOG_OBJENTER();//####
+    string prefix;
+    
+    switch (MplusM::Utilities::MapStringToServiceKind(_behaviour))
+    {
+        case MplusM::Common::kServiceKindFilter:
+            prefix = "Filter ";
+            break;
+            
+        case MplusM::Common::kServiceKindInput:
+            prefix = "Input ";
+            break;
+            
+        case MplusM::Common::kServiceKindOutput:
+            prefix = "Output ";
+            break;
+            
+        default:
+            prefix = "";
+            break;
+            
+    }
+    inherited::setName(prefix + name);
+    OD_LOG_OBJEXIT();//####
+} // PortPanel::setName
 
 PortPanel * PortPanel::setup(string      collectionName,
                              string      filename,

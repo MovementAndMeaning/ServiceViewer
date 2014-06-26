@@ -76,20 +76,24 @@ public:
         
         /*! @brief The entity is neither a serice nor a client nor an adapter. */
         kEntityKindOther
+        
     }; // EntityKind
     
     /*! @brief The constructor.
      @param kind The kind of entity.
+     @param behaviour The behavioural model if a service.
      @param description A description of the entity.
      @param owner The application object that manages this panel.
      @param within The entity that contains this panel. */
 	PortPanel(const EntityKind   kind,
-              const string       description,
+              const string &     behaviour,
+              const string &     description,
               ServiceViewerApp & owner,
               ServiceEntity &    within);
     
     /*! @brief The constructor.
      @param kind The kind of entity.
+     @param behaviour The behavioural model if a service.
      @param description A description of the entity.
      @param owner The application object that manages this panel.
      @param within The entity that contains this panel.
@@ -98,7 +102,8 @@ public:
      @param xx The initial horizontal position of the panel.
      @param yy The initial vertical position of the panel. */
 	PortPanel(const EntityKind         kind,
-              const string             description,
+              const string &           behaviour,
+              const string &           description,
               ServiceViewerApp &       owner,
               ServiceEntity &          within,
               const ofParameterGroup & parameters,
@@ -111,10 +116,12 @@ public:
     
     /*! @brief Add a port to the panel.
      @param portName The name of the port.
+     @param portProtocol The protocol of the port.
      @param portKind What the port will be used for.
      @param direction The primary direction of the port.
      @returns The newly-created port. */
-    PortEntry *  addPort(string                         portName,
+    PortEntry *  addPort(const string &                 portName,
+                         const string &                 portProtocol = "",
                          const PortEntry::PortUsage     portKind = PortEntry::kPortUsageOther,
                          const PortEntry::PortDirection direction = PortEntry::kPortDirectionInputOutput);
     
@@ -230,10 +237,7 @@ public:
     
     /*! @brief Set the title string for the panel.
      @param name The new title string for the panel. */
-	inline void setName(string name)
-    {
-        inherited::setName(name);
-    } // setName
+	void setName(string name);
 
     /*! @brief Move the panel to a new location.
      @param xx The new horizontal coordinate.
@@ -310,6 +314,9 @@ private:
 
     /*! @brief The entity that contains this panel. */
     ServiceEntity &    _within;
+
+    /*! @brief The behavioural model if a service. */
+    string             _behaviour;
     
     /*! @brief The description of the entity, if it is a service. */
     string             _description;

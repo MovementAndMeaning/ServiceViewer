@@ -86,6 +86,7 @@ public:
         
         /*! @brief The connection point is unknown. */
         kAnchorUnknown
+        
     }; // AnchorSide
     
     /*! @brief The primary direction of the port. */
@@ -102,6 +103,7 @@ public:
         
         /*! @brief The port direction is unknown. */
         kPortDirectionUnknown
+        
     }; // PortDirection
     
     /*! @brief What the port will be used for. */
@@ -115,6 +117,7 @@ public:
         
         /*! @brief The port has no specific characterization. */
         kPortUsageOther
+        
     }; // PortUsage
     
     /*! @brief The form of a connection. */
@@ -125,6 +128,7 @@ public:
         
         /*! @brief The kind of connection. */
         MplusM::Common::ChannelMode _connectionMode;
+        
     }; // PortConnection
     
     /*! @brief The set of connections to the port. */
@@ -132,9 +136,11 @@ public:
 
     /*! @brief The constructor.
      @param parent The GUI element containing this element.
+     @param portProtocol The protocol of the port.
      @param portKind What the port will be used for.
      @param direction The primary direction of the port. */
 	PortEntry(IconlessPanel *     parent,
+              const string &      portProtocol,
               const PortUsage     portKind,
               const PortDirection direction = kPortDirectionInput);
     
@@ -355,6 +361,9 @@ private:
     
     /*! @brief The name of the associated port. */
     string        _portName;
+    
+    /*! @brief The protocol of the associated port. */
+    string        _portProtocol;
     
     /*! @brief The primary direction for connections to the port. */
     PortDirection _direction;

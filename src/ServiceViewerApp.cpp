@@ -118,8 +118,8 @@ static yarp::os::ConstString lOutputOnlyPortName;
 static void createDirectionTestPorts(void)
 {
     OD_LOG_ENTER();//####
-    lInputOnlyPortName = MplusM::Common::GetRandomChannelName("/checkdirection/channel_");
-    lOutputOnlyPortName = MplusM::Common::GetRandomChannelName("/checkdirection/channel_");
+    lInputOnlyPortName = MplusM::Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX "checkdirection/channel_");
+    lOutputOnlyPortName = MplusM::Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX "checkdirection/channel_");
     lInputOnlyPort = new MplusM::Common::AdapterChannel(false);
     if (lInputOnlyPort)
     {
@@ -525,7 +525,7 @@ void ServiceViewerApp::exit(void)
     OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::exit
 
-PortEntry * ServiceViewerApp::findBackgroundPort(string name)
+PortEntry * ServiceViewerApp::findBackgroundPort(const string & name)
 {
     OD_LOG_OBJENTER();//####
     OD_LOG_S1("name = ", name.c_str());//####
@@ -544,7 +544,7 @@ PortEntry * ServiceViewerApp::findBackgroundPort(string name)
     return result;
 } // ServiceViewerApp::findBackgroundPort
 
-ServiceEntity * ServiceViewerApp::findForegroundEntity(string name)
+ServiceEntity * ServiceViewerApp::findForegroundEntity(const string & name)
 {
     OD_LOG_OBJENTER();//####
     OD_LOG_S1("name = ", name.c_str());//####
@@ -565,7 +565,7 @@ ServiceEntity * ServiceViewerApp::findForegroundEntity(string name)
     return result;
 } // ServiceViewerApp::findForegroundEntity
 
-ServiceEntity * ServiceViewerApp::findForegroundEntityForPort(string name)
+ServiceEntity * ServiceViewerApp::findForegroundEntityForPort(const string & name)
 {
     OD_LOG_OBJENTER();//####
     OD_LOG_S1("name = ", name.c_str());//####
@@ -611,7 +611,7 @@ ServiceEntity * ServiceViewerApp::findForegroundEntityForPort(const PortEntry * 
     return result;
 } // ServiceViewerApp::findForegroundEntityForPort
 
-PortEntry * ServiceViewerApp::findForegroundPort(string name)
+PortEntry * ServiceViewerApp::findForegroundPort(const string & name)
 {
     OD_LOG_OBJENTER();//####
     OD_LOG_S1("name = ", name.c_str());//####
@@ -1185,11 +1185,12 @@ void ServiceViewerApp::update(void)
                 {
                     MplusM::Utilities::ServiceDescriptor descriptor(outer->second);
                     ServiceEntity *                      anEntity = new ServiceEntity(PortPanel::kEntityKindService,
+                                                                                      descriptor._kind.c_str(),
                                                                                       descriptor._description.c_str(),
                                                                                       *this);
                     
                     anEntity->setup(descriptor._canonicalName);
-                    PortEntry * aPort = anEntity->addPort(descriptor._channelName, PortEntry::kPortUsageService,
+                    PortEntry * aPort = anEntity->addPort(descriptor._channelName, "", PortEntry::kPortUsageService,
                                                           PortEntry::kPortDirectionInput);
                     
                     if (aPort)
@@ -1201,8 +1202,8 @@ void ServiceViewerApp::update(void)
                     {
                         MplusM::Common::ChannelDescription aChannel(*inner);
                         
-                        aPort = anEntity->addPort(aChannel._portName, PortEntry::kPortUsageService,
-                                                  PortEntry::kPortDirectionInput);
+                        aPort = anEntity->addPort(aChannel._portName, aChannel._portProtocol,
+                                                  PortEntry::kPortUsageService, PortEntry::kPortDirectionInput);
                         if (aPort)
                         {
                             rememberPortInBackground(aPort);
@@ -1213,8 +1214,8 @@ void ServiceViewerApp::update(void)
                     {
                         MplusM::Common::ChannelDescription aChannel(*inner);
                         
-                        aPort = anEntity->addPort(aChannel._portName, PortEntry::kPortUsageService,
-                                                  PortEntry::kPortDirectionOutput);
+                        aPort = anEntity->addPort(aChannel._portName, aChannel._portProtocol,
+                                                  PortEntry::kPortUsageService, PortEntry::kPortDirectionOutput);
                         if (aPort)
                         {
                             rememberPortInBackground(aPort);
@@ -1227,13 +1228,13 @@ void ServiceViewerApp::update(void)
                      ++outer)
                 {
                     PortEntry *     aPort;
-                    ServiceEntity * anEntity = new ServiceEntity(PortPanel::kEntityKindClientOrAdapter, "", *this);
+                    ServiceEntity * anEntity = new ServiceEntity(PortPanel::kEntityKindClientOrAdapter, "", "", *this);
                     
                     anEntity->setup(outer->first.c_str());
                     for (MplusM::Common::StringVector::const_iterator inner(outer->second._associates._inputs.begin());
                          outer->second._associates._inputs.end() != inner; ++inner)
                     {
-                        aPort = anEntity->addPort(*inner, PortEntry::kPortUsageOther,
+                        aPort = anEntity->addPort(*inner, "", PortEntry::kPortUsageOther,
                                                   PortEntry::kPortDirectionInput);
                         if (aPort)
                         {
@@ -1243,14 +1244,14 @@ void ServiceViewerApp::update(void)
                     for (MplusM::Common::StringVector::const_iterator inner(outer->second._associates._outputs.begin());
                          outer->second._associates._outputs.end() != inner; ++inner)
                     {
-                        aPort = anEntity->addPort(*inner, PortEntry::kPortUsageOther,
+                        aPort = anEntity->addPort(*inner, "", PortEntry::kPortUsageOther,
                                                   PortEntry::kPortDirectionOutput);
                         if (aPort)
                         {
                             rememberPortInBackground(aPort);
                         }
                     }
-                    aPort = anEntity->addPort(outer->second._name, PortEntry::kPortUsageClient,
+                    aPort = anEntity->addPort(outer->second._name, "", PortEntry::kPortUsageClient,
                                               PortEntry::kPortDirectionInputOutput);
                     if (aPort)
                     {
@@ -1262,7 +1263,7 @@ void ServiceViewerApp::update(void)
                 for (PortMap::const_iterator walker(_standalonePorts.begin()); _standalonePorts.end() != walker;
                      ++walker)
                 {
-                    ServiceEntity *      anEntity = new ServiceEntity(PortPanel::kEntityKindOther, "", *this);
+                    ServiceEntity *      anEntity = new ServiceEntity(PortPanel::kEntityKindOther, "", "", *this);
                     PortEntry::PortUsage usage;
                     
                     anEntity->setup(walker->first.c_str());
@@ -1282,7 +1283,7 @@ void ServiceViewerApp::update(void)
                             break;
                             
                     }
-                    PortEntry * aPort = anEntity->addPort(walker->second._name, usage, walker->second._direction);
+                    PortEntry * aPort = anEntity->addPort(walker->second._name, "", usage, walker->second._direction);
                     
                     if (aPort)
                     {

@@ -262,6 +262,7 @@ private:
         
         /*! @brief The mode of the connection. */
         MplusM::Common::ChannelMode _mode;
+        
     }; // ConnectionDetails
     
     /*! @brief The name and direction for a port. */
@@ -272,6 +273,7 @@ private:
         
         /*! @brief The direction of the port. */
         PortEntry::PortDirection _direction;
+        
     }; // NameAndDirection
     
     /*! @brief The name and associates for a port. */
@@ -282,6 +284,7 @@ private:
         
         /*! @brief The associates of the port. */
         MplusM::Utilities::PortAssociation _associates;
+        
     }; // PortAndAssociates
     
     /*! @brief A mapping from port names to associates. */
@@ -336,17 +339,17 @@ private:
     /*! @brief Find a port in the to-be-displayed list by name.
      @param name The name of the port.
      @returns @c NULL if the port cannot be found and non-@c NULL if it is found. */
-    PortEntry * findBackgroundPort(string name);
+    PortEntry * findBackgroundPort(const string & name);
     
     /*! @brief Find an entity in the currently-displayed list by name.
      @param name The name of the entity.
      @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
-    ServiceEntity * findForegroundEntity(string name);
+    ServiceEntity * findForegroundEntity(const string & name);
     
     /*! @brief Find an entity by the name of a port within it.
      @param name The name of the port.
      @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
-    ServiceEntity * findForegroundEntityForPort(string name);
+    ServiceEntity * findForegroundEntityForPort(const string & name);
     
     /*! @brief Find an entity by a port within it.
      @param aPort The port of interest.
@@ -356,7 +359,7 @@ private:
     /*! @brief Find a port in the currently-displayed list by name.
      @param name The name of the port.
      @returns @c NULL if the port cannot be found and non-@c NULL if it is found. */
-    PortEntry * findForegroundPort(string name);
+    PortEntry * findForegroundPort(const string & name);
     
     /*! @brief Add a port to the set of known ports in the to-be-displayed list.
      @param aPort The port to be added. */
