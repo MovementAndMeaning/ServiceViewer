@@ -133,7 +133,16 @@ void BackgroundScanner::threadedFunction(void)
                 }
                 else
                 {
-                    cerr << "actual interval = " << (ofGetElapsedTimef() - _lastScanTime) << endl;
+                    char numBuff[30];
+                    
+#if MAC_OR_LINUX_
+                    snprintf(numBuff, sizeof(numBuff), "%g", ofGetElapsedTimef() - _lastScanTime);
+#else // ! MAC_OR_LINUX_
+                    _snprintf(numBuff, sizeof(numBuff) - 1, "%g", ofGetElapsedTimef() - _lastScanTime);
+                    // Correct for the weird behaviour of _snprintf
+                    numBuff[sizeof(numBuff) - 1] = '\0';
+#endif // ! MAC_OR_LINUX_
+                    MplusM::Common::GetLogger().info(yarp::os::ConstString("actual interval = ") + numBuff);
                 }
                 _lastScanTime = ofGetElapsedTimef();
                 _owner.gatherEntitiesInBackground();

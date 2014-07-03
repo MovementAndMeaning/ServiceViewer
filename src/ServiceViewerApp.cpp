@@ -1133,7 +1133,7 @@ void ServiceViewerApp::setup(void)
     else
     {
         OD_LOG("! (yarp::os::Network::checkNetwork())");//####
-        cerr << "YARP network not running." << endl;
+        MplusM::Common::GetLogger().fail("YARP network not running.");
         _networkAvailable = false;
     }
 #endif // CheckNetworkWorks_

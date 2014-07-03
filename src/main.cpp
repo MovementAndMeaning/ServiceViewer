@@ -123,6 +123,7 @@ int main(int      argc,
                 kODLoggingOptionEnableThreadSupport);//####
 #endif // ! defined(MpM_ServicesLogToStandardError)
     OD_LOG_ENTER();//####
+    MplusM::Common::SetUpLogger(*argv);
     yarp::os::Network yarp; // This is necessary to establish any connection to the YARP infrastructure
     
     try
