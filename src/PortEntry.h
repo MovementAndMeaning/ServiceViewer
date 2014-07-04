@@ -236,6 +236,14 @@ public:
         return _portName;
     } // getPortName
     
+    /*! @brief Return the protocol of the associated port.
+     @returns The protocol of the associated port. */
+    inline string getProtocol(void)
+    const
+    {
+        return _portProtocol;
+    } // getProtocol
+    
     /*! @brief Return the usage of the port entry.
      @returns The usage of the port entry. */
     PortUsage getUsage(void)

@@ -227,6 +227,29 @@ static PortEntry::PortDirection determinePortDirection(const yarp::os::ConstStri
     return result;
 } // determinePortDirection
 
+/*! @brief Determine whether a connection can be made, based on the port protocols.
+ @param sourceProtocol The protocol of the source port.
+ @param destinationProtocol The protocol of the destination port.
+ @returns @c true if the protocols permit a connection to be made and @c false otherwise. */
+static bool protocolsMatch(const string & sourceProtocol,
+                           const string & destinationProtocol)
+{
+    OD_LOG_ENTER();//####
+    OD_LOG_S2("sourceProtocol = ", sourceProtocol.c_str(), "destinationProtocol = ", destinationProtocol.c_str());//####
+    bool result = false;
+    
+    OD_LOG_EXIT_B(result);//####
+    if (0 == destinationProtocol.length())
+    {
+        result = true;
+    }
+    else
+    {
+        result = (sourceProtocol == destinationProtocol);
+    }
+    return result;
+} // protocolsMatch
+
 #if defined(__APPLE__)
 # pragma mark Class methods
 #endif // defined(__APPLE__)
@@ -384,25 +407,6 @@ void ServiceViewerApp::addServicesToBackground(const MplusM::Common::StringVecto
                     
                     _rememberedPorts.insert(aChannel._portName);
                 }
-#if 0
-                MplusM::Common::ServiceKind kind = MplusM::Utilities::MapStringToServiceKind(descriptor._kind);
-                
-                switch (kind)
-                {
-                    case MplusM::Common::kServiceKindInput:
-                        break;
-                        
-                    case MplusM::Common::kServiceKindOutput:
-                        break;
-                        
-                    case MplusM::Common::kServiceKindFilter:
-                        break;
-                        
-                    default:
-                        break;
-                        
-                }
-#endif//0
             }
         }
     }
@@ -830,6 +834,7 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort)
     {
         PortEntry::PortDirection direction = aPort->getDirection();
         PortEntry::PortUsage     usage = aPort->getUsage();
+        string                   protocol = aPort->getProtocol();
         
         if (_firstRemovePort)
         {
@@ -868,8 +873,10 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort)
             
             if (_firstAddPort != aPort)
             {
+                string firstProtocol = _firstAddPort->getProtocol();
+                
                 // Check if we can end here.
-                if (PortEntry::kPortDirectionOutput != direction)
+                if ((PortEntry::kPortDirectionOutput != direction) && protocolsMatch(firstProtocol, protocol))
                 {
                     ServiceEntity * secondEntity = findForegroundEntityForPort(aPort);
                     
