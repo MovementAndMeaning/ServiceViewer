@@ -1027,8 +1027,17 @@ void ServiceViewerApp::setEntityPositions(void)
             float           newY;
             ofRectangle     entityShape(anEntity->getShape());
             ogdf::node      aNode = gg.newNode();
-            ServiceEntity * olderVersion = findForegroundEntity(anEntity->getName());
+            PortEntry *     firstPort = anEntity->getPort(0);
+            ServiceEntity * olderVersion;
             
+            if (firstPort)
+            {
+                olderVersion = findForegroundEntityForPort(firstPort->getPortName());
+            }
+            else
+            {
+                olderVersion = findForegroundEntity(anEntity->getName());
+            }
             ga.width(aNode) = entityShape.width;
             ga.height(aNode) = entityShape.height;
             anEntity->setNode(aNode);
@@ -1166,7 +1175,7 @@ void ServiceViewerApp::update(void)
     inherited::update();
     if (_scanner)
     {
-        for (bool locked = _scanner->lock(); ! locked; )
+        for (bool locked = _scanner->lock(); ! locked; locked = _scanner->lock())
         {
             sleep(SHORT_SLEEP);
         }
