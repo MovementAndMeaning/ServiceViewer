@@ -1,4 +1,4 @@
-//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //  File:       PortEntry.cpp
 //
@@ -10,34 +10,31 @@
 //
 //  Copyright:  (c) 2014 by HPlus Technologies Ltd. and Simon Fraser University.
 //
-//              All rights reserved. Redistribution and use in source and binary forms,
-//              with or without modification, are permitted provided that the following
-//              conditions are met:
-//                * Redistributions of source code must retain the above copyright
-//                  notice, this list of conditions and the following disclaimer.
-//                * Redistributions in binary form must reproduce the above copyright
-//                  notice, this list of conditions and the following disclaimer in the
-//                  documentation and/or other materials provided with the
-//                  distribution.
-//                * Neither the name of the copyright holders nor the names of its
-//                  contributors may be used to endorse or promote products derived
-//                  from this software without specific prior written permission.
+//              All rights reserved. Redistribution and use in source and binary forms, with or
+//              without modification, are permitted provided that the following conditions are met:
+//                * Redistributions of source code must retain the above copyright notice, this list
+//                  of conditions and the following disclaimer.
+//                * Redistributions in binary form must reproduce the above copyright notice, this
+//                  list of conditions and the following disclaimer in the documentation and/or
+//                  other materials provided with the distribution.
+//                * Neither the name of the copyright holders nor the names of its contributors may
+//                  be used to endorse or promote products derived from this software without
+//                  specific prior written permission.
 //
-//              THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-//              "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-//              LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-//              PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-//              OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//              SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//              LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-//              DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-//              THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-//              (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-//              OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//              THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+//              EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//              OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+//              SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//              INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+//              TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+//              BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+//              CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+//              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+//              DAMAGE.
 //
 //  Created:    2014-05-12
 //
-//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 //#include "PortEntry.h"
 #include "ServiceEntity.h"
@@ -87,12 +84,15 @@ static PortEntry::AnchorSide calculateAnchorForPoint(ofPoint &       newCentre,
                                                      const ofPoint & refCentre)
 {
 //    OD_LOG_ENTER();//####
-//    OD_LOG_P3("newCentre = ", &newCentre, "targetPoint = ", &targetPoint, "refCentre = ", &refCentre);//####
+//    OD_LOG_P3("newCentre = ", &newCentre, "targetPoint = ", &targetPoint,//####
+//              "refCentre = ", &refCentre);//####
     PortEntry::AnchorSide anchor = PortEntry::kAnchorUnknown;
-    float                 boxSize = (ofDist(refCentre.x, refCentre.y, targetPoint.x, targetPoint.y) * kTargetBoxScale);
-    float                 soFar = 1e23; // Ridiculously big, just in case.
+    float                 boxSize = (ofDist(refCentre.x, refCentre.y, targetPoint.x,
+                                            targetPoint.y) * kTargetBoxScale);
+    float                 soFar = 1e23;           // Ridiculously big, just in case.
     ofPoint               tempPoint;
-    ofRectangle           box(targetPoint.x - (boxSize / 2), targetPoint.y - (boxSize / 2), boxSize, boxSize);
+    ofRectangle           box(targetPoint.x - (boxSize / 2), targetPoint.y - (boxSize / 2),
+                              boxSize, boxSize);
     
     if (CalculateMinDistance(soFar, refCentre, box.x, box.y + (boxSize / 2), tempPoint))
     {
@@ -102,12 +102,13 @@ static PortEntry::AnchorSide calculateAnchorForPoint(ofPoint &       newCentre,
     if (CalculateMinDistance(soFar, refCentre, box.x + boxSize, box.y + (boxSize / 2), tempPoint))
     {
         anchor = PortEntry::kAnchorRight;
-        newCentre = targetPoint + ofPoint(- boxSize, 0);
+        newCentre = targetPoint + ofPoint(-boxSize, 0);
     }
-    if ((! disallowBottom) && CalculateMinDistance(soFar, refCentre, box.x + (boxSize / 2), box.y + boxSize, tempPoint))
+    if ((! disallowBottom) && CalculateMinDistance(soFar, refCentre, box.x + (boxSize / 2),
+                                                   box.y + boxSize, tempPoint))
     {
         anchor = PortEntry::kAnchorBottomCentre;
-        newCentre = targetPoint + ofPoint(0, - boxSize);
+        newCentre = targetPoint + ofPoint(0, -boxSize);
     }
     if (CalculateMinDistance(soFar, refCentre, box.x + (boxSize / 2), box.y, tempPoint))
     {
@@ -130,19 +131,20 @@ PortEntry::PortEntry(IconlessPanel *     parent,
                      const string &      portProtocol,
                      const PortUsage     portKind,
                      const PortDirection direction) :
-            inherited(parent), _portProtocol(portProtocol), _direction(direction), _usage(portKind), _isLastPort(true)
+    inherited(parent), _portProtocol(portProtocol), _direction(direction), _usage(portKind),
+    _isLastPort(true)
 {
-    OD_LOG_ENTER();//####
-    OD_LOG_P1("parent = ", parent);//####
-    OD_LOG_S1("portProtocol = ", portProtocol);//####
-    OD_LOG_L2("portKind = ", portKind, "direction = ", direction);//####
-    OD_LOG_EXIT_P(this);//####
+    OD_LOG_ENTER(); //####
+    OD_LOG_P1("parent = ", parent); //####
+    OD_LOG_S1s("portProtocol = ", portProtocol.c_str()); //####
+    OD_LOG_L2("portKind = ", portKind, "direction = ", direction); //####
+    OD_LOG_EXIT_P(this); //####
 } // PortEntry::PortEntry
 
 PortEntry::~PortEntry(void)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_OBJEXIT(); //####
 } // PortEntry::~PortEntry
 
 #if defined(__APPLE__)
@@ -154,14 +156,14 @@ PortEntry::~PortEntry(void)
 void PortEntry::addInputConnection(PortEntry *                 other,
                                    MplusM::Common::ChannelMode mode)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_P1("other = ", other);//####
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("other = ", other); //####
     if (other)
     {
         bool canAdd = true;
         
-        for (Connections::const_iterator walker(_inputConnections.begin()); _inputConnections.end() != walker;
-             ++walker)
+        for (Connections::const_iterator walker(_inputConnections.begin());
+             _inputConnections.end() != walker; ++walker)
         {
             if (walker->_otherPort == other)
             {
@@ -179,7 +181,7 @@ void PortEntry::addInputConnection(PortEntry *                 other,
             _inputConnections.push_back(newConnection);
         }
     }
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // PortEntry::addInputConnection
 
 /*! @brief Add an output connection to the port.
@@ -187,14 +189,14 @@ void PortEntry::addInputConnection(PortEntry *                 other,
 void PortEntry::addOutputConnection(PortEntry *                 other,
                                     MplusM::Common::ChannelMode mode)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_P1("other = ", other);//####
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("other = ", other); //####
     if (other)
     {
         bool canAdd = true;
         
-        for (Connections::const_iterator walker(_outputConnections.begin()); _outputConnections.end() != walker;
-             ++walker)
+        for (Connections::const_iterator walker(_outputConnections.begin());
+             _outputConnections.end() != walker; ++walker)
         {
             if (walker->_otherPort == other)
             {
@@ -212,7 +214,7 @@ void PortEntry::addOutputConnection(PortEntry *                 other,
             _outputConnections.push_back(newConnection);
         }
     }
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // PortEntry::addOutputConnection
 
 PortEntry::AnchorSide PortEntry::calculateClosestAnchor(ofPoint &       result,
@@ -223,7 +225,8 @@ PortEntry::AnchorSide PortEntry::calculateClosestAnchor(ofPoint &       result,
 //    OD_LOG_OBJENTER();//####
 //    OD_LOG_P2("result = ", &result, "pp = ", &pp);//####
 //    OD_LOG_B1("isSource = ", isSource);//####
-    // Check each anchor point - the two side centres and optionally the bottom - to find the shortest distance.
+    // Check each anchor point - the two side centres and optionally the bottom - to find the
+    // shortest distance.
     AnchorSide  anchor = kAnchorUnknown;
     float       soFar = 1e23; // Ridiculously big, just in case.
     ofRectangle outer(getShape());
@@ -237,7 +240,8 @@ PortEntry::AnchorSide PortEntry::calculateClosestAnchor(ofPoint &       result,
             result.x -= kArrowSize;
         }
     }
-    if (CalculateMinDistance(soFar, pp, outer.x + outer.width, outer.y + (outer.height / 2), result))
+    if (CalculateMinDistance(soFar, pp, outer.x + outer.width, outer.y + (outer.height / 2),
+                             result))
     {
         anchor = kAnchorRight;
         if (isSource)
@@ -248,7 +252,8 @@ PortEntry::AnchorSide PortEntry::calculateClosestAnchor(ofPoint &       result,
     }
     if (_isLastPort && (! disallowBottom))
     {
-        if (CalculateMinDistance(soFar, pp, outer.x + (outer.width / 2), outer.y + outer.height, result))
+        if (CalculateMinDistance(soFar, pp, outer.x + (outer.width / 2), outer.y + outer.height,
+                                 result))
         {
             anchor = kAnchorBottomCentre;
             if (isSource)
@@ -280,18 +285,21 @@ void PortEntry::drawDragLine(const float xPos,
         ofPoint               fromHere;
         ofPoint               newCentre;
         
-        // Check if the destination is above the source, in which case we determine the anchors in the reverse
-        // order.
+        // Check if the destination is above the source, in which case we determine the
+        // anchors in the reverse order.
         if (aCentre.y < yPos)
         {
             anchorHere = calculateClosestAnchor(fromHere, true, false, toThere);
-            anchorThere = calculateAnchorForPoint(newCentre, PortEntry::kAnchorBottomCentre == anchorHere, toThere,
-                                                  aCentre);
+            anchorThere = calculateAnchorForPoint(newCentre,
+                                                  PortEntry::kAnchorBottomCentre == anchorHere,
+                                                  toThere, aCentre);
         }
         else
         {
             anchorThere = calculateAnchorForPoint(newCentre, false, toThere, aCentre);
-            anchorHere = calculateClosestAnchor(fromHere, true, PortEntry::kAnchorBottomCentre == anchorThere, toThere);
+            anchorHere = calculateClosestAnchor(fromHere, true,
+                                                PortEntry::kAnchorBottomCentre == anchorThere,
+                                                toThere);
         }
         if (isUDP)
         {
@@ -321,27 +329,27 @@ void PortEntry::drawSourceAnchor(const AnchorSide anchor,
     
     switch (anchor)
     {
-        case kAnchorLeft:
-            first = anchorPos + ofPoint(kArrowSize, - kArrowSize);
+	    case kAnchorLeft :
+            first = anchorPos + ofPoint(kArrowSize, -kArrowSize);
             second = anchorPos + ofPoint(kArrowSize, kArrowSize);
             break;
             
-        case kAnchorRight:
-            first = anchorPos + ofPoint(- kArrowSize, - kArrowSize);
-            second = anchorPos + ofPoint(- kArrowSize, kArrowSize);
+	    case kAnchorRight :
+            first = anchorPos + ofPoint(-kArrowSize, -kArrowSize);
+            second = anchorPos + ofPoint(-kArrowSize, kArrowSize);
             break;
             
-        case kAnchorBottomCentre:
-            first = anchorPos + ofPoint(- kArrowSize, - kArrowSize);
-            second = anchorPos + ofPoint(kArrowSize, - kArrowSize);
+	    case kAnchorBottomCentre :
+            first = anchorPos + ofPoint(-kArrowSize, -kArrowSize);
+            second = anchorPos + ofPoint(kArrowSize, -kArrowSize);
             break;
             
-        case kAnchorTopCentre:
-            first = anchorPos + ofPoint(- kArrowSize, kArrowSize);
+	    case kAnchorTopCentre :
+            first = anchorPos + ofPoint(-kArrowSize, kArrowSize);
             second = anchorPos + ofPoint(kArrowSize, kArrowSize);
             break;
             
-        default:
+	    default :
             break;
             
     }
@@ -364,27 +372,27 @@ void PortEntry::drawTargetAnchor(const AnchorSide anchor,
     
     switch (anchor)
     {
-        case kAnchorLeft:
-            first = anchorPos + ofPoint(- kArrowSize, - kArrowSize);
-            second = anchorPos + ofPoint(- kArrowSize, kArrowSize);
+	    case kAnchorLeft :
+            first = anchorPos + ofPoint(-kArrowSize, -kArrowSize);
+            second = anchorPos + ofPoint(-kArrowSize, kArrowSize);
             break;
             
-        case kAnchorRight:
-            first = anchorPos + ofPoint(kArrowSize, - kArrowSize);
+	    case kAnchorRight :
+            first = anchorPos + ofPoint(kArrowSize, -kArrowSize);
             second = anchorPos + ofPoint(kArrowSize, kArrowSize);
             break;
             
-        case kAnchorBottomCentre:
-            first = anchorPos + ofPoint(- kArrowSize, kArrowSize);
+	    case kAnchorBottomCentre :
+            first = anchorPos + ofPoint(-kArrowSize, kArrowSize);
             second = anchorPos + ofPoint(kArrowSize, kArrowSize);
             break;
             
-        case kAnchorTopCentre:
-            first = anchorPos + ofPoint(- kArrowSize, - kArrowSize);
-            second = anchorPos + ofPoint(kArrowSize, - kArrowSize);
+	    case kAnchorTopCentre :
+            first = anchorPos + ofPoint(-kArrowSize, -kArrowSize);
+            second = anchorPos + ofPoint(kArrowSize, -kArrowSize);
             break;
             
-        default:
+	    default :
             break;
             
     }
@@ -421,11 +429,11 @@ const
 
 bool PortEntry::mouseDragged(ofMouseEventArgs & args)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_P1("args = ", &args);//####
-    OD_LOG_L1("args.button = ", args.button);//####
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("args = ", &args); //####
+    OD_LOG_L1("args.button = ", args.button); //####
     bool result = inherited::mouseDragged(args);
-
+    
     if (! result)
     {
         ServiceViewerApp & owner = getParent()->getOwner();
@@ -436,8 +444,8 @@ bool PortEntry::mouseDragged(ofMouseEventArgs & args)
             bool controlWasActive = owner.controlActive();
             bool removeIsActive = owner.removeIsActive();
             
-            OD_LOG_B3("addIsActive = ", addIsActive, "controlWasActive = ", controlWasActive, "removeIsActive = ",//####
-                      removeIsActive);//####
+            OD_LOG_B3("addIsActive = ", addIsActive, "controlWasActive = ", controlWasActive, //####
+                      "removeIsActive = ", removeIsActive); //####
             if (OF_MOUSE_BUTTON_3 == args.button)
             {
                 result = true;
@@ -452,7 +460,7 @@ bool PortEntry::mouseDragged(ofMouseEventArgs & args)
             }
         }
     }
-    OD_LOG_OBJEXIT_B(result);//####
+    OD_LOG_OBJEXIT_B(result); //####
     return result;
 } // PortEntry::mouseDragged
 
@@ -468,9 +476,9 @@ bool PortEntry::mouseMoved(ofMouseEventArgs & args)
 
 bool PortEntry::mousePressed(ofMouseEventArgs & args)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_P1("args = ", &args);//####
-    OD_LOG_L1("args.button = ", args.button);//####
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("args = ", &args); //####
+    OD_LOG_L1("args.button = ", args.button); //####
     bool result = inherited::mousePressed(args);
     
     if (! result)
@@ -483,8 +491,8 @@ bool PortEntry::mousePressed(ofMouseEventArgs & args)
             bool controlWasActive = owner.controlActive();
             bool removeIsActive = owner.removeIsActive();
             
-            OD_LOG_B3("addIsActive = ", addIsActive, "controlWasActive = ", controlWasActive, "removeIsActive = ",//####
-                      removeIsActive);//####
+            OD_LOG_B3("addIsActive = ", addIsActive, "controlWasActive = ", controlWasActive, //####
+                      "removeIsActive = ", removeIsActive); //####
             if (OF_MOUSE_BUTTON_3 == args.button)
             {
                 string prefix;
@@ -492,23 +500,23 @@ bool PortEntry::mousePressed(ofMouseEventArgs & args)
                 
                 switch (MplusM::Utilities::GetPortKind(_portName.c_str()))
                 {
-                    case MplusM::Utilities::kPortKindAdapter:
+                    case MplusM::Utilities::kPortKindAdapter :
                         prefix = "Adapter port ";
                         break;
                         
-                    case MplusM::Utilities::kPortKindClient:
+                    case MplusM::Utilities::kPortKindClient :
                         prefix = "Client port ";
                         break;
                         
-                    case MplusM::Utilities::kPortKindService:
+                    case MplusM::Utilities::kPortKindService :
                         prefix = "Service port ";
                         break;
                         
-                    case MplusM::Utilities::kPortKindServiceRegistry:
+                    case MplusM::Utilities::kPortKindServiceRegistry :
                         prefix = "Service Registry port ";
                         break;
                         
-                    case MplusM::Utilities::kPortKindStandard:
+                    case MplusM::Utilities::kPortKindStandard :
                         prefix = "Standard port ";
                         break;
                         
@@ -531,17 +539,17 @@ bool PortEntry::mousePressed(ofMouseEventArgs & args)
             }
         }
     }
-    OD_LOG_OBJEXIT_B(result);//####
+    OD_LOG_OBJEXIT_B(result); //####
     return result;
 } // PortEntry::mousePressed
 
 bool PortEntry::mouseReleased(ofMouseEventArgs & args)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_P1("args = ", &args);//####
-    OD_LOG_L1("args.button = ", args.button);//####
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("args = ", &args); //####
+    OD_LOG_L1("args.button = ", args.button); //####
     bool result = inherited::mouseReleased(args);
-
+    
     if (! result)
     {
         ServiceViewerApp & owner = getParent()->getOwner();
@@ -552,8 +560,8 @@ bool PortEntry::mouseReleased(ofMouseEventArgs & args)
             bool controlWasActive = owner.controlActive();
             bool removeIsActive = owner.removeIsActive();
             
-            OD_LOG_B3("addIsActive = ", addIsActive, "controlWasActive = ", controlWasActive, "removeIsActive = ",//####
-                      removeIsActive);//####
+            OD_LOG_B3("addIsActive = ", addIsActive, "controlWasActive = ", controlWasActive, //####
+                      "removeIsActive = ", removeIsActive); //####
             if (OF_MOUSE_BUTTON_3 == args.button)
             {
                 result = true;
@@ -577,14 +585,14 @@ bool PortEntry::mouseReleased(ofMouseEventArgs & args)
             }
         }
     }
-    OD_LOG_OBJEXIT_B(result);//####
+    OD_LOG_OBJEXIT_B(result); //####
     return result;
 } // PortEntry::mouseReleased
 
 void PortEntry::removeInputConnection(PortEntry * other)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_P1("other = ", other);//####
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("other = ", other); //####
     if (other)
     {
         Connections::iterator walker(_inputConnections.begin());
@@ -602,13 +610,13 @@ void PortEntry::removeInputConnection(PortEntry * other)
             _inputConnections.erase(walker);
         }
     }
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // PortEntry::removeInputConnection
 
 void PortEntry::removeOutputConnection(PortEntry * other)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_P1("other = ", other);//####
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("other = ", other); //####
     if (other)
     {
         Connections::iterator walker(_outputConnections.begin());
@@ -619,48 +627,47 @@ void PortEntry::removeOutputConnection(PortEntry * other)
             {
                 break;
             }
-            
         }
         if (_outputConnections.end() != walker)
         {
             _outputConnections.erase(walker);
         }
     }
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // PortEntry::removeOutputConnection
 
 PortEntry * PortEntry::setup(string      label,
                              const float width,
                              const float height)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_S1("label = ", label.c_str());//####
-    OD_LOG_D2("width = ", width, "height = ", height);//####
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_S1s("label = ", label); //####
+    OD_LOG_D2("width = ", width, "height = ", height); //####
     string tag;
     
     _portName = label;
     switch (_direction)
     {
-        case kPortDirectionInput:
+	    case kPortDirectionInput :
             tag = "In";
             break;
             
-        case kPortDirectionInputOutput:
+	    case kPortDirectionInputOutput :
             tag = "I/O";
             break;
             
-        case kPortDirectionOutput:
+	    case kPortDirectionOutput :
             tag = "Out";
             break;
             
-        default:
+	    default :
             tag = "Unk";
             break;
             
     }
-    PortEntry * result = static_cast<PortEntry *>(inherited::setup(tag, label, width, height));
+    PortEntry * result = static_cast<PortEntry *> (inherited::setup(tag, label, width, height));
     
-    OD_LOG_OBJEXIT_P(result);//####
+    OD_LOG_OBJEXIT_P(result); //####
     return result;
 } // PortEntry::setup
 
@@ -680,4 +687,3 @@ ofPoint PortEntry::getCentre(void)
 #if defined(__APPLE__)
 # pragma mark Global functions
 #endif // defined(__APPLE__)
-

@@ -1,4 +1,4 @@
-//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //  File:       LabelWithShadow.cpp
 //
@@ -10,34 +10,31 @@
 //
 //  Copyright:  (c) 2014 by HPlus Technologies Ltd. and Simon Fraser University.
 //
-//              All rights reserved. Redistribution and use in source and binary forms,
-//              with or without modification, are permitted provided that the following
-//              conditions are met:
-//                * Redistributions of source code must retain the above copyright
-//                  notice, this list of conditions and the following disclaimer.
-//                * Redistributions in binary form must reproduce the above copyright
-//                  notice, this list of conditions and the following disclaimer in the
-//                  documentation and/or other materials provided with the
-//                  distribution.
-//                * Neither the name of the copyright holders nor the names of its
-//                  contributors may be used to endorse or promote products derived
-//                  from this software without specific prior written permission.
+//              All rights reserved. Redistribution and use in source and binary forms, with or
+//              without modification, are permitted provided that the following conditions are met:
+//                * Redistributions of source code must retain the above copyright notice, this list
+//                  of conditions and the following disclaimer.
+//                * Redistributions in binary form must reproduce the above copyright notice, this
+//                  list of conditions and the following disclaimer in the documentation and/or
+//                  other materials provided with the distribution.
+//                * Neither the name of the copyright holders nor the names of its contributors may
+//                  be used to endorse or promote products derived from this software without
+//                  specific prior written permission.
 //
-//              THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-//              "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-//              LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-//              PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-//              OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//              SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//              LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-//              DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-//              THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-//              (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-//              OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//              THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+//              EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//              OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+//              SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//              INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+//              TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+//              BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+//              CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+//              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+//              DAMAGE.
 //
 //  Created:    2014-05-12
 //
-//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #include "LabelWithShadow.h"
 #include "IconlessPanel.h"
@@ -81,33 +78,33 @@ ofColor LabelWithShadow::shadowColor(128);
 #endif // defined(__APPLE__)
 
 LabelWithShadow::LabelWithShadow(IconlessPanel * parent) :
-            inherited(), _parent(parent)
+    inherited(), _parent(parent)
 {
-    OD_LOG_ENTER();//####
-    OD_LOG_P1("parent = ", parent);//####
-	_thisShadowColor = shadowColor;
+    OD_LOG_ENTER(); //####
+    OD_LOG_P1("parent = ", parent); //####
+    _thisShadowColor = shadowColor;
     _thisShadowWidth = shadowWidth;
-    OD_LOG_EXIT_P(this);//####
+    OD_LOG_EXIT_P(this); //####
 } // LabelWithShadow::LabelWithShadow
 
 LabelWithShadow::LabelWithShadow(IconlessPanel *     parent,
                                  ofParameter<string> label,
                                  const float         width,
                                  const float         height) :
-            inherited(label, width, height), _parent(parent)
+    inherited(label, width, height), _parent(parent)
 {
-    OD_LOG_ENTER();//####
-    OD_LOG_P1("parent = ", parent);//####
-    OD_LOG_D2("width = ", width, "height = ", height);//####
-	_thisShadowColor = shadowColor;
+    OD_LOG_ENTER(); //####
+    OD_LOG_P1("parent = ", parent); //####
+    OD_LOG_D2("width = ", width, "height = ", height); //####
+    _thisShadowColor = shadowColor;
     _thisShadowWidth = shadowWidth;
-    OD_LOG_EXIT_P(this);//####
+    OD_LOG_EXIT_P(this); //####
 } // LabelWithShadow::LabelWithShadow
 
 LabelWithShadow::~LabelWithShadow(void)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_OBJEXIT(); //####
 } // LabelWithShadow::~LabelWithShadow
 
 #if defined(__APPLE__)
@@ -116,24 +113,24 @@ LabelWithShadow::~LabelWithShadow(void)
 
 float LabelWithShadow::calculateTextWidth(void)
 {
-    OD_LOG_OBJENTER();//####
+    OD_LOG_OBJENTER(); //####
     string name;
     
     if (! getName().empty())
     {
         name = getName() + ": ";
     }
-    name += static_cast<string>(label);
+    name += static_cast<string> (label);
     ofRectangle bbox = getTextBoundingBox(name, 0, 0);
     float       result = ((0 <= bbox.width) ? (bbox.width + (2 * textPadding)) : 0);
     
-    OD_LOG_OBJEXIT_D(result);//####
+    OD_LOG_OBJEXIT_D(result); //####
     return result;
 } // LabelWithShadow::calculateTextWidth
 
 void LabelWithShadow::generateDraw(void)
 {
-    OD_LOG_OBJENTER();//####
+    OD_LOG_OBJENTER(); //####
     float newWidth = calculateTextWidth();
     float parentWidth = _parent->getWidth();
     
@@ -151,27 +148,28 @@ void LabelWithShadow::generateDraw(void)
     _shadow.setFilled(true);
     _shadow.rectangle(b.x + _thisShadowWidth, b.y + _thisShadowWidth, b.width, b.height);
     inherited::generateDraw();
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // LabelWithShadow::generateDraw
 
 void LabelWithShadow::render(void)
 {
-    OD_LOG_OBJENTER();//####
+    OD_LOG_OBJENTER(); //####
     _shadow.draw();
     inherited::render();
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // LabelWithShadow::render
 
 LabelWithShadow * LabelWithShadow::setup(ofParameter<string> label,
                                          const float         width,
                                          const float         height)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_D2("width = ", width, "height = ", height);//####
-    LabelWithShadow * result = static_cast<LabelWithShadow *>(inherited::setup(label, width, height));
-
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_D2("width = ", width, "height = ", height); //####
+    LabelWithShadow * result = static_cast<LabelWithShadow *> (inherited::setup(label, width,
+                                                                                height));
+    
     b.width = kOurDefaultLabelWidth;
-    OD_LOG_OBJEXIT_P(result);//####
+    OD_LOG_OBJEXIT_P(result); //####
     return result;
 } // LabelWithShadow::setup
 
@@ -180,13 +178,14 @@ LabelWithShadow * LabelWithShadow::setup(string      labelName,
                                          const float width,
                                          const float height)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_S2("labelName = ", labelName.c_str(), "label = ", label.c_str());//####
-    OD_LOG_D2("width = ", width, "height = ", height);//####
-    LabelWithShadow * result = static_cast<LabelWithShadow *>(inherited::setup(labelName, label, width, height));
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_S2s("labelName = ", labelName, "label = ", label); //####
+    OD_LOG_D2("width = ", width, "height = ", height); //####
+    LabelWithShadow * result = static_cast<LabelWithShadow *> (inherited::setup(labelName, label,
+                                                                                width, height));
     
     b.width = kOurDefaultLabelWidth;
-    OD_LOG_OBJEXIT_P(result);//####
+    OD_LOG_OBJEXIT_P(result); //####
     return result;
 } // LabelWithShadow::setup
 

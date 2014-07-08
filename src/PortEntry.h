@@ -1,4 +1,4 @@
-//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //  File:       PortEntry.h
 //
@@ -10,37 +10,34 @@
 //
 //  Copyright:  (c) 2014 by HPlus Technologies Ltd. and Simon Fraser University.
 //
-//              All rights reserved. Redistribution and use in source and binary forms,
-//              with or without modification, are permitted provided that the following
-//              conditions are met:
-//                * Redistributions of source code must retain the above copyright
-//                  notice, this list of conditions and the following disclaimer.
-//                * Redistributions in binary form must reproduce the above copyright
-//                  notice, this list of conditions and the following disclaimer in the
-//                  documentation and/or other materials provided with the
-//                  distribution.
-//                * Neither the name of the copyright holders nor the names of its
-//                  contributors may be used to endorse or promote products derived
-//                  from this software without specific prior written permission.
+//              All rights reserved. Redistribution and use in source and binary forms, with or
+//              without modification, are permitted provided that the following conditions are met:
+//                * Redistributions of source code must retain the above copyright notice, this list
+//                  of conditions and the following disclaimer.
+//                * Redistributions in binary form must reproduce the above copyright notice, this
+//                  list of conditions and the following disclaimer in the documentation and/or
+//                  other materials provided with the distribution.
+//                * Neither the name of the copyright holders nor the names of its contributors may
+//                  be used to endorse or promote products derived from this software without
+//                  specific prior written permission.
 //
-//              THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-//              "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-//              LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-//              PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-//              OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//              SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//              LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-//              DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-//              THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-//              (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-//              OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//              THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+//              EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//              OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+//              SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//              INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+//              TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+//              BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+//              CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+//              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+//              DAMAGE.
 //
 //  Created:    2014-05-12
 //
-//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #if (! defined(__ServiceViewer__PortEntry__))
-# define __ServiceViewer__PortEntry__ /* Header guard */
+# define __ServiceViewer__PortEntry__  /* Header guard */
 
 # include "LabelWithShadow.h"
 
@@ -124,7 +121,7 @@ public:
     struct PortConnection
     {
         /*! @brief The 'other-end' of a connection. */
-        PortEntry *                 _otherPort;
+        PortEntry * _otherPort;
         
         /*! @brief The kind of connection. */
         MplusM::Common::ChannelMode _connectionMode;
@@ -133,19 +130,19 @@ public:
     
     /*! @brief The set of connections to the port. */
     typedef vector<PortConnection> Connections;
-
+    
     /*! @brief The constructor.
      @param parent The GUI element containing this element.
      @param portProtocol The protocol of the port.
      @param portKind What the port will be used for.
      @param direction The primary direction of the port. */
-	PortEntry(IconlessPanel *     parent,
+    PortEntry(IconlessPanel *     parent,
               const string &      portProtocol,
               const PortUsage     portKind,
               const PortDirection direction = kPortDirectionInput);
     
     /*! @brief The destructor. */
-	virtual ~PortEntry(void);
+    virtual ~PortEntry(void);
     
     /*! @brief Add an input connection to the port.
      @param other The port that is to be connected.
@@ -225,7 +222,7 @@ public:
     inline PortPanel * getParent(void)
     const
     {
-        return reinterpret_cast<PortPanel *>(_parent);
+        return reinterpret_cast<PortPanel *> (_parent);
     } // getParent
     
     /*! @brief Return the name of the associated port.
@@ -252,56 +249,67 @@ public:
         return _usage;
     } // getUsage
     
-    /*! @brief Returns @c true if the port entry is the bottom-most (last) port entry in a panel and @c false otherwise.
-     @returns @c true if the port is the last port entry in a panel and @c false otherwise. */
+    /*! @brief Returns @c true if the port entry is the bottom-most (last) port entry in a
+     panel and @c false otherwise.
+     @returns @c true if the port is the last port entry in a panel and @c false
+     otherwise. */
     inline bool isLastPort(void)
     const
     {
         return _isLastPort;
     } // isLastPort
     
-    /*! @brief Returns @c true if the given point is within the displayed region of the entry and @c false otherwise.
+    /*! @brief Returns @c true if the given point is within the displayed region of the
+     entry and @c false otherwise.
      @param aPoint The point of interest.
-     @returns @c true if the given point is within the displayed region of the entry and @c false otherwise. */
+     @returns @c true if the given point is within the displayed region of the entry and
+     @c false otherwise. */
     bool isPointInside(const ofPoint & aPoint)
     const;
     
-    /*! @brief Returns @c true if the given point is within the displayed region of the entry and @c false otherwise.
+    /*! @brief Returns @c true if the given point is within the displayed region of the
+     entry and @c false otherwise.
      @param xPos The horizontal coordinate of the point of interest.
      @param yPos The vertical coordinate of the point of interest.
-     @returns @c true if the given point is within the displayed region of the entry and @c false otherwise. */
+     @returns @c true if the given point is within the displayed region of the entry and
+     @c false otherwise. */
     bool isPointInside(const float xPos,
                        const float yPos)
     const;
     
-    /*! @brief Returns @c true if the port entry is part of a service and @c false otherwise.
+    /*! @brief Returns @c true if the port entry is part of a service and @c false
+     otherwise.
      @returns @c true if the port is part of a service and @c false otherwise. */
     inline bool isService(void)
     const
     {
-        return (kPortUsageService == _usage);
+        return kPortUsageService == _usage;
     } // isService
     
     /*! @brief Process a mouse-dragged event.
      @param args The attributes of the event.
-     @returns @c true if the event was processed and @c false if it can be further propagated. */
-	virtual bool mouseDragged(ofMouseEventArgs & args);
-
+     @returns @c true if the event was processed and @c false if it can be further
+     propagated. */
+    virtual bool mouseDragged(ofMouseEventArgs & args);
+    
     /*! @brief Process a mouse-moved event.
      @param args The attributes of the event.
-     @returns @c true if the event was processed and @c false if it can be further propagated. */
-	virtual bool mouseMoved(ofMouseEventArgs & args);
-
+     @returns @c true if the event was processed and @c false if it can be further
+     propagated. */
+    virtual bool mouseMoved(ofMouseEventArgs & args);
+    
     /*! @brief Process a mouse-pressed event.
      @param args The attributes of the event.
-     @returns @c true if the event was processed and @c false if it can be further propagated. */
-	virtual bool mousePressed(ofMouseEventArgs & args);
-
+     @returns @c true if the event was processed and @c false if it can be further
+     propagated. */
+    virtual bool mousePressed(ofMouseEventArgs & args);
+    
     /*! @brief Process a mouse-released event.
      @param args The attributes of the event.
-     @returns @c true if the event was processed and @c false if it can be further propagated. */
-	virtual bool mouseReleased(ofMouseEventArgs & args);
-
+     @returns @c true if the event was processed and @c false if it can be further
+     propagated. */
+    virtual bool mouseReleased(ofMouseEventArgs & args);
+    
     /*! @brief Remove an input connection from a port.
      @param other The port that is to be disconnected. */
     void removeInputConnection(PortEntry * other);
@@ -359,35 +367,36 @@ private:
      
      Note - not implemented and private, to prevent unexpected copying.
      @param other Another object to construct from. */
-    PortEntry & operator=(const PortEntry & other);
+    PortEntry & operator =(const PortEntry & other);
     
     /*! @brief The connections to the port. */
-    Connections   _inputConnections;
+    Connections _inputConnections;
     
     /*! @brief The connections to the port. */
-    Connections   _outputConnections;
+    Connections _outputConnections;
     
     /*! @brief The name of the associated port. */
-    string        _portName;
+    string _portName;
     
     /*! @brief The protocol of the associated port. */
-    string        _portProtocol;
+    string _portProtocol;
     
     /*! @brief The primary direction for connections to the port. */
     PortDirection _direction;
     
     /*! @brief The primary usage for the port. */
-    PortUsage     _usage;
+    PortUsage _usage;
     
-    /*! @brief @c true if the port entry is the bottom-most (last) port entry in a panel and @c false otherwise. */
-    bool          _isLastPort;
+    /*! @brief @c true if the port entry is the bottom-most (last) port entry in a panel
+     and @c false otherwise. */
+    bool _isLastPort;
     
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
 #  pragma clang diagnostic ignored "-Wunused-private-field"
 # endif // defined(__APPLE__)
     /*! @brief Filler to pad to alignment boundary */
-    char          _filler[7];
+    char _filler[7];
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)

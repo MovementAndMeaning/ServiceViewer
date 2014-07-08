@@ -1,4 +1,4 @@
-//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //  File:       ServiceViewerApp.cpp
 //
@@ -10,34 +10,31 @@
 //
 //  Copyright:  (c) 2014 by HPlus Technologies Ltd. and Simon Fraser University.
 //
-//              All rights reserved. Redistribution and use in source and binary forms,
-//              with or without modification, are permitted provided that the following
-//              conditions are met:
-//                * Redistributions of source code must retain the above copyright
-//                  notice, this list of conditions and the following disclaimer.
-//                * Redistributions in binary form must reproduce the above copyright
-//                  notice, this list of conditions and the following disclaimer in the
-//                  documentation and/or other materials provided with the
-//                  distribution.
-//                * Neither the name of the copyright holders nor the names of its
-//                  contributors may be used to endorse or promote products derived
-//                  from this software without specific prior written permission.
+//              All rights reserved. Redistribution and use in source and binary forms, with or
+//              without modification, are permitted provided that the following conditions are met:
+//                * Redistributions of source code must retain the above copyright notice, this list
+//                  of conditions and the following disclaimer.
+//                * Redistributions in binary form must reproduce the above copyright notice, this
+//                  list of conditions and the following disclaimer in the documentation and/or
+//                  other materials provided with the distribution.
+//                * Neither the name of the copyright holders nor the names of its contributors may
+//                  be used to endorse or promote products derived from this software without
+//                  specific prior written permission.
 //
-//              THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-//              "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-//              LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-//              PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-//              OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//              SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//              LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-//              DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-//              THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-//              (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-//              OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//              THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+//              EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//              OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+//              SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//              INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+//              TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+//              BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+//              CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+//              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+//              DAMAGE.
 //
 //  Created:    2014-05-08
 //
-//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #include "ServiceViewerApp.h"
 #include "BackgroundScanner.h"
@@ -99,15 +96,17 @@ static const float kNormalConnectionWidth = 2;
 static const float kServiceConnectionWidth = (2 * kNormalConnectionWidth);
 
 /*! @brief @c true if the port direction resources are available. */
-static bool                             lPortsValid = false;
+static bool lPortsValid = false;
 /*! @brief The port used to determine if a port being checked can be used as an output. */
 static MplusM::Common::AdapterChannel * lInputOnlyPort = NULL;
 /*! @brief The port used to determine if a port being checked can be used as an input. */
 static MplusM::Common::AdapterChannel * lOutputOnlyPort = NULL;
 
-/*! @brief The name of the port used to determine if a port being checked can be used as an output. */
+/*! @brief The name of the port used to determine if a port being checked can be used as an
+ output. */
 static yarp::os::ConstString lInputOnlyPortName;
-/*! @brief The name of the port used to determine if a port being checked can be used as an input. */
+/*! @brief The name of the port used to determine if a port being checked can be used as an
+ input. */
 static yarp::os::ConstString lOutputOnlyPortName;
 
 #if defined(__APPLE__)
@@ -117,9 +116,11 @@ static yarp::os::ConstString lOutputOnlyPortName;
 /*! @brief Create the resources needed to determine port directions. */
 static void createDirectionTestPorts(void)
 {
-    OD_LOG_ENTER();//####
-    lInputOnlyPortName = MplusM::Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX "checkdirection/channel_");
-    lOutputOnlyPortName = MplusM::Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX "checkdirection/channel_");
+    OD_LOG_ENTER(); //####
+    lInputOnlyPortName = MplusM::Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX
+                                                              "checkdirection/channel_");
+    lOutputOnlyPortName = MplusM::Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX
+                                                               "checkdirection/channel_");
     lInputOnlyPort = new MplusM::Common::AdapterChannel(false);
     if (lInputOnlyPort)
     {
@@ -137,13 +138,13 @@ static void createDirectionTestPorts(void)
             }
         }
     }
-    OD_LOG_EXIT();//####
+    OD_LOG_EXIT(); //####
 } // createDirectionTestPorts
 
 /*! @brief Release the resources used to determine port directions. */
 static void destroyDirectionTestPorts(void)
 {
-    OD_LOG_ENTER();//####
+    OD_LOG_ENTER(); //####
     if (lInputOnlyPort)
     {
 #if defined(MpM_DoExplicitClose)
@@ -159,56 +160,60 @@ static void destroyDirectionTestPorts(void)
         MplusM::Common::AdapterChannel::RelinquishChannel(lOutputOnlyPort);
     }
     lPortsValid = false;
-    OD_LOG_EXIT();//####
+    OD_LOG_EXIT(); //####
 } // destroyDirectionTestPorts
 
 /*! @brief Determine whether a port can be used for input and/or output.
  @param portName The name of the port to check.
  @returns The allowed directions for the port. */
-static PortEntry::PortDirection determinePortDirection(const yarp::os::ConstString & portName)
+static PortEntry::PortDirection determineDirection(const yarp::os::ConstString & portName)
 {
-    OD_LOG_ENTER();//####
-    OD_LOG_S1("portName = ", portName.c_str());//####
+    OD_LOG_ENTER(); //####
+    OD_LOG_S1s("portName = ", portName); //####
     PortEntry::PortDirection result = PortEntry::kPortDirectionUnknown;
     
     if (lPortsValid)
     {
         bool canDoInput = false;
         bool canDoOutput = false;
-
-        // First, check if we are looking at a client port - because of how they are constructed, attempting to connect
-        // to them will result in a hang, so we just treat them as I/O.
+        
+        // First, check if we are looking at a client port - because of how they are
+        // constructed, attempting to connect to them will result in a hang, so we just
+        // treat them as I/O.
         switch (MplusM::Utilities::GetPortKind(portName))
         {
-            case MplusM::Utilities::kPortKindClient:
+            case MplusM::Utilities::kPortKindClient :
                 canDoInput = canDoOutput = true;
                 break;
                 
-            case MplusM::Utilities::kPortKindService:
-            case MplusM::Utilities::kPortKindServiceRegistry:
+            case MplusM::Utilities::kPortKindService :
+            case MplusM::Utilities::kPortKindServiceRegistry :
                 canDoInput = true;
                 break;
                 
-            default:
+            default :
                 // Determine by doing a test connection.
-                if (MplusM::Common::NetworkConnectWithRetries(lOutputOnlyPortName, portName, STANDARD_WAIT_TIME, false))
+                if (MplusM::Common::NetworkConnectWithRetries(lOutputOnlyPortName, portName,
+                                                              STANDARD_WAIT_TIME, false))
                 {
                     canDoInput = true;
-                    if (! MplusM::Common::NetworkDisconnectWithRetries(lOutputOnlyPortName, portName,
+                    if (! MplusM::Common::NetworkDisconnectWithRetries(lOutputOnlyPortName,
+                                                                       portName,
                                                                        STANDARD_WAIT_TIME))
                     {
-                        OD_LOG("(! MplusM::Common::NetworkDisconnectWithRetries(lOutputOnlyPortName, portName, "//####
-                               "STANDARD_WAIT_TIME))");//####
+                        OD_LOG("(! MplusM::Common::NetworkDisconnectWithRetries(" //####
+                               "lOutputOnlyPortName, portName, STANDARD_WAIT_TIME))"); //####
                     }
                 }
-                if (MplusM::Common::NetworkConnectWithRetries(portName, lInputOnlyPortName, STANDARD_WAIT_TIME, false))
+                if (MplusM::Common::NetworkConnectWithRetries(portName, lInputOnlyPortName,
+                                                              STANDARD_WAIT_TIME, false))
                 {
                     canDoOutput = true;
                     if (! MplusM::Common::NetworkDisconnectWithRetries(portName, lInputOnlyPortName,
                                                                        STANDARD_WAIT_TIME))
                     {
-                        OD_LOG("(! MplusM::Common::NetworkDisconnectWithRetries(portName, lInputOnlyPortName, "//####
-                               "STANDARD_WAIT_TIME))");//####
+                        OD_LOG("(! MplusM::Common::NetworkDisconnectWithRetries(portName, " //####
+                               "lInputOnlyPortName, STANDARD_WAIT_TIME))"); //####
                     }
                 }
                 break;
@@ -216,29 +221,31 @@ static PortEntry::PortDirection determinePortDirection(const yarp::os::ConstStri
         }
         if (canDoInput)
         {
-            result = (canDoOutput ? PortEntry::kPortDirectionInputOutput : PortEntry::kPortDirectionInput);
+            result = (canDoOutput ? PortEntry::kPortDirectionInputOutput :
+                      PortEntry::kPortDirectionInput);
         }
         else if (canDoOutput)
         {
             result = PortEntry::kPortDirectionOutput;
         }
     }
-    OD_LOG_EXIT_L(static_cast<long>(result));//####
+    OD_LOG_EXIT_L(static_cast<long> (result)); //####
     return result;
-} // determinePortDirection
+} // determineDirection
 
 /*! @brief Determine whether a connection can be made, based on the port protocols.
  @param sourceProtocol The protocol of the source port.
  @param destinationProtocol The protocol of the destination port.
- @returns @c true if the protocols permit a connection to be made and @c false otherwise. */
+ @returns @c true if the protocols permit a connection to be made and @c false
+ otherwise. */
 static bool protocolsMatch(const string & sourceProtocol,
                            const string & destinationProtocol)
 {
-    OD_LOG_ENTER();//####
-    OD_LOG_S2("sourceProtocol = ", sourceProtocol.c_str(), "destinationProtocol = ", destinationProtocol.c_str());//####
+    OD_LOG_ENTER(); //####
+    OD_LOG_S2s("sourceProtocol = ", sourceProtocol, "destinationProtocol = ", //####
+              destinationProtocol); //####
     bool result = false;
     
-    OD_LOG_EXIT_B(result);//####
     if (0 == destinationProtocol.length())
     {
         result = true;
@@ -247,6 +254,7 @@ static bool protocolsMatch(const string & sourceProtocol,
     {
         result = (sourceProtocol == destinationProtocol);
     }
+    OD_LOG_EXIT_B(result); //####
     return result;
 } // protocolsMatch
 
@@ -259,15 +267,16 @@ static bool protocolsMatch(const string & sourceProtocol,
 #endif // defined(__APPLE__)
 
 ServiceViewerApp::ServiceViewerApp(void) :
-            inherited(), _entities1(), _entities2(), _ports1(), _ports2(), _backgroundEntities(&_entities1),
-            _foregroundEntities(&_entities2), _backgroundPorts(&_ports1), _foregroundPorts(&_ports2),
-            _firstAddPort(NULL), _firstRemovePort(NULL), _scanner(new BackgroundScanner(*this, kMinScanInterval)),
-            _addingUDPConnection(false), _addIsActive(false), _altActive(false), _commandActive(false),
-            _controlActive(false), _dragActive(false), _ignoreNextScan(false), _movementActive(false),
-            _networkAvailable(false), _registryAvailable(false), _removeIsActive(false), _shiftActive(false)
+    inherited(), _entities1(), _entities2(), _ports1(), _ports2(), _backgroundEntities(&_entities1),
+    _foregroundEntities(&_entities2), _backgroundPorts(&_ports1), _foregroundPorts(&_ports2),
+    _firstAddPort(NULL), _firstRemovePort(NULL), _scanner(new BackgroundScanner(*this,
+                                                                                kMinScanInterval)),
+    _addingUDPConnection(false), _addIsActive(false), _altActive(false), _commandActive(false),
+    _controlActive(false), _dragActive(false), _ignoreNextScan(false), _movementActive(false),
+    _networkAvailable(false), _registryAvailable(false), _removeIsActive(false), _shiftActive(false)
 {
-    OD_LOG_ENTER();//####
-    OD_LOG_EXIT_P(this);//####
+    OD_LOG_ENTER(); //####
+    OD_LOG_EXIT_P(this); //####
 } // ServiceViewerApp::ServiceViewerApp
 
 #if defined(__APPLE__)
@@ -276,26 +285,27 @@ ServiceViewerApp::ServiceViewerApp(void) :
 
 void ServiceViewerApp::addEntityToBackground(ServiceEntity * anEntity)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_P1("anEntity = ", anEntity);//####
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("anEntity = ", anEntity); //####
     _backgroundEntities->push_back(anEntity);
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::addEntityToBackground
 
 void ServiceViewerApp::addEntityToForeground(ServiceEntity * anEntity)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_P1("anEntity = ", anEntity);//####
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("anEntity = ", anEntity); //####
     _foregroundEntities->push_back(anEntity);
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::addEntityToForeground
 
-void ServiceViewerApp::addPortConnectionsToBackground(const MplusM::Utilities::PortVector & detectedPorts)
+void ServiceViewerApp::addPortConnectionsToBackground(const MplusM::Utilities::PortVector &
+                                                                                    detectedPorts)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_P1("detectedPorts = ", &detectedPorts);//####
-    for (MplusM::Utilities::PortVector::const_iterator outer(detectedPorts.begin()); detectedPorts.end() != outer;
-         ++outer)
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("detectedPorts = ", &detectedPorts); //####
+    for (MplusM::Utilities::PortVector::const_iterator outer(detectedPorts.begin());
+         detectedPorts.end() != outer; ++outer)
     {
         if (_rememberedPorts.end() != _rememberedPorts.find(outer->_portName))
         {
@@ -306,7 +316,8 @@ void ServiceViewerApp::addPortConnectionsToBackground(const MplusM::Utilities::P
             details._outPortName = outer->_portName;
             MplusM::Utilities::GatherPortConnections(outer->_portName, inputs, outputs,
                                                      MplusM::Utilities::kInputAndOutputOutput, true);
-            for (MplusM::Common::ChannelVector::const_iterator inner(outputs.begin()); outputs.end() != inner; ++inner)
+            for (MplusM::Common::ChannelVector::const_iterator inner(outputs.begin());
+                 outputs.end() != inner; ++inner)
             {
                 if (_rememberedPorts.end() != _rememberedPorts.find(inner->_portName))
                 {
@@ -317,36 +328,40 @@ void ServiceViewerApp::addPortConnectionsToBackground(const MplusM::Utilities::P
             }
         }
     }
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::addPortConnectionsToBackground
 
-void ServiceViewerApp::addPortsWithAssociatesToBackground(const MplusM::Utilities::PortVector & detectedPorts)
+void ServiceViewerApp::addPortsWithAssociatesToBackground(const MplusM::Utilities::PortVector &
+                                                                                    detectedPorts)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_P1("detectedPorts = ", &detectedPorts);//####
-    for (MplusM::Utilities::PortVector::const_iterator outer(detectedPorts.begin()); detectedPorts.end() != outer;
-         ++outer)
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("detectedPorts = ", &detectedPorts); //####
+    for (MplusM::Utilities::PortVector::const_iterator outer(detectedPorts.begin());
+         detectedPorts.end() != outer; ++outer)
     {
         if (_rememberedPorts.end() == _rememberedPorts.find(outer->_portName))
         {
             PortAndAssociates associates;
             
-            if (MplusM::Utilities::GetAssociatedPorts(outer->_portName, associates._associates, STANDARD_WAIT_TIME,
-                                                      true))
+            if (MplusM::Utilities::GetAssociatedPorts(outer->_portName, associates._associates,
+                                                      STANDARD_WAIT_TIME, true))
             {
                 if (associates._associates._primary)
                 {
-                    yarp::os::ConstString caption(outer->_portIpAddress + ":" + outer->_portPortNumber);
+                    yarp::os::ConstString caption(outer->_portIpAddress + ":" +
+                                                  outer->_portPortNumber);
                     
                     associates._name = outer->_portName;
                     _associatedPorts.insert(AssociatesMap::value_type(caption.c_str(), associates));
                     _rememberedPorts.insert(outer->_portName);
-                    for (MplusM::Common::StringVector::const_iterator inner(associates._associates._inputs.begin());
+                    for (MplusM::Common::StringVector::const_iterator inner =
+                                                            associates._associates._inputs.begin();
                          associates._associates._inputs.end() != inner; ++inner)
                     {
                         _rememberedPorts.insert(*inner);
                     }
-                    for (MplusM::Common::StringVector::const_iterator inner(associates._associates._outputs.begin());
+                    for (MplusM::Common::StringVector::const_iterator inner =
+                                                            associates._associates._outputs.begin();
                          associates._associates._outputs.end() != inner; ++inner)
                     {
                         _rememberedPorts.insert(*inner);
@@ -355,15 +370,16 @@ void ServiceViewerApp::addPortsWithAssociatesToBackground(const MplusM::Utilitie
             }
         }
     }
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::addPortsWithAssociatesToBackground
 
-void ServiceViewerApp::addRegularPortEntitiesToBackground(const MplusM::Utilities::PortVector & detectedPorts)
+void ServiceViewerApp::addRegularPortEntitiesToBackground(const MplusM::Utilities::PortVector &
+                                                                                    detectedPorts)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_P1("detectedPorts = ", &detectedPorts);//####
-    for (MplusM::Utilities::PortVector::const_iterator walker(detectedPorts.begin()); detectedPorts.end() != walker;
-         ++walker)
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("detectedPorts = ", &detectedPorts); //####
+    for (MplusM::Utilities::PortVector::const_iterator walker(detectedPorts.begin());
+         detectedPorts.end() != walker; ++walker)
     {
         if (_rememberedPorts.end() == _rememberedPorts.find(walker->_portName))
         {
@@ -372,35 +388,39 @@ void ServiceViewerApp::addRegularPortEntitiesToBackground(const MplusM::Utilitie
             
             _rememberedPorts.insert(walker->_portName);
             info._name = walker->_portName;
-            info._direction = determinePortDirection(walker->_portName);
+            info._direction = determineDirection(walker->_portName);
             _standalonePorts.insert(PortMap::value_type(caption.c_str(), info));
         }
     }
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // addRegularPortEntitiesToBackground
 
 void ServiceViewerApp::addServicesToBackground(const MplusM::Common::StringVector & services)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_P1("services = ", &services);//####
-    for (MplusM::Common::StringVector::const_iterator outer(services.begin()); services.end() != outer; ++outer)
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("services = ", &services); //####
+    for (MplusM::Common::StringVector::const_iterator outer(services.begin());
+         services.end() != outer; ++outer)
     {
         if (_detectedServices.end() == _detectedServices.find(outer->c_str()))
         {
             MplusM::Utilities::ServiceDescriptor descriptor;
             
-            if (MplusM::Utilities::GetNameAndDescriptionForService(*outer, descriptor, STANDARD_WAIT_TIME))
+            if (MplusM::Utilities::GetNameAndDescriptionForService(*outer, descriptor,
+                                                                   STANDARD_WAIT_TIME))
             {
                 _detectedServices.insert(ServiceMap::value_type(outer->c_str(), descriptor));
                 _rememberedPorts.insert(descriptor._channelName);
-                for (MplusM::Common::ChannelVector::const_iterator inner(descriptor._inputChannels.begin());
+                for (MplusM::Common::ChannelVector::const_iterator inner =
+                                                                descriptor._inputChannels.begin();
                      descriptor._inputChannels.end() != inner; ++inner)
                 {
                     MplusM::Common::ChannelDescription aChannel(*inner);
                     
-                    _rememberedPorts.insert(aChannel._portName);                    
+                    _rememberedPorts.insert(aChannel._portName);
                 }
-                for (MplusM::Common::ChannelVector::const_iterator inner(descriptor._outputChannels.begin());
+                for (MplusM::Common::ChannelVector::const_iterator inner =
+                                                                descriptor._outputChannels.begin();
                      descriptor._outputChannels.end() != inner; ++inner)
                 {
                     MplusM::Common::ChannelDescription aChannel(*inner);
@@ -410,12 +430,12 @@ void ServiceViewerApp::addServicesToBackground(const MplusM::Common::StringVecto
             }
         }
     }
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::addServicesToBackground
 
 void ServiceViewerApp::clearDragState(void)
 {
-    OD_LOG_OBJENTER();//####
+    OD_LOG_OBJENTER(); //####
     if (_firstAddPort)
     {
         // Process connection add requests.
@@ -428,13 +448,14 @@ void ServiceViewerApp::clearDragState(void)
         _firstAddPort = NULL;
     }
     _dragActive = false;
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::clearDragState
 
 void ServiceViewerApp::clearOutBackgroundData(void)
 {
-    OD_LOG_OBJENTER();//####
-    for (EntityList::const_iterator it(_backgroundEntities->begin()); _backgroundEntities->end() != it; ++it)
+    OD_LOG_OBJENTER(); //####
+    for (EntityList::const_iterator it(_backgroundEntities->begin());
+         _backgroundEntities->end() != it; ++it)
     {
         ServiceEntity * anEntity = *it;
         
@@ -451,24 +472,25 @@ void ServiceViewerApp::clearOutBackgroundData(void)
     _associatedPorts.clear();
     _standalonePorts.clear();
     _connections.clear();
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::clearOutBackgroundData
 
 void ServiceViewerApp::dragEvent(ofDragInfo dragInfo)
 {
-    OD_LOG_OBJENTER();//####
+    OD_LOG_OBJENTER(); //####
     inherited::dragEvent(dragInfo);
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::dragEvent
 
 void ServiceViewerApp::draw(void)
 {
-//    OD_LOG_OBJENTER();//####
+    //    OD_LOG_OBJENTER();//####
     ofBackgroundGradient(ofColor::white, ofColor::gray);
     if (_networkAvailable)
     {
         _foregroundLock.lock();
-        for (EntityList::const_iterator it(_foregroundEntities->begin()); _foregroundEntities->end() != it; ++it)
+        for (EntityList::const_iterator it(_foregroundEntities->begin());
+             _foregroundEntities->end() != it; ++it)
         {
             ServiceEntity * anEntity = *it;
             
@@ -477,7 +499,8 @@ void ServiceViewerApp::draw(void)
                 anEntity->draw();
             }
         }
-        for (EntityList::const_iterator it(_foregroundEntities->begin()); _foregroundEntities->end() != it; ++it)
+        for (EntityList::const_iterator it(_foregroundEntities->begin());
+             _foregroundEntities->end() != it; ++it)
         {
             ServiceEntity * anEntity = *it;
             
@@ -508,17 +531,17 @@ void ServiceViewerApp::draw(void)
         
         ofEnableAlphaBlending();
         ofSetColor(ofColor::black);
-		ofBitmapStringGetTextureRef().bind();
+        ofBitmapStringGetTextureRef().bind();
         mesh.draw();
-		ofBitmapStringGetTextureRef().unbind();
+        ofBitmapStringGetTextureRef().unbind();
         ofDisableAlphaBlending();
     }
-//    OD_LOG_OBJEXIT();//####
+    //    OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::draw
 
 void ServiceViewerApp::exit(void)
 {
-    OD_LOG_OBJENTER();//####
+    OD_LOG_OBJENTER(); //####
     if (_scanner && _scanner->isThreadRunning())
     {
         _scanner->stopThread();
@@ -526,13 +549,13 @@ void ServiceViewerApp::exit(void)
     destroyDirectionTestPorts();
     clearOutBackgroundData();
     inherited::exit();
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::exit
 
 PortEntry * ServiceViewerApp::findBackgroundPort(const string & name)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_S1("name = ", name.c_str());//####
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_S1s("name = ", name); //####
     PortEntry *                  result;
     PortEntryMap::const_iterator match(_backgroundPorts->find(name));
     
@@ -544,17 +567,18 @@ PortEntry * ServiceViewerApp::findBackgroundPort(const string & name)
     {
         result = match->second;
     }
-    OD_LOG_OBJEXIT_P(result);//####
+    OD_LOG_OBJEXIT_P(result); //####
     return result;
 } // ServiceViewerApp::findBackgroundPort
 
 ServiceEntity * ServiceViewerApp::findForegroundEntity(const string & name)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_S1("name = ", name.c_str());//####
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_S1s("name = ", name); //####
     ServiceEntity * result = NULL;
     
-    for (EntityList::const_iterator it(_foregroundEntities->begin()); _foregroundEntities->end() != it; ++it)
+    for (EntityList::const_iterator it(_foregroundEntities->begin());
+         _foregroundEntities->end() != it; ++it)
     {
         ServiceEntity * anEntity = *it;
         
@@ -565,20 +589,21 @@ ServiceEntity * ServiceViewerApp::findForegroundEntity(const string & name)
         }
         
     }
-    OD_LOG_OBJEXIT_P(result);//####
+    OD_LOG_OBJEXIT_P(result); //####
     return result;
 } // ServiceViewerApp::findForegroundEntity
 
 ServiceEntity * ServiceViewerApp::findForegroundEntityForPort(const string & name)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_S1("name = ", name.c_str());//####
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_S1s("name = ", name); //####
     PortEntryMap::const_iterator match(_foregroundPorts->find(name));
     ServiceEntity *              result = NULL;
     
     if (_foregroundPorts->end() != match)
     {
-        for (EntityList::const_iterator it(_foregroundEntities->begin()); _foregroundEntities->end() != it; ++it)
+        for (EntityList::const_iterator it(_foregroundEntities->begin());
+             _foregroundEntities->end() != it; ++it)
         {
             ServiceEntity * anEntity = *it;
             
@@ -590,17 +615,18 @@ ServiceEntity * ServiceViewerApp::findForegroundEntityForPort(const string & nam
             
         }
     }
-    OD_LOG_OBJEXIT_P(result);//####
+    OD_LOG_OBJEXIT_P(result); //####
     return result;
 } // ServiceViewerApp::findForegroundEntityForPort
 
 ServiceEntity * ServiceViewerApp::findForegroundEntityForPort(const PortEntry * aPort)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_P1("aPort = ", aPort);//####
-    ServiceEntity *      result = NULL;
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("aPort = ", aPort); //####
+    ServiceEntity * result = NULL;
     
-    for (EntityList::const_iterator it(_foregroundEntities->begin()); _foregroundEntities->end() != it; ++it)
+    for (EntityList::const_iterator it(_foregroundEntities->begin());
+         _foregroundEntities->end() != it; ++it)
     {
         ServiceEntity * anEntity = *it;
         
@@ -611,14 +637,14 @@ ServiceEntity * ServiceViewerApp::findForegroundEntityForPort(const PortEntry * 
         }
         
     }
-    OD_LOG_OBJEXIT_P(result);//####
+    OD_LOG_OBJEXIT_P(result); //####
     return result;
 } // ServiceViewerApp::findForegroundEntityForPort
 
 PortEntry * ServiceViewerApp::findForegroundPort(const string & name)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_S1("name = ", name.c_str());//####
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_S1s("name = ", name); //####
     PortEntry *                  result;
     PortEntryMap::const_iterator match(_foregroundPorts->find(name));
     
@@ -630,14 +656,14 @@ PortEntry * ServiceViewerApp::findForegroundPort(const string & name)
     {
         result = match->second;
     }
-    OD_LOG_OBJEXIT_P(result);//####
+    OD_LOG_OBJEXIT_P(result); //####
     return result;
 } // ServiceViewerApp::findForegroundPort
 
 void ServiceViewerApp::forgetPort(PortEntry * aPort)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_P1("aPort = ", aPort);//####
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("aPort = ", aPort); //####
     if (aPort)
     {
         PortEntryMap::iterator match(_foregroundPorts->find(aPort->getName()));
@@ -652,12 +678,12 @@ void ServiceViewerApp::forgetPort(PortEntry * aPort)
             _backgroundPorts->erase(match);
         }
     }
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::forgetPort
 
 void ServiceViewerApp::gatherEntitiesInBackground(void)
 {
-    OD_LOG_OBJENTER();//####
+    OD_LOG_OBJENTER(); //####
     MplusM::Utilities::PortVector detectedPorts;
     MplusM::Common::StringVector  services;
     
@@ -677,14 +703,14 @@ void ServiceViewerApp::gatherEntitiesInBackground(void)
     addRegularPortEntitiesToBackground(detectedPorts);
     // Record the port connections.
     addPortConnectionsToBackground(detectedPorts);
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::gatherEntitiesInBackground
 
 void ServiceViewerApp::gotMessage(ofMessage msg)
 {
-    OD_LOG_OBJENTER();//####
+    OD_LOG_OBJENTER(); //####
     inherited::gotMessage(msg);
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::gotMessage
 
 void ServiceViewerApp::keyPressed(int key)
@@ -693,12 +719,14 @@ void ServiceViewerApp::keyPressed(int key)
 //    OD_LOG_L1("key = ", key);//####
     if (OF_KEY_ALT == (key & OF_KEY_ALT))
     {
-        // Note that the key state will be cleared by a mouse click, so we need to remember it with a secondary flag.
+        // Note that the key state will be cleared by a mouse click, so we need to remember it with
+        // a secondary flag.
         _altActive = _addIsActive = true;
     }
     if (OF_KEY_COMMAND == (key & OF_KEY_COMMAND))
     {
-        // Note that the key state will be cleared by a mouse click, so we need to remember it with a secondary flag.
+        // Note that the key state will be cleared by a mouse click, so we need to remember it with
+        // a secondary flag.
         _commandActive = _removeIsActive = true;
     }
     if (OF_KEY_CONTROL == (key & OF_KEY_CONTROL))
@@ -741,10 +769,10 @@ void ServiceViewerApp::mouseDragged(int x,
                                     int y,
                                     int button)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_L3("x = ", x, "y = ", y, "button = ", button);//####
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_L3("x = ", x, "y = ", y, "button = ", button); //####
     inherited::mouseDragged(x, y, button);
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::mouseDragged
 
 void ServiceViewerApp::mouseMoved(int x,
@@ -760,28 +788,28 @@ void ServiceViewerApp::mousePressed(int x,
                                     int y,
                                     int button)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_L3("x = ", x, "y = ", y, "button = ", button);//####
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_L3("x = ", x, "y = ", y, "button = ", button); //####
     inherited::mousePressed(x, y, button);
     reportPortEntryClicked(NULL);
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::mousePressed
 
 void ServiceViewerApp::mouseReleased(int x,
                                      int y,
                                      int button)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_L3("x = ", x, "y = ", y, "button = ", button);//####
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_L3("x = ", x, "y = ", y, "button = ", button); //####
     inherited::mouseReleased(x, y, button);
     clearDragState();
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::mouseReleased
 
 void ServiceViewerApp::moveEntityToEndOfForegroundList(ServiceEntity * anEntity)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_P1("anEntity = ", anEntity);//####
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("anEntity = ", anEntity); //####
     if (anEntity->isSelected())
     {
         EntityList::iterator it(_foregroundEntities->begin());
@@ -798,38 +826,38 @@ void ServiceViewerApp::moveEntityToEndOfForegroundList(ServiceEntity * anEntity)
         }
         _movementActive = false;
     }
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::moveEntityToEndOfForegroundList
 
 void ServiceViewerApp::rememberPortInBackground(PortEntry * aPort)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_P1("aPort = ", aPort);//####
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("aPort = ", aPort); //####
     if (aPort)
     {
-        _backgroundPorts->insert(PortEntryMap::value_type(static_cast<string>(*aPort), aPort));
+        _backgroundPorts->insert(PortEntryMap::value_type(static_cast<string> (*aPort), aPort));
     }
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::rememberPortInBackground
 
 void ServiceViewerApp::reportConnectionDrag(const float xPos,
                                             const float yPos)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_D2("xPos = ", xPos, "yPos = ", yPos);//####
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_D2("xPos = ", xPos, "yPos = ", yPos); //####
     if (_firstAddPort)
     {
         _dragActive = true;
         _dragXpos = xPos;
         _dragYpos = yPos;
     }
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::reportConnectionDrag
 
 void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_P1("aPort = ", aPort);//####
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("aPort = ", aPort); //####
     if (aPort)
     {
         PortEntry::PortDirection direction = aPort->getDirection();
@@ -843,6 +871,8 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort)
             
             if (_firstRemovePort != aPort)
             {
+                string firstName(_firstRemovePort->getPortName());
+                
                 // Check if we can end here.
                 if (PortEntry::kPortDirectionOutput != direction)
                 {
@@ -850,8 +880,8 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort)
                     
                     if (firstEntity && secondEntity)
                     {
-                        if (MplusM::Utilities::RemoveConnection(_firstRemovePort->getPortName().c_str(),
-                                                                aPort->getPortName().c_str()))
+                    if (MplusM::Utilities::RemoveConnection(firstName.c_str(),
+                                                            aPort->getPortName().c_str()))
                         {
                             _firstRemovePort->removeOutputConnection(aPort);
                             aPort->removeInputConnection(_firstRemovePort);
@@ -873,17 +903,20 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort)
             
             if (_firstAddPort != aPort)
             {
-                string firstProtocol = _firstAddPort->getProtocol();
+                string firstName(_firstAddPort->getPortName());
+                string firstProtocol(_firstAddPort->getProtocol());
                 
                 // Check if we can end here.
-                if ((PortEntry::kPortDirectionOutput != direction) && protocolsMatch(firstProtocol, protocol))
+                if ((PortEntry::kPortDirectionOutput != direction) &&
+                    protocolsMatch(firstProtocol, protocol))
                 {
                     ServiceEntity * secondEntity = findForegroundEntityForPort(aPort);
                     
                     if (firstEntity && secondEntity)
                     {
-                        if (MplusM::Utilities::AddConnection(_firstAddPort->getPortName().c_str(),
-                                                             aPort->getPortName().c_str(), STANDARD_WAIT_TIME,
+                        if (MplusM::Utilities::AddConnection(firstName.c_str(),
+                                                             aPort->getPortName().c_str(),
+                                                             STANDARD_WAIT_TIME,
                                                              _addingUDPConnection))
                         {
                             MplusM::Common::ChannelMode mode = (_addingUDPConnection ?
@@ -906,7 +939,8 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort)
         else if (_commandActive)
         {
             // Check if we can start from here.
-            if ((PortEntry::kPortDirectionInput != direction) && (PortEntry::kPortUsageClient != usage))
+            if ((PortEntry::kPortDirectionInput != direction) &&
+                (PortEntry::kPortUsageClient != usage))
             {
                 ServiceEntity * entity = findForegroundEntityForPort(aPort);
                 
@@ -923,7 +957,8 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort)
         else if (_altActive)
         {
             // Check if we can start from here.
-            if ((PortEntry::kPortDirectionInput != direction) && (PortEntry::kPortUsageClient != usage))
+            if ((PortEntry::kPortDirectionInput != direction) &&
+                (PortEntry::kPortUsageClient != usage))
             {
                 ServiceEntity * entity = findForegroundEntityForPort(aPort);
                 
@@ -976,22 +1011,23 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort)
         _addIsActive = _removeIsActive = false;
         _firstAddPort = _firstRemovePort = NULL;
     }
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::reportPortEntryClicked
 
 void ServiceViewerApp::setEntityPositions(void)
 {
-    OD_LOG_OBJENTER();//####
+    OD_LOG_OBJENTER(); //####
     bool  positionsNeedUpdate = false;
     float fullHeight = ofGetHeight();
     float fullWidth = ofGetWidth();
     float diagonal = sqrt((fullHeight * fullHeight) + (fullWidth * fullWidth));
     
 #if defined(TEST_GRAPHICS_)
-    for (EntityList::const_iterator it(_backgroundEntities->begin()); _backgroundEntities->end() != it; ++it)
+    for (EntityList::const_iterator it(_backgroundEntities->begin());
+         _backgroundEntities->end() != it; ++it)
     {
         ServiceEntity * anEntity = *it;
-
+        
         if (anEntity)
         {
             ServiceEntity * olderVersion = findForegroundEntity(anEntity->getName());
@@ -1017,7 +1053,8 @@ void ServiceViewerApp::setEntityPositions(void)
     ogdf::GraphAttributes ga(gg);
     
     ga.directed(true);
-    for (EntityList::const_iterator it(_backgroundEntities->begin()); _backgroundEntities->end() != it; ++it)
+    for (EntityList::const_iterator it(_backgroundEntities->begin());
+         _backgroundEntities->end() != it; ++it)
     {
         ServiceEntity * anEntity = *it;
         
@@ -1062,7 +1099,8 @@ void ServiceViewerApp::setEntityPositions(void)
     if (positionsNeedUpdate)
     {
         // Set up the edges (connections)
-        for (EntityList::const_iterator it(_backgroundEntities->begin()); _backgroundEntities->end() != it; ++it)
+        for (EntityList::const_iterator it(_backgroundEntities->begin());
+             _backgroundEntities->end() != it; ++it)
         {
             ServiceEntity * anEntity = *it;
             
@@ -1104,14 +1142,15 @@ void ServiceViewerApp::setEntityPositions(void)
         ogdf::FMMMLayout fmmm;
         
         fmmm.useHighLevelOptions(true);
-        fmmm.newInitialPlacement(false);//true);
+        fmmm.newInitialPlacement(false); //true);
         fmmm.qualityVersusSpeed(ogdf::FMMMLayout::qvsGorgeousAndEfficient);
         fmmm.allowedPositions(ogdf::FMMMLayout::apAll);
         fmmm.initialPlacementMult(ogdf::FMMMLayout::ipmAdvanced);
         fmmm.initialPlacementForces(ogdf::FMMMLayout::ipfKeepPositions);
         fmmm.repForcesStrength(2.0);
         fmmm.call(ga);
-        for (EntityList::const_iterator it(_backgroundEntities->begin()); _backgroundEntities->end() != it; ++it)
+        for (EntityList::const_iterator it(_backgroundEntities->begin());
+             _backgroundEntities->end() != it; ++it)
         {
             ServiceEntity * anEntity = *it;
             
@@ -1127,15 +1166,15 @@ void ServiceViewerApp::setEntityPositions(void)
         }
     }
 #endif // ! defined(TEST_GRAPHICS_)
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::setEntityPositions
 
 void ServiceViewerApp::setup(void)
 {
-    OD_LOG_OBJENTER();//####
+    OD_LOG_OBJENTER(); //####
     ofSetWindowTitle("Service Viewer");
-	ofSetFrameRate(60);
-	ofSetVerticalSync(true);
+    ofSetFrameRate(60);
+    ofSetVerticalSync(true);
 #if CheckNetworkWorks_
     if (yarp::os::Network::checkNetwork())
 #endif // CheckNetworkWorks_
@@ -1148,17 +1187,19 @@ void ServiceViewerApp::setup(void)
 #if CheckNetworkWorks_
     else
     {
-        OD_LOG("! (yarp::os::Network::checkNetwork())");//####
-        MplusM::Common::GetLogger().fail("YARP network not running.");
+        OD_LOG("! (yarp::os::Network::checkNetwork())"); //####
+        yarp::os::impl::Logger & theLogger = MplusM::Common::GetLogger();
+        
+        theLogger.fail("YARP network not running.");
         _networkAvailable = false;
     }
 #endif // CheckNetworkWorks_
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::setup
 
 void ServiceViewerApp::swapBackgroundAndForeground(void)
 {
-    OD_LOG_OBJENTER();//####
+    OD_LOG_OBJENTER(); //####
     if ((! _firstAddPort) && (! _firstRemovePort) && (! _movementActive))
     {
         _foregroundLock.lock();
@@ -1166,12 +1207,12 @@ void ServiceViewerApp::swapBackgroundAndForeground(void)
         swap(_backgroundEntities, _foregroundEntities);
         _foregroundLock.unlock();
     }
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::swapBackgroundAndForeground
 
 void ServiceViewerApp::update(void)
 {
-//    OD_LOG_OBJENTER();//####
+    //    OD_LOG_OBJENTER();//####
     inherited::update();
     if (_scanner)
     {
@@ -1194,44 +1235,50 @@ void ServiceViewerApp::update(void)
             }
             else
             {
-                // We have no GUI activity, so we can use the results of the scan. Convert the detected services into
-                // entities in the background list.
-                for (ServiceMap::const_iterator outer(_detectedServices.begin()); _detectedServices.end() != outer;
-                     ++outer)
+                // We have no GUI activity, so we can use the results of the scan. Convert the
+                // detected services into entities in the background list.
+                for (ServiceMap::const_iterator outer(_detectedServices.begin());
+                     _detectedServices.end() != outer; ++outer)
                 {
                     MplusM::Utilities::ServiceDescriptor descriptor(outer->second);
-                    ServiceEntity *                      anEntity = new ServiceEntity(PortPanel::kEntityKindService,
-                                                                                      descriptor._kind.c_str(),
-                                                                                      descriptor._description.c_str(),
-                                                                                      *this);
+                    ServiceEntity *                      anEntity =
+                                                    new ServiceEntity(PortPanel::kEntityKindService,
+                                                                      descriptor._kind.c_str(),
+                                                                  descriptor._description.c_str(),
+                                                                      *this);
                     
                     anEntity->setup(descriptor._canonicalName);
-                    PortEntry * aPort = anEntity->addPort(descriptor._channelName, "", PortEntry::kPortUsageService,
+                    PortEntry * aPort = anEntity->addPort(descriptor._channelName, "",
+                                                          PortEntry::kPortUsageService,
                                                           PortEntry::kPortDirectionInput);
-                    
+
                     if (aPort)
                     {
                         rememberPortInBackground(aPort);
                     }
-                    for (MplusM::Common::ChannelVector::const_iterator inner(descriptor._inputChannels.begin());
+                    for (MplusM::Common::ChannelVector::const_iterator inner =
+                                                                descriptor._inputChannels.begin();
                          descriptor._inputChannels.end() != inner; ++inner)
                     {
                         MplusM::Common::ChannelDescription aChannel(*inner);
                         
                         aPort = anEntity->addPort(aChannel._portName, aChannel._portProtocol,
-                                                  PortEntry::kPortUsageService, PortEntry::kPortDirectionInput);
+                                                  PortEntry::kPortUsageService,
+                                                  PortEntry::kPortDirectionInput);
                         if (aPort)
                         {
                             rememberPortInBackground(aPort);
                         }
                     }
-                    for (MplusM::Common::ChannelVector::const_iterator inner(descriptor._outputChannels.begin());
+                    for (MplusM::Common::ChannelVector::const_iterator inner =
+                                                                descriptor._outputChannels.begin();
                          descriptor._outputChannels.end() != inner; ++inner)
                     {
                         MplusM::Common::ChannelDescription aChannel(*inner);
                         
                         aPort = anEntity->addPort(aChannel._portName, aChannel._portProtocol,
-                                                  PortEntry::kPortUsageService, PortEntry::kPortDirectionOutput);
+                                                  PortEntry::kPortUsageService,
+                                                  PortEntry::kPortDirectionOutput);
                         if (aPort)
                         {
                             rememberPortInBackground(aPort);
@@ -1240,14 +1287,17 @@ void ServiceViewerApp::update(void)
                     addEntityToBackground(anEntity);
                 }
                 // Convert the detected ports with associates into entities in the background list.
-                for (AssociatesMap::const_iterator outer(_associatedPorts.begin()); _associatedPorts.end() != outer;
-                     ++outer)
+                for (AssociatesMap::const_iterator outer(_associatedPorts.begin());
+                     _associatedPorts.end() != outer; ++outer)
                 {
                     PortEntry *     aPort;
-                    ServiceEntity * anEntity = new ServiceEntity(PortPanel::kEntityKindClientOrAdapter, "", "", *this);
+                    ServiceEntity * anEntity =
+                                            new ServiceEntity(PortPanel::kEntityKindClientOrAdapter,
+                                                              "", "", *this);
                     
                     anEntity->setup(outer->first.c_str());
-                    for (MplusM::Common::StringVector::const_iterator inner(outer->second._associates._inputs.begin());
+                    for (MplusM::Common::StringVector::const_iterator inner =
+                                                        outer->second._associates._inputs.begin();
                          outer->second._associates._inputs.end() != inner; ++inner)
                     {
                         aPort = anEntity->addPort(*inner, "", PortEntry::kPortUsageOther,
@@ -1257,7 +1307,8 @@ void ServiceViewerApp::update(void)
                             rememberPortInBackground(aPort);
                         }
                     }
-                    for (MplusM::Common::StringVector::const_iterator inner(outer->second._associates._outputs.begin());
+                    for (MplusM::Common::StringVector::const_iterator inner =
+                                                        outer->second._associates._outputs.begin();
                          outer->second._associates._outputs.end() != inner; ++inner)
                     {
                         aPort = anEntity->addPort(*inner, "", PortEntry::kPortUsageOther,
@@ -1276,31 +1327,32 @@ void ServiceViewerApp::update(void)
                     addEntityToBackground(anEntity);
                 }
                 // Convert the detected standalone ports into entities in the background list.
-                for (PortMap::const_iterator walker(_standalonePorts.begin()); _standalonePorts.end() != walker;
-                     ++walker)
+                for (PortMap::const_iterator walker(_standalonePorts.begin());
+                     _standalonePorts.end() != walker; ++walker)
                 {
-                    ServiceEntity *      anEntity = new ServiceEntity(PortPanel::kEntityKindOther, "", "", *this);
+                    ServiceEntity *      anEntity = new ServiceEntity(PortPanel::kEntityKindOther,
+                                                                      "", "", *this);
                     PortEntry::PortUsage usage;
                     
                     anEntity->setup(walker->first.c_str());
                     switch (MplusM::Utilities::GetPortKind(walker->second._name))
                     {
-                        case MplusM::Utilities::kPortKindClient:
+                        case MplusM::Utilities::kPortKindClient :
                             usage = PortEntry::kPortUsageClient;
                             break;
                             
-                        case MplusM::Utilities::kPortKindService:
-                        case MplusM::Utilities::kPortKindServiceRegistry:
+                        case MplusM::Utilities::kPortKindService :
+                        case MplusM::Utilities::kPortKindServiceRegistry :
                             usage = PortEntry::kPortUsageService;
                             break;
                             
-                        default:
+                        default :
                             usage = PortEntry::kPortUsageOther;
                             break;
                             
                     }
-                    PortEntry * aPort = anEntity->addPort(walker->second._name, "", usage, walker->second._direction);
-                    
+                    PortEntry * aPort = anEntity->addPort(walker->second._name, "", usage,
+                                                          walker->second._direction);
                     if (aPort)
                     {
                         rememberPortInBackground(aPort);
@@ -1308,8 +1360,8 @@ void ServiceViewerApp::update(void)
                     addEntityToBackground(anEntity);
                 }
                 // Convert the detected connections into connections in the background list.
-                for (ConnectionList::const_iterator walker(_connections.begin()); _connections.end() != walker;
-                     ++walker)
+                for (ConnectionList::const_iterator walker(_connections.begin());
+                     _connections.end() != walker; ++walker)
                 {
                     PortEntry * thisPort = findBackgroundPort(walker->_outPortName);
                     PortEntry * otherPort = findBackgroundPort(walker->_inPortName);
@@ -1327,16 +1379,16 @@ void ServiceViewerApp::update(void)
             _scanner->enableScan();
         }
     }
-//    OD_LOG_OBJEXIT();//####
+    //    OD_LOG_OBJEXIT();//####
 } // ServiceViewerApp::update
 
 void ServiceViewerApp::windowResized(int w,
                                      int h)
 {
-    OD_LOG_OBJENTER();//####
-    OD_LOG_L2("w = ", w, "h = ", h);//####
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_L2("w = ", w, "h = ", h); //####
     inherited::windowResized(w, h);
-    OD_LOG_OBJEXIT();//####
+    OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::windowResized
 
 #if defined(__APPLE__)

@@ -1,4 +1,4 @@
-//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //  File:       ServiceViewerApp.h
 //
@@ -10,37 +10,34 @@
 //
 //  Copyright:  (c) 2014 by HPlus Technologies Ltd. and Simon Fraser University.
 //
-//              All rights reserved. Redistribution and use in source and binary forms,
-//              with or without modification, are permitted provided that the following
-//              conditions are met:
-//                * Redistributions of source code must retain the above copyright
-//                  notice, this list of conditions and the following disclaimer.
-//                * Redistributions in binary form must reproduce the above copyright
-//                  notice, this list of conditions and the following disclaimer in the
-//                  documentation and/or other materials provided with the
-//                  distribution.
-//                * Neither the name of the copyright holders nor the names of its
-//                  contributors may be used to endorse or promote products derived
-//                  from this software without specific prior written permission.
+//              All rights reserved. Redistribution and use in source and binary forms, with or
+//              without modification, are permitted provided that the following conditions are met:
+//                * Redistributions of source code must retain the above copyright notice, this list
+//                  of conditions and the following disclaimer.
+//                * Redistributions in binary form must reproduce the above copyright notice, this
+//                  list of conditions and the following disclaimer in the documentation and/or
+//                  other materials provided with the distribution.
+//                * Neither the name of the copyright holders nor the names of its contributors may
+//                  be used to endorse or promote products derived from this software without
+//                  specific prior written permission.
 //
-//              THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-//              "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-//              LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-//              PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-//              OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//              SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//              LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-//              DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-//              THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-//              (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-//              OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//              THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+//              EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//              OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+//              SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//              INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+//              TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+//              BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+//              CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+//              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+//              DAMAGE.
 //
 //  Created:    2014-05-08
 //
-//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #if (! defined(__ServiceViewer__ServiceViewerApp__))
-# define __ServiceViewer__ServiceViewerApp__ /* Header guard */
+# define __ServiceViewer__ServiceViewerApp__  /* Header guard */
 
 # include "PortEntry.h"
 
@@ -118,7 +115,7 @@ public:
     {
         return _dragActive;
     } // dragActive
-
+    
     /*! @brief Process a drag event.
      @param dragInfo The attributes of the event. */
     virtual void dragEvent(ofDragInfo dragInfo);
@@ -233,7 +230,7 @@ public:
     /*! @brief Return the color to be used for non-TCP/non-UDP connections.
      @returns The color to be used for non-TCP/non-UDP connection. */
     static ofColor getOtherConnectionColor(void);
-
+    
     /*! @brief Return the line width for a service connection.
      @returns The line width for a service connection. */
     static float getServiceConnectionWidth(void);
@@ -255,10 +252,10 @@ private:
     struct ConnectionDetails
     {
         /*! @brief The name of the destination port. */
-        string                      _inPortName;
+        string _inPortName;
         
         /*! @brief The name of the source port. */
-        string                      _outPortName;
+        string _outPortName;
         
         /*! @brief The mode of the connection. */
         MplusM::Common::ChannelMode _mode;
@@ -269,7 +266,7 @@ private:
     struct NameAndDirection
     {
         /*! @brief The name of the port. */
-        string                   _name;
+        string _name;
         
         /*! @brief The direction of the port. */
         PortEntry::PortDirection _direction;
@@ -280,7 +277,7 @@ private:
     struct PortAndAssociates
     {
         /*! @brief The name of the port. */
-        string                             _name;
+        string _name;
         
         /*! @brief The associates of the port. */
         MplusM::Utilities::PortAssociation _associates;
@@ -295,7 +292,7 @@ private:
     
     /*! @brief A collection of services and ports. */
     typedef std::list<ServiceEntity *>                             EntityList;
-
+    
     /*! @brief A mapping from strings to ports. */
     typedef std::map<string, PortEntry *>                          PortEntryMap;
     
@@ -318,8 +315,8 @@ private:
      
      Note - not implemented and private, to prevent unexpected copying.
      @param other Another object to construct from. */
-    ServiceViewerApp & operator=(const ServiceViewerApp & other);
-
+    ServiceViewerApp & operator =(const ServiceViewerApp & other);
+    
     /*! @brief Add connections between detected ports in the to-be-displayed list.
      @param detectedPorts The set of detected YARP ports. */
     void addPortConnectionsToBackground(const MplusM::Utilities::PortVector & detectedPorts);
@@ -372,104 +369,105 @@ private:
     void swapBackgroundAndForeground(void);
     
     /*! @brief A collection of visible services and ports. */
-    EntityList          _entities1;
-
+    EntityList _entities1;
+    
     /*! @brief A collection of visible services and ports. */
-    EntityList          _entities2;
+    EntityList _entities2;
     
     /*! @brief A set of known ports. */
-    PortEntryMap        _ports1;
+    PortEntryMap _ports1;
     
     /*! @brief A set of known ports. */
-    PortEntryMap        _ports2;
+    PortEntryMap _ports2;
     
     /*! @brief A set of known services. */
-    ServiceMap          _detectedServices;
+    ServiceMap _detectedServices;
     
     /*! @brief A set of known ports. */
-    PortSet             _rememberedPorts;
+    PortSet _rememberedPorts;
     
     /*! @brief A set of associated ports. */
-    AssociatesMap       _associatedPorts;
+    AssociatesMap _associatedPorts;
     
     /*! @brief A set of standalone ports. */
-    PortMap             _standalonePorts;
+    PortMap _standalonePorts;
     
     /*! @brief A set of connections. */
-    ConnectionList      _connections;
+    ConnectionList _connections;
     
     /*! @brief Control access to the currently-displayed lists. */
-    ofMutex             _foregroundLock;
+    ofMutex _foregroundLock;
     
     /*! @brief The background set of known entities. */
-    EntityList *        _backgroundEntities;
+    EntityList * _backgroundEntities;
     
     /*! @brief The foreground set of known entities. */
-    EntityList *        _foregroundEntities;
+    EntityList * _foregroundEntities;
     
     /*! @brief The background set of known ports. */
-    PortEntryMap *      _backgroundPorts;
-
+    PortEntryMap * _backgroundPorts;
+    
     /*! @brief The foreground set of known ports. */
-    PortEntryMap *      _foregroundPorts;
+    PortEntryMap * _foregroundPorts;
     
     /*! @brief The starting port for a connection being added. */
-    PortEntry *         _firstAddPort;
+    PortEntry * _firstAddPort;
     
     /*! @brief The starting port for a connection being removed. */
-    PortEntry *         _firstRemovePort;
+    PortEntry * _firstRemovePort;
     
     /*! @brief The background port scanner. */
     BackgroundScanner * _scanner;
     
     /*! @brief The horizontal coordinate of the current drag location. */
-    float               _dragXpos;
+    float _dragXpos;
     
     /*! @brief The vertical coordinate of the current drag location. */
-    float               _dragYpos;
+    float _dragYpos;
     
     /*! @brief @c true if the connection being added will be UDP and @c false if it will be TCP. */
-    bool                _addingUDPConnection;
+    bool _addingUDPConnection;
     
     /*! @brief @c true if a connection is being added and @c false otherwise. */
-    bool                _addIsActive;
+    bool _addIsActive;
     
     /*! @brief @c true if the ALT/OPTION modifier key is depressed and @c false otherwise. */
-    bool                _altActive;
+    bool _altActive;
     
     /*! @brief @c true if the COMMAND modifier key is depressed and @c false otherwise. */
-    bool                _commandActive;
+    bool _commandActive;
     
     /*! @brief @c true if the CONTROL modifier key is depressed and @c false otherwise. */
-    bool                _controlActive;
+    bool _controlActive;
     
-    /*! @brief @c true if a connection is being created by dragging between ports and @c false otherwise. */
-    bool                _dragActive;
+    /*! @brief @c true if a connection is being created by dragging between ports and @c false
+     otherwise. */
+    bool _dragActive;
     
     /*! @brief @c true if the next scan will be ignored and @c false otherwise. */
-    bool                _ignoreNextScan;
+    bool _ignoreNextScan;
     
     /*! @brief @c true if an entity is being moved. */
-    bool                _movementActive;
+    bool _movementActive;
     
     /*! @brief @c true if the YARP network is running. */
-    bool                _networkAvailable;
+    bool _networkAvailable;
     
     /*! @brief @c true if the service registry can be used. */
-    bool                _registryAvailable;
+    bool _registryAvailable;
     
     /*! @brief @c true if a connection is being removed and @c false otherwise. */
-    bool                _removeIsActive;
+    bool _removeIsActive;
     
     /*! @brief @c true if the SHIFT modifier key is depressed and @c false otherwise. */
-    bool                _shiftActive;
+    bool _shiftActive;
     
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
 #  pragma clang diagnostic ignored "-Wunused-private-field"
 # endif // defined(__APPLE__)
     /*! @brief Filler to pad to alignment boundary */
-    char        _filler[4];
+    char _filler[4];
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)

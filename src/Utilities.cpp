@@ -1,4 +1,4 @@
-//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //  File:       Utilities.cpp
 //
@@ -10,34 +10,31 @@
 //
 //  Copyright:  (c) 2014 by HPlus Technologies Ltd. and Simon Fraser University.
 //
-//              All rights reserved. Redistribution and use in source and binary forms,
-//              with or without modification, are permitted provided that the following
-//              conditions are met:
-//                * Redistributions of source code must retain the above copyright
-//                  notice, this list of conditions and the following disclaimer.
-//                * Redistributions in binary form must reproduce the above copyright
-//                  notice, this list of conditions and the following disclaimer in the
-//                  documentation and/or other materials provided with the
-//                  distribution.
-//                * Neither the name of the copyright holders nor the names of its
-//                  contributors may be used to endorse or promote products derived
-//                  from this software without specific prior written permission.
+//              All rights reserved. Redistribution and use in source and binary forms, with or
+//              without modification, are permitted provided that the following conditions are met:
+//                * Redistributions of source code must retain the above copyright notice, this list
+//                  of conditions and the following disclaimer.
+//                * Redistributions in binary form must reproduce the above copyright notice, this
+//                  list of conditions and the following disclaimer in the documentation and/or
+//                  other materials provided with the distribution.
+//                * Neither the name of the copyright holders nor the names of its contributors may
+//                  be used to endorse or promote products derived from this software without
+//                  specific prior written permission.
 //
-//              THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-//              "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-//              LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-//              PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-//              OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//              SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//              LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-//              DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-//              THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-//              (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-//              OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//              THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+//              EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//              OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+//              SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//              INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+//              TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+//              BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+//              CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+//              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+//              DAMAGE.
 //
 //  Created:    2014-05-12
 //
-//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #include "Utilities.h"
 
@@ -94,9 +91,9 @@ bool CalculateMinDistance(float &         distanceSoFar,
                           const ofPoint & testPoint,
                           ofPoint &       bestSoFar)
 {
-    OD_LOG_ENTER();//####
-    OD_LOG_P4("distanceSoFar = ", &distanceSoFar, "refPoint = ", &refPoint, "testPoint = ", &testPoint,//####
-              "bestSoFar = ", &bestSoFar);//####
+    OD_LOG_ENTER(); //####
+    OD_LOG_P4("distanceSoFar = ", &distanceSoFar, "refPoint = ", &refPoint, "testPoint = ", //####
+              &testPoint, "bestSoFar = ", &bestSoFar); //####
     bool  result;
     float newDistance = refPoint.distance(testPoint);
     
@@ -110,15 +107,15 @@ bool CalculateMinDistance(float &         distanceSoFar,
     {
         result = false;
     }
-    OD_LOG_EXIT_B(result);//####
+    OD_LOG_EXIT_B(result); //####
     return result;
 } // CalculateMinDistance
 
 void CalculateTextMeshDimensions(const ofMesh & textMesh,
                                  ofVec2f &      dimensions)
 {
-    OD_LOG_ENTER();//####
-    OD_LOG_P2("textMesh = ", &textMesh, "dimensions = ", &dimensions);//####
+    OD_LOG_ENTER(); //####
+    OD_LOG_P2("textMesh = ", &textMesh, "dimensions = ", &dimensions); //####
     float maxX = 0;
     float maxY = 0;
     float minX = 0;
@@ -154,24 +151,27 @@ void CalculateTextMeshDimensions(const ofMesh & textMesh,
         }
     }
     dimensions.set(maxX - minX, maxY - minY);
-    OD_LOG_EXIT();//####
+    OD_LOG_EXIT(); //####
 } // CalculateTextMeshDimensions
 
 /*! @brief Draw a bezier curve between two points.
  @param startPoint The beginning of the curve.
  @param endPoint The end of the curve.
- @param startCentre A reference point for the beginning of the curve, used to calculate the beginning tangent.
- @param endCentre A reference point for the end of the curve, used to calculate the ending tangent. */
+ @param startCentre A reference point for the beginning of the curve, used to calculate the
+ beginning tangent.
+ @param endCentre A reference point for the end of the curve, used to calculate the ending
+ tangent. */
 void DrawBezier(const ofPoint & startPoint,
                 const ofPoint & endPoint,
                 const ofPoint & startCentre,
                 const ofPoint & endCentre)
 {
 //    OD_LOG_ENTER();//####
-//    OD_LOG_P4("startPoint = ", &startPoint, "endPoint = ", &endPoint, "startCentre = ", &startCentre,//####
-//              "endCentre = ", &endCentre);//####
+//    OD_LOG_P4("startPoint = ", &startPoint, "endPoint = ", &endPoint, "startCentre = ", //####
+//              &startCentre, "endCentre = ", &endCentre);//####
     ofPolyline bLine;
-    float      controlLength = (ofDist(startPoint.x, startPoint.y, endPoint.x, endPoint.y) * kControlLengthScale);
+    float      controlLength = (ofDist(startPoint.x, startPoint.y, endPoint.x, endPoint.y) *
+                                kControlLengthScale);
     float      startAngle = atan2(startPoint.y - startCentre.y, startPoint.x - startCentre.x);
     float      endAngle = atan2(endPoint.y - endCentre.y, endPoint.x - endCentre.x);
     ofPoint    controlPoint1(controlLength * cos(startAngle), controlLength * sin(startAngle));

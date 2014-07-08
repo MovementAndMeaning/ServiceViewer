@@ -1,4 +1,4 @@
-//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //  File:       ServiceEntity.h
 //
@@ -10,37 +10,34 @@
 //
 //  Copyright:  (c) 2014 by HPlus Technologies Ltd. and Simon Fraser University.
 //
-//              All rights reserved. Redistribution and use in source and binary forms,
-//              with or without modification, are permitted provided that the following
-//              conditions are met:
-//                * Redistributions of source code must retain the above copyright
-//                  notice, this list of conditions and the following disclaimer.
-//                * Redistributions in binary form must reproduce the above copyright
-//                  notice, this list of conditions and the following disclaimer in the
-//                  documentation and/or other materials provided with the
-//                  distribution.
-//                * Neither the name of the copyright holders nor the names of its
-//                  contributors may be used to endorse or promote products derived
-//                  from this software without specific prior written permission.
+//              All rights reserved. Redistribution and use in source and binary forms, with or
+//              without modification, are permitted provided that the following conditions are met:
+//                * Redistributions of source code must retain the above copyright notice, this list
+//                  of conditions and the following disclaimer.
+//                * Redistributions in binary form must reproduce the above copyright notice, this
+//                  list of conditions and the following disclaimer in the documentation and/or
+//                  other materials provided with the distribution.
+//                * Neither the name of the copyright holders nor the names of its contributors may
+//                  be used to endorse or promote products derived from this software without
+//                  specific prior written permission.
 //
-//              THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-//              "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-//              LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-//              PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-//              OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//              SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//              LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-//              DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-//              THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-//              (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-//              OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//              THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+//              EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//              OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+//              SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//              INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+//              TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+//              BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+//              CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+//              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+//              DAMAGE.
 //
 //  Created:    2014-05-09
 //
-//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #if (! defined(__ServiceViewer__ServiceEntity__))
-# define __ServiceViewer__ServiceEntity__ /* Header guard */
+# define __ServiceViewer__ServiceEntity__  /* Header guard */
 
 # include "MovementTracker.h"
 # include "PortPanel.h"
@@ -73,13 +70,13 @@ public:
      @param behaviour The behavioural model if a service.
      @param description The description, if this is a service.
      @param owner The application object that manages this entity. */
-	ServiceEntity(const PortPanel::EntityKind kind,
+    ServiceEntity(const PortPanel::EntityKind kind,
                   const string &              behaviour,
                   const string &              description,
                   ServiceViewerApp &          owner);
     
     /*! @brief The destructor. */
-	virtual ~ServiceEntity(void);
+    virtual ~ServiceEntity(void);
     
     /*! @brief Add a port to the panel.
      @param portName The name of the port.
@@ -90,7 +87,8 @@ public:
     inline PortEntry * addPort(const string &                 portName,
                                const string &                 portProtocol,
                                const PortEntry::PortUsage     portKind,
-                               const PortEntry::PortDirection direction = PortEntry::kPortDirectionInputOutput)
+                               const PortEntry::PortDirection direction =
+                               PortEntry::                kPortDirectionInputOutput)
     {
         return _panel.addPort(portName, portProtocol, portKind, direction);
     } // addPort
@@ -171,7 +169,7 @@ public:
     
     /*! @brief The entity position changes are complete. */
     virtual void positionChangeComplete(void);
-
+    
     /*! @brief Select the entity. */
     inline void select(void)
     {
@@ -210,10 +208,10 @@ public:
      @param entityName The name of the service or application.
      @param xx The initial horizontal position of the entity.
      @param yy The initial vertical position of the entity. */
-	void setup(string      entityName,
+    void setup(string      entityName,
                const float xx = 10,
                const float yy = 10);
-
+    
 protected:
     
 private:
@@ -231,7 +229,7 @@ private:
      
      Note - not implemented and private, to prevent unexpected copying.
      @param other Another object to construct from. */
-    ServiceEntity & operator=(const ServiceEntity & other);
+    ServiceEntity & operator =(const ServiceEntity & other);
     
     /*! @brief The GUI object that represents the entity. */
     PortPanel _panel;
@@ -240,23 +238,23 @@ private:
     ogdf::node _node;
     
     /*! @brief @c true if the connect marker is to be displayed and @c false otherwise. */
-    bool      _drawConnectMarker;
+    bool _drawConnectMarker;
     
     /*! @brief @c true if the disconnect marker is to be displayed and @c false otherwise. */
-    bool      _drawDisconnectMarker;
+    bool _drawDisconnectMarker;
     
     /*! @brief @c true if the movement marker is to be displayed and @c false otherwise. */
-    bool      _drawMoveMarker;
-
+    bool _drawMoveMarker;
+    
     /*! @brief @c true if the entity is selected and @c false otherwise. */
-    bool      _selected;
+    bool _selected;
     
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
 #  pragma clang diagnostic ignored "-Wunused-private-field"
 # endif // defined(__APPLE__)
     /*! @brief Filler to pad to alignment boundary */
-    char      _filler[4];
+    char _filler[4];
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)

@@ -1,4 +1,4 @@
-//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //  File:       PortPanel.h
 //
@@ -10,37 +10,34 @@
 //
 //  Copyright:  (c) 2014 by HPlus Technologies Ltd. and Simon Fraser University.
 //
-//              All rights reserved. Redistribution and use in source and binary forms,
-//              with or without modification, are permitted provided that the following
-//              conditions are met:
-//                * Redistributions of source code must retain the above copyright
-//                  notice, this list of conditions and the following disclaimer.
-//                * Redistributions in binary form must reproduce the above copyright
-//                  notice, this list of conditions and the following disclaimer in the
-//                  documentation and/or other materials provided with the
-//                  distribution.
-//                * Neither the name of the copyright holders nor the names of its
-//                  contributors may be used to endorse or promote products derived
-//                  from this software without specific prior written permission.
+//              All rights reserved. Redistribution and use in source and binary forms, with or
+//              without modification, are permitted provided that the following conditions are met:
+//                * Redistributions of source code must retain the above copyright notice, this list
+//                  of conditions and the following disclaimer.
+//                * Redistributions in binary form must reproduce the above copyright notice, this
+//                  list of conditions and the following disclaimer in the documentation and/or
+//                  other materials provided with the distribution.
+//                * Neither the name of the copyright holders nor the names of its contributors may
+//                  be used to endorse or promote products derived from this software without
+//                  specific prior written permission.
 //
-//              THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-//              "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-//              LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-//              PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-//              OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//              SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//              LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-//              DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-//              THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-//              (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-//              OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//              THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+//              EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//              OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+//              SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//              INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+//              TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+//              BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+//              CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+//              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+//              DAMAGE.
 //
 //  Created:    2014-05-12
 //
-//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #if (! defined(__ServiceViewer__PortPanel__))
-# define __ServiceViewer__PortPanel__ /* Header guard */
+# define __ServiceViewer__PortPanel__  /* Header guard */
 
 # include "IconlessPanel.h"
 # include "PortEntry.h"
@@ -85,7 +82,7 @@ public:
      @param description A description of the entity.
      @param owner The application object that manages this panel.
      @param within The entity that contains this panel. */
-	PortPanel(const EntityKind   kind,
+    PortPanel(const EntityKind   kind,
               const string &     behaviour,
               const string &     description,
               ServiceViewerApp & owner,
@@ -101,7 +98,7 @@ public:
      @param filename The settings file for the panel.
      @param xx The initial horizontal position of the panel.
      @param yy The initial vertical position of the panel. */
-	PortPanel(const EntityKind         kind,
+    PortPanel(const EntityKind         kind,
               const string &           behaviour,
               const string &           description,
               ServiceViewerApp &       owner,
@@ -112,7 +109,7 @@ public:
               const float              yy = 10);
     
     /*! @brief The destructor. */
-	virtual ~PortPanel(void);
+    virtual ~PortPanel(void);
     
     /*! @brief Add a port to the panel.
      @param portName The name of the port.
@@ -120,17 +117,18 @@ public:
      @param portKind What the port will be used for.
      @param direction The primary direction of the port.
      @returns The newly-created port. */
-    PortEntry *  addPort(const string &                 portName,
-                         const string &                 portProtocol = "",
-                         const PortEntry::PortUsage     portKind = PortEntry::kPortUsageOther,
-                         const PortEntry::PortDirection direction = PortEntry::kPortDirectionInputOutput);
+    PortEntry * addPort(const string &                 portName,
+                        const string &                 portProtocol = "",
+                        const PortEntry::PortUsage     portKind = PortEntry::kPortUsageOther,
+                        const PortEntry::PortDirection direction =
+                                                            PortEntry::kPortDirectionInputOutput);
     
     /*! @brief Draw the panel. */
-	inline void draw(void)
+    inline void draw(void)
     {
         inherited::draw();
     } // draw
-
+    
     /*! @brief Returns the entity that contains thie panel.
      @returns The entity that contains this panel. */
     ServiceEntity & getContainer(void)
@@ -157,14 +155,14 @@ public:
     
     /*! @brief Returns the height of the panel.
      @returns The height of the panel. */
-	inline float getHeight(void)
+    inline float getHeight(void)
     {
         return inherited::getHeight();
     } // getHeight
     
     /*! @brief Returns the name of the panel.
      @returns The name of the panel. */
-	inline string getName(void)
+    inline string getName(void)
     {
         return inherited::getName();
     } // getName
@@ -175,42 +173,46 @@ public:
     {
         return inherited::getNumControls();
     } // getNumPorts
-
+    
     inline ServiceViewerApp & getOwner(void)
     const
     {
         return _owner;
     } // getOwner
-
+    
     /*! @brief Returns a port by index.
      @param num The zero-origin index of the port.
      @returns A port or @c NULL if the index is out of range. */
     PortEntry * getPort(const int num);
-
+    
     /*! @brief Returns the outline of the panel.
      @returns The outline of the panel. */
-	inline ofRectangle getShape(void)
+    inline ofRectangle getShape(void)
     {
         return inherited::getShape();
     } // getShape
-
+    
     /*! @brief Returns the width of the panel.
      @returns The width of the panel. */
-	inline float getWidth(void)
+    inline float getWidth(void)
     {
         return inherited::getWidth();
     } // getWidth
     
-    /*! @brief Returns @c true if the given point is within the displayed region of the entry and @c false otherwise.
+    /*! @brief Returns @c true if the given point is within the displayed region of the entry and
+     @c false otherwise.
      @param aPoint The point of interest.
-     @returns @c true if the given point is within the displayed region of the entry and @c false otherwise. */
+     @returns @c true if the given point is within the displayed region of the entry and @c false
+     otherwise. */
     bool isPointInside(const ofPoint & aPoint)
     const;
     
-    /*! @brief Returns @c true if the given point is within the displayed region of the entry and @c false otherwise.
+    /*! @brief Returns @c true if the given point is within the displayed region of the entry and
+     @c false otherwise.
      @param xPos The horizontal coordinate of the point of interest.
      @param yPos The vertical coordinate of the point of interest.
-     @returns @c true if the given point is within the displayed region of the entry and @c false otherwise. */
+     @returns @c true if the given point is within the displayed region of the entry and @c false
+     otherwise. */
     bool isPointInside(const float xPos,
                        const float yPos)
     const;
@@ -218,38 +220,38 @@ public:
     /*! @brief Process a mouse-dragged event.
      @param args The attributes of the event.
      @returns @c true if the event was processed and @c false if it can be further propagated. */
-	virtual bool mouseDragged(ofMouseEventArgs & args);
+    virtual bool mouseDragged(ofMouseEventArgs & args);
     
     /*! @brief Process a mouse-moved event.
      @param args The attributes of the event.
      @returns @c true if the event was processed and @c false if it can be further propagated. */
-	virtual bool mouseMoved(ofMouseEventArgs & args);
-
+    virtual bool mouseMoved(ofMouseEventArgs & args);
+    
     /*! @brief Process a mouse-pressed event.
      @param args The attributes of the event.
      @returns @c true if the event was processed and @c false if it can be further propagated. */
-	virtual bool mousePressed(ofMouseEventArgs & args);
+    virtual bool mousePressed(ofMouseEventArgs & args);
     
     /*! @brief Process a mouse-released event.
      @param args The attributes of the event.
      @returns @c true if the event was processed and @c false if it can be further propagated. */
-	virtual bool mouseReleased(ofMouseEventArgs & args);
+    virtual bool mouseReleased(ofMouseEventArgs & args);
     
     /*! @brief Set the title string for the panel.
      @param name The new title string for the panel. */
-	void setName(string name);
-
+    void setName(string name);
+    
     /*! @brief Move the panel to a new location.
      @param xx The new horizontal coordinate.
      @param yy The new vertical coordinate. */
-	inline virtual void setPosition(float xx,
+    inline virtual void setPosition(float xx,
                                     float yy)
     {
         inherited::setPosition(xx, yy);
     } // setPosition
-
-    /*! @brief Connect a tracking object to the panel, that will receive handlePositionChange and positionChangeComplete
-     notifications */
+    
+    /*! @brief Connect a tracking object to the panel, that will receive
+     handlePositionChange and positionChangeComplete notifications */
     inline void setTracker(MovementTracker * newTracker)
     {
         _tracker = newTracker;
@@ -260,7 +262,7 @@ public:
      @param filename The settings file for the panel.
      @param xx The initial horizontal position of the panel.
      @param yy The initial vertical position of the panel. */
-	PortPanel * setup(string      collectionName = "",
+    PortPanel * setup(string      collectionName = "",
                       string      filename = "settings.xml",
                       const float xx = 10,
                       const float yy = 10);
@@ -270,7 +272,7 @@ public:
      @param filename The settings file for the panel.
      @param xx The initial horizontal position of the panel.
      @param yy The initial vertical position of the panel. */
-	PortPanel * setup(const ofParameterGroup & parameters,
+    PortPanel * setup(const ofParameterGroup & parameters,
                       string                   filename = "settings.xml",
                       const float              xx = 10,
                       const float              yy = 10);
@@ -281,8 +283,9 @@ protected:
      @param mx The new mouse horizontal position.
      @param my The new mouse vertical position.
      @param bCheck @c true if this is the initial mouse motion event.
-     @returns @c true if the event was processed and @c false if it can be further propagated. */
-	virtual bool setValue(float mx,
+     @returns @c true if the event was processed and @c false if it can be further
+     propagated. */
+    virtual bool setValue(float mx,
                           float my,
                           bool  bCheck);
     
@@ -301,38 +304,38 @@ private:
      
      Note - not implemented and private, to prevent unexpected copying.
      @param other Another object to construct from. */
-    PortPanel & operator=(const PortPanel & other);
+    PortPanel & operator =(const PortPanel & other);
     
     /*! @brief The offset of the initial mouse motion, relative to the panel position. */
-    ofPoint            _grabPt;
-
+    ofPoint _grabPt;
+    
     /*! @brief The tracking object for the panel. */
-    MovementTracker *  _tracker;
-
+    MovementTracker * _tracker;
+    
     /*! @brief The application object that manages the panel. */
     ServiceViewerApp & _owner;
-
+    
     /*! @brief The entity that contains this panel. */
-    ServiceEntity &    _within;
-
+    ServiceEntity & _within;
+    
     /*! @brief The behavioural model if a service. */
-    string             _behaviour;
+    string _behaviour;
     
     /*! @brief The description of the entity, if it is a service. */
-    string             _description;
+    string _description;
     
     /*! @brief The kind of entity. */
-    EntityKind         _kind;
+    EntityKind _kind;
     
     /*! @brief @c true if the panel is being dragged and @c false otherwise. */
-	bool               _grabbed;
+    bool _grabbed;
     
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
 #  pragma clang diagnostic ignored "-Wunused-private-field"
 # endif // defined(__APPLE__)
     /*! @brief Filler to pad to alignment boundary */
-    char               _filler[7];
+    char _filler[7];
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)

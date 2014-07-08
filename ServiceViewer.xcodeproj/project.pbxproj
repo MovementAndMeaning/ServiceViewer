@@ -43,7 +43,7 @@
 		E45BE9810E8CC7DD009D7055 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9770E8CC7DD009D7055 /* CoreServices.framework */; };
 		E45BE9830E8CC7DD009D7055 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9790E8CC7DD009D7055 /* OpenGL.framework */; };
 		E45BE9840E8CC7DD009D7055 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE97A0E8CC7DD009D7055 /* QuickTime.framework */; };
-		E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
+		E4B69E200A3A1BDC003C02F2 /* ServiceViewerMain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* ServiceViewerMain.cpp */; };
 		E4B69E210A3A1BDC003C02F2 /* ServiceViewerApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1E0A3A1BDC003C02F2 /* ServiceViewerApp.cpp */; };
 		E4C2424710CC5A17004149E2 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424410CC5A17004149E2 /* AppKit.framework */; };
 		E4C2424810CC5A17004149E2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424510CC5A17004149E2 /* Cocoa.framework */; };
@@ -141,7 +141,7 @@
 		E45BE9770E8CC7DD009D7055 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		E45BE9790E8CC7DD009D7055 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		E45BE97A0E8CC7DD009D7055 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
-		E4B69E1D0A3A1BDC003C02F2 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
+		E4B69E1D0A3A1BDC003C02F2 /* ServiceViewerMain.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = ServiceViewerMain.cpp; path = src/ServiceViewerMain.cpp; sourceTree = SOURCE_ROOT; };
 		E4B69E1E0A3A1BDC003C02F2 /* ServiceViewerApp.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ServiceViewerApp.cpp; path = src/ServiceViewerApp.cpp; sourceTree = SOURCE_ROOT; };
 		E4B69E1F0A3A1BDC003C02F2 /* ServiceViewerApp.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ServiceViewerApp.h; path = src/ServiceViewerApp.h; sourceTree = SOURCE_ROOT; };
 		E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; path = "openFrameworks-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -344,7 +344,6 @@
 				DFCEE153191D4AD7003EE453 /* IconlessPanel.h */,
 				DFCEE15B19213653003EE453 /* LabelWithShadow.cpp */,
 				DFCEE15C19213653003EE453 /* LabelWithShadow.h */,
-				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				DFCEE158191D86EC003EE453 /* MovementTracker.cpp */,
 				DFCEE159191D86EC003EE453 /* MovementTracker.h */,
 				DFCEE16119214FB3003EE453 /* PortEntry.cpp */,
@@ -355,6 +354,7 @@
 				DFCEE156191D5AE4003EE453 /* ServiceEntity.h */,
 				E4B69E1E0A3A1BDC003C02F2 /* ServiceViewerApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ServiceViewerApp.h */,
+				E4B69E1D0A3A1BDC003C02F2 /* ServiceViewerMain.cpp */,
 				DFCEE15E19214A52003EE453 /* Utilities.cpp */,
 				DFCEE15F19214A52003EE453 /* Utilities.h */,
 			);
@@ -457,7 +457,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
+				E4B69E200A3A1BDC003C02F2 /* ServiceViewerMain.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* ServiceViewerApp.cpp in Sources */,
 				DFA9893A1948B549005F10EB /* BackgroundScanner.cpp in Sources */,
 				856AA354D08AB4B323081444 /* ofxBaseGui.cpp in Sources */,
