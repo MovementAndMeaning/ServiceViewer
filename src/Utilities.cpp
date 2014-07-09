@@ -166,9 +166,11 @@ void DrawBezier(const ofPoint & startPoint,
                 const ofPoint & startCentre,
                 const ofPoint & endCentre)
 {
-//    OD_LOG_ENTER();//####
-//    OD_LOG_P4("startPoint = ", &startPoint, "endPoint = ", &endPoint, "startCentre = ", //####
-//              &startCentre, "endCentre = ", &endCentre);//####
+#if 0
+    OD_LOG_ENTER(); //####
+    OD_LOG_P4("startPoint = ", &startPoint, "endPoint = ", &endPoint, "startCentre = ", //####
+              &startCentre, "endCentre = ", &endCentre); //####
+#endif // 0
     ofPolyline bLine;
     float      controlLength = (ofDist(startPoint.x, startPoint.y, endPoint.x, endPoint.y) *
                                 kControlLengthScale);
@@ -180,5 +182,7 @@ void DrawBezier(const ofPoint & startPoint,
     bLine.addVertex(startPoint);
     bLine.bezierTo(startPoint + controlPoint1, endPoint + controlPoint2, endPoint);
     bLine.draw();
-//    OD_LOG_EXIT();//####
+#if 0
+    OD_LOG_EXIT();//####
+#endif // 0
 } // DrawBezier

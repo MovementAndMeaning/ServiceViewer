@@ -102,7 +102,9 @@ ServiceEntity::~ServiceEntity(void)
 
 void ServiceEntity::draw(void)
 {
-//    OD_LOG_OBJENTER();//####
+#if 0
+    OD_LOG_OBJENTER(); //####
+#endif // 0
     ServiceViewerApp & owner = _panel.getOwner();
     
     _panel.draw();
@@ -200,7 +202,9 @@ void ServiceEntity::draw(void)
             }
         }
     }
-//    OD_LOG_OBJEXIT();//####
+#if 0
+    OD_LOG_OBJEXIT(); //####
+#endif // 0
 } // ServiceEntity::draw
 
 void ServiceEntity::handlePositionChange(void)

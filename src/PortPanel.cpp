@@ -155,8 +155,10 @@ PortEntry * PortPanel::addPort(const string &                 portName,
 
 PortEntry * PortPanel::getPort(const int num)
 {
-//    OD_LOG_OBJENTER();//####
-//    OD_LOG_L1("num = ", num);//####
+#if 0
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_L1("num = ", num); //####
+#endif // 0
     PortEntry * result;
     
     if (0 <= num)
@@ -167,18 +169,24 @@ PortEntry * PortPanel::getPort(const int num)
     {
         result = NULL;
     }
-//    OD_LOG_OBJEXIT_P(result);//####
+#if 0
+    OD_LOG_OBJEXIT_P(result); //####
+#endif // 0
     return result;
 } // getPort
 
 bool PortPanel::isPointInside(const ofPoint & aPoint)
 const
 {
-//    OD_LOG_OBJENTER();//####
-//    OD_LOG_P1("aPoint = ", &aPoint);//####
+#if 0
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("aPoint = ", &aPoint); //####
+#endif // 0
     bool result = b.inside(aPoint);
     
-//    OD_LOG_OBJEXIT_B(result);//####
+#if 0
+    OD_LOG_OBJEXIT_B(result); //####
+#endif // 0
     return result;
 } // PortPanel::isPointInside
 
@@ -186,11 +194,15 @@ bool PortPanel::isPointInside(const float xPos,
                               const float yPos)
 const
 {
-//    OD_LOG_OBJENTER();//####
-//    OD_LOG_D2("xPos = ", xPos, "yPos = ", yPos);//####
+#if 0
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_D2("xPos = ", xPos, "yPos = ", yPos); //####
+#endif // 0
     bool result = b.inside(xPos, yPos);
     
-//    OD_LOG_OBJEXIT_B(result);//####
+#if 0
+    OD_LOG_OBJEXIT_B(result); //####
+#endif // 0
     return result;
 } // PortPanel::isPointInside
 
@@ -230,11 +242,15 @@ bool PortPanel::mouseDragged(ofMouseEventArgs & args)
 
 bool PortPanel::mouseMoved(ofMouseEventArgs & args)
 {
-//    OD_LOG_OBJENTER();//####
-//    OD_LOG_P1("args = ", &args);//####
+#if 0
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("args = ", &args); //####
+#endif // 0
     bool result = inherited::mouseMoved(args);
     
-//    OD_LOG_OBJEXIT_B(result);//####
+#if 0
+    OD_LOG_OBJEXIT_B(result); //####
+#endif // 0
     return result;
 } // PortPanel::mouseMoved
 

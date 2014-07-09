@@ -40,7 +40,7 @@
 #include "BackgroundScanner.h"
 #include "ServiceEntity.h"
 
-//#include "ODEnableLogging.h"
+#include "ODEnableLogging.h"
 #include "ODLogging.h"
 
 #include "ofAppRunner.h"
@@ -243,7 +243,7 @@ static bool protocolsMatch(const string & sourceProtocol,
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S2s("sourceProtocol = ", sourceProtocol, "destinationProtocol = ", //####
-              destinationProtocol); //####
+               destinationProtocol); //####
     bool result = false;
     
     if (0 == destinationProtocol.length())
@@ -484,7 +484,9 @@ void ServiceViewerApp::dragEvent(ofDragInfo dragInfo)
 
 void ServiceViewerApp::draw(void)
 {
-    //    OD_LOG_OBJENTER();//####
+#if 0
+    OD_LOG_OBJENTER(); //####
+#endif // 0
     ofBackgroundGradient(ofColor::white, ofColor::gray);
     if (_networkAvailable)
     {
@@ -536,7 +538,9 @@ void ServiceViewerApp::draw(void)
         ofBitmapStringGetTextureRef().unbind();
         ofDisableAlphaBlending();
     }
-    //    OD_LOG_OBJEXIT();//####
+#if 0
+    OD_LOG_OBJEXIT(); //####
+#endif // 0
 } // ServiceViewerApp::draw
 
 void ServiceViewerApp::exit(void)
@@ -715,8 +719,10 @@ void ServiceViewerApp::gotMessage(ofMessage msg)
 
 void ServiceViewerApp::keyPressed(int key)
 {
-//    OD_LOG_OBJENTER();//####
-//    OD_LOG_L1("key = ", key);//####
+#if 0
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_L1("key = ", key); //####
+#endif // 0
     if (OF_KEY_ALT == (key & OF_KEY_ALT))
     {
         // Note that the key state will be cleared by a mouse click, so we need to remember it with
@@ -738,13 +744,17 @@ void ServiceViewerApp::keyPressed(int key)
         _shiftActive = true;
     }
     inherited::keyPressed(key);
-//    OD_LOG_OBJEXIT();//####
+#if 0
+    OD_LOG_OBJEXIT(); //####
+#endif // 0
 } // ServiceViewerApp::keyPressed
 
 void ServiceViewerApp::keyReleased(int key)
 {
-//    OD_LOG_OBJENTER();//####
-//    OD_LOG_L1("key = ", key);//####
+#if 0
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_L1("key = ", key); //####
+#endif // 0
     if (OF_KEY_ALT == (key & OF_KEY_ALT))
     {
         _altActive = false;
@@ -762,7 +772,9 @@ void ServiceViewerApp::keyReleased(int key)
         _shiftActive = false;
     }
     inherited::keyReleased(key);
-//    OD_LOG_OBJEXIT();//####
+#if 0
+    OD_LOG_OBJEXIT(); //####
+#endif // 0
 } // ServiceViewerApp::keyReleased
 
 void ServiceViewerApp::mouseDragged(int x,
@@ -778,10 +790,14 @@ void ServiceViewerApp::mouseDragged(int x,
 void ServiceViewerApp::mouseMoved(int x,
                                   int y)
 {
-//    OD_LOG_OBJENTER();//####
-//    OD_LOG_L2("x = ", x, "y = ", y);//####
+#if 0
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_L2("x = ", x, "y = ", y); //####
+#endif // 0
     inherited::mouseMoved(x, y);
-//    OD_LOG_OBJEXIT();//####
+#if 0
+    OD_LOG_OBJEXIT(); //####
+#endif // 0
 } // ServiceViewerApp::mouseMoved
 
 void ServiceViewerApp::mousePressed(int x,
@@ -1212,7 +1228,9 @@ void ServiceViewerApp::swapBackgroundAndForeground(void)
 
 void ServiceViewerApp::update(void)
 {
-    //    OD_LOG_OBJENTER();//####
+#if 0
+    OD_LOG_OBJENTER(); //####
+#endif // 0
     inherited::update();
     if (_scanner)
     {
@@ -1379,7 +1397,9 @@ void ServiceViewerApp::update(void)
             _scanner->enableScan();
         }
     }
-    //    OD_LOG_OBJEXIT();//####
+#if 0
+    OD_LOG_OBJEXIT(); //####
+#endif // 0
 } // ServiceViewerApp::update
 
 void ServiceViewerApp::windowResized(int w,
