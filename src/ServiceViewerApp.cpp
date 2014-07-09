@@ -1067,8 +1067,15 @@ void ServiceViewerApp::setEntityPositions(void)
 #else // ! defined(TEST_GRAPHICS_)
     ogdf::Graph           gg;
     ogdf::GraphAttributes ga(gg);
+    ogdf::node            phantomNode = gg.newNode();
     
     ga.directed(true);
+    // If nodes are not connected, OGDF will pile them all at the origin; by adding a 'phantom' node
+    // that is connected to every other node, we force OGDF to spread the nodes out.
+    ga.width(phantomNode) = 1;
+    ga.height(phantomNode) = 1;
+    ga.x(phantomNode) = ofRandom(fullWidth);
+    ga.y(phantomNode) = ofRandom(fullHeight);
     for (EntityList::const_iterator it(_backgroundEntities->begin());
          _backgroundEntities->end() != it; ++it)
     {
@@ -1122,6 +1129,7 @@ void ServiceViewerApp::setEntityPositions(void)
             
             if (anEntity)
             {
+                bool       wasConnected = false;
                 ogdf::node thisNode = anEntity->getNode();
                 
                 // Add edges between entities that are connected via their entries
@@ -1147,10 +1155,22 @@ void ServiceViewerApp::setEntityPositions(void)
                                     ogdf::node      otherNode = otherEntity.getNode();
                                     ogdf::edge      ee = gg.newEdge(thisNode, otherNode);
                                     
+                                    wasConnected = true;
                                 }
                             }
                         }
+                        const PortEntry::Connections & inputs(aPort->getInputConnections());
+                        
+                        if (0 < inputs.size())
+                        {
+                            wasConnected = true;
+                        }
                     }
+                }
+                if (! wasConnected)
+                {
+                    ogdf::edge phantomNodeToThis = gg.newEdge(phantomNode, thisNode);
+
                 }
             }
         }
