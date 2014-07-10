@@ -164,18 +164,25 @@ static void destroyDirectionTestPorts(void)
 } // destroyDirectionTestPorts
 
 /*! @brief Determine whether a port can be used for input and/or output.
+ @param oldEntry The previous record for the port, if it exists.
  @param portName The name of the port to check.
  @returns The allowed directions for the port. */
-static PortEntry::PortDirection determineDirection(const yarp::os::ConstString & portName)
+static PortEntry::PortDirection determineDirection(PortEntry *                   oldEntry,
+                                                   const yarp::os::ConstString & portName)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S1s("portName = ", portName); //####
     PortEntry::PortDirection result = PortEntry::kPortDirectionUnknown;
     
-    if (lPortsValid)
+    if (oldEntry)
     {
-        bool canDoInput = false;
-        bool canDoOutput = false;
+        result = oldEntry->getDirection();
+    }
+    else if (lPortsValid)
+    {
+        bool        canDoInput = false;
+        bool        canDoOutput = false;
+        PortEntry * oldEntry;
         
         // First, check if we are looking at a client port - because of how they are
         // constructed, attempting to connect to them will result in a hang, so we just
@@ -228,6 +235,14 @@ static PortEntry::PortDirection determineDirection(const yarp::os::ConstString &
         {
             result = PortEntry::kPortDirectionOutput;
         }
+        else
+        {
+            result = PortEntry::kPortDirectionUnknown;
+        }
+    }
+    else
+    {
+        result = PortEntry::kPortDirectionUnknown;
     }
     OD_LOG_EXIT_L(static_cast<long> (result)); //####
     return result;
@@ -385,10 +400,11 @@ void ServiceViewerApp::addRegularPortEntitiesToBackground(const MplusM::Utilitie
         {
             yarp::os::ConstString caption(walker->_portIpAddress + ":" + walker->_portPortNumber);
             NameAndDirection      info;
+            PortEntry *           oldEntry = findForegroundPort(walker->_portName);
             
             _rememberedPorts.insert(walker->_portName);
             info._name = walker->_portName;
-            info._direction = determineDirection(walker->_portName);
+            info._direction = determineDirection(oldEntry, walker->_portName);
             _standalonePorts.insert(PortMap::value_type(caption.c_str(), info));
         }
     }
@@ -1328,15 +1344,17 @@ void ServiceViewerApp::update(void)
                 for (AssociatesMap::const_iterator outer(_associatedPorts.begin());
                      _associatedPorts.end() != outer; ++outer)
                 {
-                    PortEntry *     aPort;
-                    ServiceEntity * anEntity =
+                    PortEntry *                                aPort;
+                    ServiceEntity *                            anEntity =
                                             new ServiceEntity(PortPanel::kEntityKindClientOrAdapter,
                                                               "", "", *this);
+                    const MplusM::Utilities::PortAssociation & associates =
+                                                                        outer->second._associates;
                     
                     anEntity->setup(outer->first.c_str());
                     for (MplusM::Common::StringVector::const_iterator inner =
-                                                        outer->second._associates._inputs.begin();
-                         outer->second._associates._inputs.end() != inner; ++inner)
+                                                                        associates._inputs.begin();
+                         associates._inputs.end() != inner; ++inner)
                     {
                         aPort = anEntity->addPort(*inner, "", PortEntry::kPortUsageOther,
                                                   PortEntry::kPortDirectionInput);
@@ -1346,8 +1364,8 @@ void ServiceViewerApp::update(void)
                         }
                     }
                     for (MplusM::Common::StringVector::const_iterator inner =
-                                                        outer->second._associates._outputs.begin();
-                         outer->second._associates._outputs.end() != inner; ++inner)
+                                                                        associates._outputs.begin();
+                         associates._outputs.end() != inner; ++inner)
                     {
                         aPort = anEntity->addPort(*inner, "", PortEntry::kPortUsageOther,
                                                   PortEntry::kPortDirectionOutput);
@@ -1391,6 +1409,7 @@ void ServiceViewerApp::update(void)
                     }
                     PortEntry * aPort = anEntity->addPort(walker->second._name, "", usage,
                                                           walker->second._direction);
+                    
                     if (aPort)
                     {
                         rememberPortInBackground(aPort);
