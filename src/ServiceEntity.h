@@ -114,6 +114,13 @@ public:
     /*! @brief Display the entity. */
     void draw(void);
     
+    /*! @brief Returns the height of the entity.
+     @returns The height of the entity. */
+    inline float getHeight(void)
+    {
+        return _panel.getHeight();
+    } // getHeight
+    
     /*! @brief Return the name of the entity.
      @returns The name of the entity. */
     inline string getName(void)
@@ -150,6 +157,13 @@ public:
     {
         return _panel.getShape();
     } // getShape
+    
+    /*! @brief Returns the width of the entity.
+     @returns The width of the entity. */
+    inline float getWidth(void)
+    {
+        return _panel.getWidth();
+    } // getWidth
     
     /*! @brief The entity position has been changed. */
     virtual void handlePositionChange(void);
