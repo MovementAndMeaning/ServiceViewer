@@ -88,7 +88,7 @@ public:
                                const string &                 portProtocol,
                                const PortEntry::PortUsage     portKind,
                                const PortEntry::PortDirection direction =
-                               PortEntry::                kPortDirectionInputOutput)
+                                                               PortEntry::kPortDirectionInputOutput)
     {
         return _panel.addPort(portName, portProtocol, portKind, direction);
     } // addPort

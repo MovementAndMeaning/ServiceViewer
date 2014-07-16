@@ -97,14 +97,17 @@ static const float kServiceConnectionWidth = (2 * kNormalConnectionWidth);
 
 /*! @brief @c true if the port direction resources are available. */
 static bool lPortsValid = false;
+
 /*! @brief The port used to determine if a port being checked can be used as an output. */
 static MplusM::Common::AdapterChannel * lInputOnlyPort = NULL;
+
 /*! @brief The port used to determine if a port being checked can be used as an input. */
 static MplusM::Common::AdapterChannel * lOutputOnlyPort = NULL;
 
 /*! @brief The name of the port used to determine if a port being checked can be used as an
  output. */
 static yarp::os::ConstString lInputOnlyPortName;
+
 /*! @brief The name of the port used to determine if a port being checked can be used as an
  input. */
 static yarp::os::ConstString lOutputOnlyPortName;
@@ -180,9 +183,8 @@ static PortEntry::PortDirection determineDirection(PortEntry *                  
     }
     else if (lPortsValid)
     {
-        bool        canDoInput = false;
-        bool        canDoOutput = false;
-        PortEntry * oldEntry;
+        bool canDoInput = false;
+        bool canDoOutput = false;
         
         // First, check if we are looking at a client port - because of how they are
         // constructed, attempting to connect to them will result in a hang, so we just
@@ -330,7 +332,8 @@ void ServiceViewerApp::addPortConnectionsToBackground(const MplusM::Utilities::P
             
             details._outPortName = outer->_portName;
             MplusM::Utilities::GatherPortConnections(outer->_portName, inputs, outputs,
-                                                     MplusM::Utilities::kInputAndOutputOutput, true);
+                                                     MplusM::Utilities::kInputAndOutputOutput,
+                                                     true);
             for (MplusM::Common::ChannelVector::const_iterator inner(outputs.begin());
                  outputs.end() != inner; ++inner)
             {
@@ -409,7 +412,7 @@ void ServiceViewerApp::addRegularPortEntitiesToBackground(const MplusM::Utilitie
         }
     }
     OD_LOG_OBJEXIT(); //####
-} // addRegularPortEntitiesToBackground
+} // ServiceViewerApp::addRegularPortEntitiesToBackground
 
 void ServiceViewerApp::addServicesToBackground(const MplusM::Common::StringVector & services)
 {
@@ -1052,7 +1055,6 @@ void ServiceViewerApp::setEntityPositions(void)
     bool  positionsNeedUpdate = false;
     float fullHeight = ofGetHeight();
     float fullWidth = ofGetWidth();
-    float diagonal = sqrt((fullHeight * fullHeight) + (fullWidth * fullWidth));
     
 #if defined(TEST_GRAPHICS_)
     for (EntityList::const_iterator it(_backgroundEntities->begin());
@@ -1169,7 +1171,7 @@ void ServiceViewerApp::setEntityPositions(void)
                                 {
                                     ServiceEntity & otherEntity = otherParent->getContainer();
                                     ogdf::node      otherNode = otherEntity.getNode();
-                                    ogdf::edge      ee = gg.newEdge(thisNode, otherNode);
+                                    /*ogdf::edge      ee =*/ gg.newEdge(thisNode, otherNode);
                                     
                                     wasConnected = true;
                                 }
@@ -1185,7 +1187,7 @@ void ServiceViewerApp::setEntityPositions(void)
                 }
                 if (! wasConnected)
                 {
-                    ogdf::edge phantomNodeToThis = gg.newEdge(phantomNode, thisNode);
+                    /*ogdf::edge phantomNodeToThis =*/ gg.newEdge(phantomNode, thisNode);
 
                 }
             }
@@ -1454,6 +1456,10 @@ void ServiceViewerApp::windowResized(int w,
 # pragma mark Accessors
 #endif // defined(__APPLE__)
 
+#if defined(__APPLE__)
+# pragma mark Global functions
+#endif // defined(__APPLE__)
+
 ofColor ServiceViewerApp::getMarkerColor(void)
 {
     return ofColor::yellow;
@@ -1488,7 +1494,3 @@ ofColor ServiceViewerApp::getUdpConnectionColor(void)
 {
     return ofColor::purple;
 } // ServiceViewerApp::getUdpConnectionColor
-
-#if defined(__APPLE__)
-# pragma mark Global functions
-#endif // defined(__APPLE__)

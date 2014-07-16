@@ -173,7 +173,7 @@ PortEntry * PortPanel::getPort(const int num)
     OD_LOG_OBJEXIT_P(result); //####
 #endif // 0
     return result;
-} // getPort
+} // PortPanel::getPort
 
 bool PortPanel::isPointInside(const ofPoint & aPoint)
 const

@@ -283,7 +283,7 @@ public:
     inline bool isService(void)
     const
     {
-        return kPortUsageService == _usage;
+        return (kPortUsageService == _usage);
     } // isService
     
     /*! @brief Process a mouse-dragged event.
