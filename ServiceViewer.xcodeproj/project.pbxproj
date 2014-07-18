@@ -112,7 +112,7 @@
 		DF498682192567A6000EB074 /* libYARP_init.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libYARP_init.a; path = /usr/local/lib/libYARP_init.a; sourceTree = "<absolute>"; };
 		DF498684192567AF000EB074 /* libYARP_OS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libYARP_OS.a; path = /usr/local/lib/libYARP_OS.a; sourceTree = "<absolute>"; };
 		DF498686192567B8000EB074 /* libACE.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libACE.dylib; path = /usr/local/lib/libACE.dylib; sourceTree = "<absolute>"; };
-		DF656FB219364D6E00A39DA6 /* libodLogging.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libodLogging.a; path = ../../../../../../usr/local/lib/libodLogging.a; sourceTree = "<group>"; };
+		DF656FB219364D6E00A39DA6 /* libodLogging.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libodLogging.a; path = /Users/Shared/of_v0.8.1_osx_release/apps/myApps/ServiceViewer/../../../../../../usr/local/lib/libodLogging.a; sourceTree = "<absolute>"; };
 		DFA9893519461B48005F10EB /* libOGDF.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOGDF.a; path = /usr/local/lib/libOGDF.a; sourceTree = "<absolute>"; };
 		DFA989381948B549005F10EB /* BackgroundScanner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BackgroundScanner.cpp; sourceTree = "<group>"; };
 		DFA989391948B549005F10EB /* BackgroundScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackgroundScanner.h; sourceTree = "<group>"; };
@@ -668,6 +668,14 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_51)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_52)",
 				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-D__MACOSX_CORE__",
+					"-lpthread",
+					"-mtune=native",
+					"-DOGDF_DEBUG",
+					"-DOGDF_MEMORY_MALLOC_TS",
+					"-DOGDF_USE_SSE2",
+				);
 				OTHER_LDFLAGS = "$(OF_CORE_LIBS)";
 				PRODUCT_NAME = "$(TARGET_NAME)Debug";
 				WRAPPER_EXTENSION = app;
@@ -754,6 +762,13 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_49)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_50)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_51)",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-D__MACOSX_CORE__",
+					"-lpthread",
+					"-mtune=native",
+					"-DOGDF_MEMORY_MALLOC_TS",
+					"-DOGDF_USE_SSE2",
 				);
 				OTHER_LDFLAGS = "$(OF_CORE_LIBS)";
 				PRODUCT_NAME = "$(TARGET_NAME)";

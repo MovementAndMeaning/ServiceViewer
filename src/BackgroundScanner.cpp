@@ -140,7 +140,8 @@ void BackgroundScanner::threadedFunction(void)
 #endif // ! MAC_OR_LINUX_
                     yarp::os::impl::Logger & theLogger = MplusM::Common::GetLogger();
                     
-                    theLogger.info(yarp::os::ConstString("actual interval = ") + numBuff);
+                    theLogger.info(yarp::os::ConstString("actual interval = ") + numBuff +
+                                   yarp::os::ConstString(" seconds"));
                 }
                 _lastScanTime = ofGetElapsedTimef();
                 _owner.gatherEntitiesInBackground();

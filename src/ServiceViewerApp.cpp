@@ -710,7 +710,7 @@ void ServiceViewerApp::gatherEntitiesInBackground(void)
     MplusM::Utilities::PortVector detectedPorts;
     MplusM::Common::StringVector  services;
     
-    // Mark the our utility ports as known.
+    // Mark our utility ports as known.
     _rememberedPorts.insert(lInputOnlyPortName);
     _rememberedPorts.insert(lOutputOnlyPortName);
     MplusM::Utilities::GetDetectedPortList(detectedPorts);

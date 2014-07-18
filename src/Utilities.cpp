@@ -86,74 +86,6 @@ static const float kControlLengthScale = 0.25;
 # pragma mark Global functions
 #endif // defined(__APPLE__)
 
-bool CalculateMinDistance(float &         distanceSoFar,
-                          const ofPoint & refPoint,
-                          const ofPoint & testPoint,
-                          ofPoint &       bestSoFar)
-{
-    OD_LOG_ENTER(); //####
-    OD_LOG_P4("distanceSoFar = ", &distanceSoFar, "refPoint = ", &refPoint, "testPoint = ", //####
-              &testPoint, "bestSoFar = ", &bestSoFar); //####
-    bool  result;
-    float newDistance = refPoint.distance(testPoint);
-    
-    if (newDistance < distanceSoFar)
-    {
-        distanceSoFar = newDistance;
-        bestSoFar = testPoint;
-        result = true;
-    }
-    else
-    {
-        result = false;
-    }
-    OD_LOG_EXIT_B(result); //####
-    return result;
-} // CalculateMinDistance
-
-void CalculateTextMeshDimensions(const ofMesh & textMesh,
-                                 ofVec2f &      dimensions)
-{
-    OD_LOG_ENTER(); //####
-    OD_LOG_P2("textMesh = ", &textMesh, "dimensions = ", &dimensions); //####
-    float maxX = 0;
-    float maxY = 0;
-    float minX = 0;
-    float minY = 0;
-    
-    for (int ii = 0, num = textMesh.getNumVertices(); num > ii; ++ii)
-    {
-        ofVec3f aVertex = textMesh.getVertex(ii);
-        
-        if (ii)
-        {
-            if (aVertex.x > maxX)
-            {
-                maxX = aVertex.x;
-            }
-            if (aVertex.x < minX)
-            {
-                minX = aVertex.x;
-            }
-            if (aVertex.y > maxY)
-            {
-                maxY = aVertex.y;
-            }
-            if (aVertex.y < minY)
-            {
-                minY = aVertex.y;
-            }
-        }
-        else
-        {
-            maxX = minX = aVertex.x;
-            maxY = minY = aVertex.y;
-        }
-    }
-    dimensions.set(maxX - minX, maxY - minY);
-    OD_LOG_EXIT(); //####
-} // CalculateTextMeshDimensions
-
 /*! @brief Draw a bezier curve between two points.
  @param startPoint The beginning of the curve.
  @param endPoint The end of the curve.
@@ -172,8 +104,7 @@ void DrawBezier(const ofPoint & startPoint,
               &startCentre, "endCentre = ", &endCentre); //####
 #endif // 0
     ofPolyline bLine;
-    float      controlLength = (ofDist(startPoint.x, startPoint.y, endPoint.x, endPoint.y) *
-                                kControlLengthScale);
+    float      controlLength = (startPoint.distance(endPoint) * kControlLengthScale);
     float      startAngle = atan2(startPoint.y - startCentre.y, startPoint.x - startCentre.x);
     float      endAngle = atan2(endPoint.y - endCentre.y, endPoint.x - endCentre.x);
     ofPoint    controlPoint1(controlLength * cos(startAngle), controlLength * sin(startAngle));

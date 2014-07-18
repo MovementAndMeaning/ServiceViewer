@@ -53,39 +53,6 @@
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
-/*! @brief Determine if a new point is closer to a reference point than the previous point.
- @param distanceSoFar On input, the closest distance so far and on output, the new closest distance.
- @param refPoint The point to measure distance from.
- @param testPoint The point being checked.
- @param bestSoFar On input, the current closest point and output, the new closest point.
- @returns @c true if the new point is closer than the previous closest point. */
-bool CalculateMinDistance(float &         distanceSoFar,
-                          const ofPoint & refPoint,
-                          const ofPoint & testPoint,
-                          ofPoint &       bestSoFar);
-
-/*! @brief Determine if a new point is closer to a reference point than the previous point.
- @param distanceSoFar On input, the closest distance so far and on output, the new closest distance.
- @param refPoint The point to measure distance from.
- @param testX The horizontal coordinate for the point being checked.
- @param testY The vertical coordinate for the point being checked.
- @param bestSoFar On input, the current closest point and output, the new closest point.
- @returns @c true if the new point is closer than the previous closest point. */
-inline bool CalculateMinDistance(float &         distanceSoFar,
-                                 const ofPoint & refPoint,
-                                 const float     testX,
-                                 const float     testY,
-                                 ofPoint &       bestSoFar)
-{
-    return CalculateMinDistance(distanceSoFar, refPoint, ofPoint(testX, testY), bestSoFar);
-} // CalculateMinDistance
-
-/*! @brief Determine the dimsnesions of a text string.
- @param textMesh The text string rendered in a mesh.
- @param dimensions The dimensions of the text string. */
-void CalculateTextMeshDimensions(const ofMesh & textMesh,
-                                 ofVec2f &      dimensions);
-
 /*! @brief Draw a bezier curve between two points.
  @param startPoint The beginning of the curve.
  @param endPoint The end of the curve.

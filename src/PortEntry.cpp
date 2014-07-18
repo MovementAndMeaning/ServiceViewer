@@ -72,6 +72,53 @@ static const float kTargetBoxScale = 0.25;
 # pragma mark Local functions
 #endif // defined(__APPLE__)
 
+/*! @brief Determine if a new point is closer to a reference point than the previous point.
+ @param distanceSoFar On input, the closest distance so far and on output, the new closest distance.
+ @param refPoint The point to measure distance from.
+ @param testPoint The point being checked.
+ @param bestSoFar On input, the current closest point and output, the new closest point.
+ @returns @c true if the new point is closer than the previous closest point. */
+static bool calculateMinDistance(float &         distanceSoFar,
+                                 const ofPoint & refPoint,
+                                 const ofPoint & testPoint,
+                                 ofPoint &       bestSoFar)
+{
+    OD_LOG_ENTER(); //####
+    OD_LOG_P4("distanceSoFar = ", &distanceSoFar, "refPoint = ", &refPoint, "testPoint = ", //####
+              &testPoint, "bestSoFar = ", &bestSoFar); //####
+    bool  result;
+    float newDistance = refPoint.distance(testPoint);
+    
+    if (newDistance < distanceSoFar)
+    {
+        distanceSoFar = newDistance;
+        bestSoFar = testPoint;
+        result = true;
+    }
+    else
+    {
+        result = false;
+    }
+    OD_LOG_EXIT_B(result); //####
+    return result;
+} // calculateMinDistance
+
+/*! @brief Determine if a new point is closer to a reference point than the previous point.
+ @param distanceSoFar On input, the closest distance so far and on output, the new closest distance.
+ @param refPoint The point to measure distance from.
+ @param testX The horizontal coordinate for the point being checked.
+ @param testY The vertical coordinate for the point being checked.
+ @param bestSoFar On input, the current closest point and output, the new closest point.
+ @returns @c true if the new point is closer than the previous closest point. */
+inline static bool calculateMinDistance(float &         distanceSoFar,
+                                        const ofPoint & refPoint,
+                                        const float     testX,
+                                        const float     testY,
+                                        ofPoint &       bestSoFar)
+{
+    return calculateMinDistance(distanceSoFar, refPoint, ofPoint(testX, testY), bestSoFar);
+} // calculateMinDistance
+
 /*! @brief Determine the anchor point that is the minimum distance from a given point.
  @param newCentre The synthesized centre for the target point.
  @param disallowBottom @c true if the anchor cannot be bottom-centre.
@@ -89,30 +136,29 @@ static PortEntry::AnchorSide calculateAnchorForPoint(ofPoint &       newCentre,
               "refCentre = ", &refCentre); //####
 #endif // 0
     PortEntry::AnchorSide anchor = PortEntry::kAnchorUnknown;
-    float                 boxSize = (ofDist(refCentre.x, refCentre.y, targetPoint.x,
-                                            targetPoint.y) * kTargetBoxScale);
+    float                 boxSize = (refCentre.distance(targetPoint) * kTargetBoxScale);
     float                 soFar = 1e23;           // Ridiculously big, just in case.
     ofPoint               tempPoint;
     ofRectangle           box(targetPoint.x - (boxSize / 2), targetPoint.y - (boxSize / 2),
                               boxSize, boxSize);
     
-    if (CalculateMinDistance(soFar, refCentre, box.x, box.y + (boxSize / 2), tempPoint))
+    if (calculateMinDistance(soFar, refCentre, box.x, box.y + (boxSize / 2), tempPoint))
     {
         anchor = PortEntry::kAnchorLeft;
         newCentre = targetPoint + ofPoint(boxSize, 0);
     }
-    if (CalculateMinDistance(soFar, refCentre, box.x + boxSize, box.y + (boxSize / 2), tempPoint))
+    if (calculateMinDistance(soFar, refCentre, box.x + boxSize, box.y + (boxSize / 2), tempPoint))
     {
         anchor = PortEntry::kAnchorRight;
         newCentre = targetPoint + ofPoint(-boxSize, 0);
     }
-    if ((! disallowBottom) && CalculateMinDistance(soFar, refCentre, box.x + (boxSize / 2),
+    if ((! disallowBottom) && calculateMinDistance(soFar, refCentre, box.x + (boxSize / 2),
                                                    box.y + boxSize, tempPoint))
     {
         anchor = PortEntry::kAnchorBottomCentre;
         newCentre = targetPoint + ofPoint(0, -boxSize);
     }
-    if (CalculateMinDistance(soFar, refCentre, box.x + (boxSize / 2), box.y, tempPoint))
+    if (calculateMinDistance(soFar, refCentre, box.x + (boxSize / 2), box.y, tempPoint))
     {
         anchor = PortEntry::kAnchorTopCentre;
         newCentre = targetPoint + ofPoint(0, boxSize);
@@ -237,7 +283,7 @@ PortEntry::AnchorSide PortEntry::calculateClosestAnchor(ofPoint &       result,
     float       soFar = 1e23; // Ridiculously big, just in case.
     ofRectangle outer(getShape());
     
-    if (CalculateMinDistance(soFar, pp, outer.x, outer.y + (outer.height / 2), result))
+    if (calculateMinDistance(soFar, pp, outer.x, outer.y + (outer.height / 2), result))
     {
         anchor = kAnchorLeft;
         if (isSource)
@@ -246,7 +292,7 @@ PortEntry::AnchorSide PortEntry::calculateClosestAnchor(ofPoint &       result,
             result.x -= kArrowSize;
         }
     }
-    if (CalculateMinDistance(soFar, pp, outer.x + outer.width, outer.y + (outer.height / 2),
+    if (calculateMinDistance(soFar, pp, outer.x + outer.width, outer.y + (outer.height / 2),
                              result))
     {
         anchor = kAnchorRight;
@@ -258,7 +304,7 @@ PortEntry::AnchorSide PortEntry::calculateClosestAnchor(ofPoint &       result,
     }
     if (_isLastPort && (! disallowBottom))
     {
-        if (CalculateMinDistance(soFar, pp, outer.x + (outer.width / 2), outer.y + outer.height,
+        if (calculateMinDistance(soFar, pp, outer.x + (outer.width / 2), outer.y + outer.height,
                                  result))
         {
             anchor = kAnchorBottomCentre;
@@ -288,27 +334,25 @@ void PortEntry::drawDragLine(const float xPos,
     
     if (! theParent->isPointInside(xPos, yPos))
     {
-        PortEntry::AnchorSide anchorHere;
-        PortEntry::AnchorSide anchorThere;
-        ofPoint               aCentre(getCentre());
-        ofPoint               toThere(xPos, yPos);
-        ofPoint               fromHere;
-        ofPoint               newCentre;
+        AnchorSide anchorHere;
+        AnchorSide anchorThere;
+        ofPoint    aCentre(getCentre());
+        ofPoint    toThere(xPos, yPos);
+        ofPoint    fromHere;
+        ofPoint    newCentre;
         
         // Check if the destination is above the source, in which case we determine the
         // anchors in the reverse order.
         if (aCentre.y < yPos)
         {
             anchorHere = calculateClosestAnchor(fromHere, true, false, toThere);
-            anchorThere = calculateAnchorForPoint(newCentre,
-                                                  PortEntry::kAnchorBottomCentre == anchorHere,
+            anchorThere = calculateAnchorForPoint(newCentre, kAnchorBottomCentre == anchorHere,
                                                   toThere, aCentre);
         }
         else
         {
             anchorThere = calculateAnchorForPoint(newCentre, false, toThere, aCentre);
-            anchorHere = calculateClosestAnchor(fromHere, true,
-                                                PortEntry::kAnchorBottomCentre == anchorThere,
+            anchorHere = calculateClosestAnchor(fromHere, true, kAnchorBottomCentre == anchorThere,
                                                 toThere);
         }
         if (isUDP)
