@@ -138,6 +138,7 @@ void IconlessPanel::render(void)
     border.draw();
     headerBg.draw();
     ofBlendMode blendMode = ofGetStyle().blendingMode;
+    
     if (OF_BLENDMODE_ALPHA != blendMode)
     {
         ofEnableAlphaBlending();
