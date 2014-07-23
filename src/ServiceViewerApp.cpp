@@ -1480,11 +1480,6 @@ ofColor ServiceViewerApp::getMarkerColor(void)
     return ofColor::yellow;
 } // ServiceViewerApp::getMarkerColor
 
-ofColor ServiceViewerApp::getNewConnectionColor(void)
-{
-    return ofColor::gold;
-} // ServiceViewerApp::getNewConnectionColor
-
 float ServiceViewerApp::getNormalConnectionWidth(void)
 {
     return kNormalConnectionWidth;
