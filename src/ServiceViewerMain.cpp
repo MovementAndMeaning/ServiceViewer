@@ -124,7 +124,7 @@ int main(int     argc,
 #if MAC_OR_LINUX_
     MplusM::Common::SetUpLogger(*argv);
 #endif // MAC_OR_LINUX_
-    yarp::os::Network yarp; // This is necessary to establish any connection to the YARP
+    yarp::os::Network yarp; // This is necessary to establish any connections to the YARP
                             // infrastructure
     
     try
