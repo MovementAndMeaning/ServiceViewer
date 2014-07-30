@@ -1091,37 +1091,9 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort)
 void ServiceViewerApp::setEntityPositions(void)
 {
     OD_LOG_OBJENTER(); //####
-    bool  positionsNeedUpdate = false;
-    float fullHeight = ofGetHeight();
-    float fullWidth = ofGetWidth();
-    
-#if defined(TEST_GRAPHICS_)
-    for (EntityList::const_iterator it(_backgroundEntities->begin());
-         _backgroundEntities->end() != it; ++it)
-    {
-        ServiceEntity * anEntity = *it;
-        
-        if (anEntity)
-        {
-            ServiceEntity * olderVersion = findForegroundEntity(anEntity->getName());
-            
-            if (olderVersion)
-            {
-                ofRectangle oldShape(olderVersion->getShape());
-                
-                anEntity->setPosition(oldShape.getX(), oldShape.getY());
-            }
-            else
-            {
-                ofRectangle entityShape(anEntity->getShape());
-                float       newX = ofRandom(fullWidth - entityShape.width);
-                float       newY = ofRandom(fullHeight - entityShape.height);
-                
-                anEntity->setPosition(newX, newY);
-            }
-        }
-    }
-#else // ! defined(TEST_GRAPHICS_)
+    bool                  positionsNeedUpdate = false;
+    float                 fullHeight = ofGetHeight();
+    float                 fullWidth = ofGetWidth();
     ogdf::Graph           gg;
     ogdf::GraphAttributes ga(gg);
     ogdf::node            phantomNode = gg.newNode();
@@ -1258,7 +1230,7 @@ void ServiceViewerApp::setEntityPositions(void)
             }
         }
     }
-#endif // ! defined(TEST_GRAPHICS_)
+    gg.clear();
     OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::setEntityPositions
 
