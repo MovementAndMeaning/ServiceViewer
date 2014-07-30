@@ -222,6 +222,10 @@ public:
      @returns The color to be used for markers. */
     static ofColor getMarkerColor(void);
     
+    /*! @brief Return the line width for an input/output connection.
+     @returns The line width for an input/output connection. */
+    static float getInputOutputConnectionWidth(void);
+    
     /*! @brief Return the line width for a normal connection.
      @returns The line width for a normal connection. */
     static float getNormalConnectionWidth(void);

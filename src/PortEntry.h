@@ -112,6 +112,9 @@ public:
         /*! @brief The port is for a service. */
         kPortUsageService,
         
+        /*! @brief The port is for input / output. */
+        kPortUsageInputOutput,
+        
         /*! @brief The port has no specific characterization. */
         kPortUsageOther
         
@@ -248,6 +251,15 @@ public:
     {
         return _usage;
     } // getUsage
+    
+    /*! @brief Returns @c true if the port entry is a secondary port of a service and @c false
+     otherwise.
+     @returns @c true if the port is a secondary port of a service and @c false otherwise. */
+    inline bool isInputOutput(void)
+    const
+    {
+        return (kPortUsageInputOutput == _usage);
+    } // isInputOutput
     
     /*! @brief Returns @c true if the port entry is the bottom-most (last) port entry in a
      panel and @c false otherwise.

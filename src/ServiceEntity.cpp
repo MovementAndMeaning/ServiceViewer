@@ -176,6 +176,10 @@ void ServiceEntity::draw(void)
                 {
                     ofSetLineWidth(owner.getServiceConnectionWidth());
                 }
+                else if (otherEntry->isInputOutput())
+                {
+                    ofSetLineWidth(owner.getInputOutputConnectionWidth());
+                }
                 else
                 {
                     ofSetLineWidth(owner.getNormalConnectionWidth());

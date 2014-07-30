@@ -101,6 +101,9 @@
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
 
+/*! @brief The line width for an input/output connection. */
+static const float kInputOutputConnectionWidth = 4;
+
 /*! @brief The minimum time between background scans. */
 static const float kMinScanInterval = 5;
 
@@ -108,7 +111,7 @@ static const float kMinScanInterval = 5;
 static const float kNormalConnectionWidth = 2;
 
 /*! @brief The line width for a normal connection. */
-static const float kServiceConnectionWidth = (2 * kNormalConnectionWidth);
+static const float kServiceConnectionWidth = 6;
 
 /*! @brief @c true if the port direction resources are available. */
 static bool lPortsValid = false;
@@ -1333,7 +1336,7 @@ void ServiceViewerApp::update(void)
                         MplusM::Common::ChannelDescription aChannel(*inner);
                         
                         aPort = anEntity->addPort(aChannel._portName, aChannel._portProtocol,
-                                                  PortEntry::kPortUsageService,
+                                                  PortEntry::kPortUsageInputOutput,
                                                   PortEntry::kPortDirectionInput);
                         if (aPort)
                         {
@@ -1347,7 +1350,7 @@ void ServiceViewerApp::update(void)
                         MplusM::Common::ChannelDescription aChannel(*inner);
                         
                         aPort = anEntity->addPort(aChannel._portName, aChannel._portProtocol,
-                                                  PortEntry::kPortUsageService,
+                                                  PortEntry::kPortUsageInputOutput,
                                                   PortEntry::kPortDirectionOutput);
                         if (aPort)
                         {
@@ -1473,6 +1476,11 @@ void ServiceViewerApp::windowResized(int w,
 #if defined(__APPLE__)
 # pragma mark Global functions
 #endif // defined(__APPLE__)
+
+float ServiceViewerApp::getInputOutputConnectionWidth(void)
+{
+    return kInputOutputConnectionWidth;
+} // ServiceViewerApp::getInputOutputConnectionWidth
 
 ofColor ServiceViewerApp::getMarkerColor(void)
 {
