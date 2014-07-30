@@ -751,6 +751,7 @@ void ServiceViewerApp::gatherEntitiesInBackground(MplusM::Common::CheckFunction 
     // Mark our utility ports as known.
     _rememberedPorts.insert(lInputOnlyPortName);
     _rememberedPorts.insert(lOutputOnlyPortName);
+    MplusM::Utilities::RemoveStalePorts();
     MplusM::Utilities::GetDetectedPortList(detectedPorts);
     MplusM::Utilities::GetServiceNames(services, true, checker, checkStuff);
     // Record the services to be displayed.
