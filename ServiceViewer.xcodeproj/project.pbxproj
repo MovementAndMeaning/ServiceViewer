@@ -19,6 +19,7 @@
 		B266578FC55D23BFEBC042E7 /* ofxGuiGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECF8674C7975F1063C5E30CA /* ofxGuiGroup.cpp */; };
 		B56FE57CC35806596D38118C /* ofxSliderGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 802251BAF1B35B1D67B32FD0 /* ofxSliderGroup.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
+		DF332FFB198989450089004E /* libOGDFDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF332FFA198989450089004E /* libOGDFDebug.a */; };
 		DF49868019256694000EB074 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF49867F19256694000EB074 /* libc++.dylib */; };
 		DF845F621988634F00A57B53 /* libmpmCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF845F611988634F00A57B53 /* libmpmCommon.a */; };
 		DF845F641988635300A57B53 /* libodLogging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF845F631988635300A57B53 /* libodLogging.a */; };
@@ -106,6 +107,8 @@
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		C70D8946940288799E82131E /* ofxSliderGroup.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxSliderGroup.h; path = ../../../addons/ofxGui/src/ofxSliderGroup.h; sourceTree = SOURCE_ROOT; };
 		C88333E71C9457E441C33474 /* ofxButton.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxButton.cpp; path = ../../../addons/ofxGui/src/ofxButton.cpp; sourceTree = SOURCE_ROOT; };
+		DF332FFA198989450089004E /* libOGDFDebug.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOGDFDebug.a; path = ../../../../../../usr/local/lib/libOGDFDebug.a; sourceTree = "<group>"; };
+		DF332FFC1989894C0089004E /* libOGDFDebug.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOGDFDebug.a; path = ../../../../../../usr/local/lib/libOGDFDebug.a; sourceTree = "<group>"; };
 		DF49867F19256694000EB074 /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		DF845F611988634F00A57B53 /* libmpmCommon.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmpmCommon.a; path = /usr/local/lib/libmpmCommon.a; sourceTree = "<absolute>"; };
 		DF845F631988635300A57B53 /* libodLogging.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libodLogging.a; path = /usr/local/lib/libodLogging.a; sourceTree = "<absolute>"; };
@@ -160,6 +163,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF332FFB198989450089004E /* libOGDFDebug.a in Frameworks */,
 				DF845F621988634F00A57B53 /* libmpmCommon.a in Frameworks */,
 				DF845F641988635300A57B53 /* libodLogging.a in Frameworks */,
 				DF845F661988635700A57B53 /* libYARP_init.a in Frameworks */,
@@ -294,6 +298,7 @@
 				DF845F671988635A00A57B53 /* libYARP_OS.a */,
 				DF845F651988635700A57B53 /* libYARP_init.a */,
 				DF845F631988635300A57B53 /* libodLogging.a */,
+				DF332FFC1989894C0089004E /* libOGDFDebug.a */,
 				DF845F611988634F00A57B53 /* libmpmCommon.a */,
 				DF49867F19256694000EB074 /* libc++.dylib */,
 			);
@@ -320,6 +325,7 @@
 		E4B69B4A0A3A1720003C02F2 = {
 			isa = PBXGroup;
 			children = (
+				DF332FFA198989450089004E /* libOGDFDebug.a */,
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
 				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
 				E4B69E1C0A3A1BDC003C02F2 /* src */,
@@ -654,10 +660,7 @@
 					"-DOGDF_USE_SSE2",
 					"-DOGDF_DEBUG",
 				);
-				OTHER_LDFLAGS = (
-					"$(OF_CORE_LIBS)",
-					/usr/local/lib/libOGDFDebug.a,
-				);
+				OTHER_LDFLAGS = "$(OF_CORE_LIBS)";
 				PRODUCT_NAME = "$(TARGET_NAME)Debug";
 				WRAPPER_EXTENSION = app;
 			};
@@ -762,10 +765,7 @@
 					"-DOGDF_USE_SSE2",
 					"-DOGDF_DEBUG",
 				);
-				OTHER_LDFLAGS = (
-					"$(OF_CORE_LIBS)",
-					/usr/local/lib/libOGDFDebug.a,
-				);
+				OTHER_LDFLAGS = "$(OF_CORE_LIBS)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
