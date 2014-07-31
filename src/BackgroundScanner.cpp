@@ -39,8 +39,8 @@
 #include "BackgroundScanner.h"
 #include "ServiceViewerApp.h"
 
-//#include "ODEnableLogging.h"
-#include "ODLogging.h"
+//#include <odl/ODEnableLogging.h>
+#include <odl/ODLogging.h>
 
 #include "ofUtils.h"
 

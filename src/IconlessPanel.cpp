@@ -41,8 +41,8 @@
 #include "MovementTracker.h"
 #include "Utilities.h"
 
-//#include "ODEnableLogging.h"
-#include "ODLogging.h"
+//#include <odl/ODEnableLogging.h>
+#include <odl/ODLogging.h>
 
 #include "ofGraphics.h"
 

@@ -43,7 +43,7 @@
 
 // Note that openFrameworks defines a macro called 'check' :( which messes up other header files.
 # undef check
-# include "M+MCommon.h"
+# include <mpm/M+MCommon.h>
 
 # include <set>
 

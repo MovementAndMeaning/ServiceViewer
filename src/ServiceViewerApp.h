@@ -46,7 +46,7 @@
 
 // Note that openFrameworks defines a macro called 'check' :( which messes up other header files.
 # undef check
-# include "M+MUtilities.h"
+# include <mpm/M+MUtilities.h>
 
 # include <list>
 
