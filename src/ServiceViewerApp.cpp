@@ -395,8 +395,7 @@ void ServiceViewerApp::addPortsWithAssociatesToBackground(const MplusM::Utilitie
             PortAndAssociates associates;
             
             if (MplusM::Utilities::GetAssociatedPorts(outer->_portName, associates._associates,
-                                                      STANDARD_WAIT_TIME, true, checker,
-                                                      checkStuff))
+                                                      STANDARD_WAIT_TIME, checker, checkStuff))
             {
                 if (associates._associates._primary)
                 {
@@ -610,6 +609,7 @@ void ServiceViewerApp::exit(void)
     }
     destroyDirectionTestPorts();
     clearOutBackgroundData();
+    MplusM::Utilities::ShutDownGlobalStatusReporter();
     inherited::exit();
     OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::exit
@@ -1244,6 +1244,7 @@ void ServiceViewerApp::setup(void)
     ofSetWindowTitle("Service Viewer");
     ofSetFrameRate(60);
     ofSetVerticalSync(true);
+    MplusM::Utilities::SetUpGlobalStatusReporter();
 #if CheckNetworkWorks_
     if (yarp::os::Network::checkNetwork())
 #endif // CheckNetworkWorks_

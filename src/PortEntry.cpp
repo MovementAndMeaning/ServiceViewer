@@ -596,6 +596,9 @@ bool PortEntry::mousePressed(ofMouseEventArgs & args)
                         prefix = "Standard port ";
                         break;
                         
+                    case MplusM::Utilities::kPortKindUnknown :
+                        break;
+                        
                 }
                 if (0 < _portProtocol.size())
                 {
