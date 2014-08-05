@@ -62,10 +62,10 @@
 # endif // defined(__APPLE__)
 
 /*! @brief A slightly longer sleep, in milliseconds. */
-# define MIDDLE_SLEEP 110
+# define MIDDLE_SLEEP 35
 
 /*! @brief The minimum time for a thread to sleep, in milliseconds. */
-# define SHORT_SLEEP  100
+# define SHORT_SLEEP  20
 
 class BackgroundScanner;
 class ServiceEntity;
