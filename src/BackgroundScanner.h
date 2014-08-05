@@ -71,14 +71,6 @@ public:
     /*! @brief The next scan can be initiated. */
     void enableScan(void);
     
-    /*! @brief Returns @c true if scanning is active and @c false otherwise.
-     @returns @c true if scanning is active and @c false otherwise. */
-    inline bool isScanning(void)
-    const
-    {
-        return false;
-    } // isScanning
-    
     /*! @brief Returns @c true if the scan data is available and @c false otherwise.
      @returns @c true if the scan data is available and @c false otherwise. */
     inline bool scanComplete(void)
