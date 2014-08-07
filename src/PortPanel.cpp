@@ -72,7 +72,7 @@
 #endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
-# pragma mark Constructors and destructors
+# pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
 PortPanel::PortPanel(const EntityKind   kind,
@@ -126,7 +126,7 @@ PortPanel::~PortPanel(void)
 } // PortPanel::~PortPanel
 
 #if defined(__APPLE__)
-# pragma mark Actions
+# pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
 PortEntry * PortPanel::addPort(const string &                 portName,
@@ -155,10 +155,8 @@ PortEntry * PortPanel::addPort(const string &                 portName,
 
 PortEntry * PortPanel::getPort(const int num)
 {
-#if 0
     OD_LOG_OBJENTER(); //####
     OD_LOG_L1("num = ", num); //####
-#endif // 0
     PortEntry * result;
     
     if (0 <= num)
@@ -169,24 +167,18 @@ PortEntry * PortPanel::getPort(const int num)
     {
         result = NULL;
     }
-#if 0
     OD_LOG_OBJEXIT_P(result); //####
-#endif // 0
     return result;
 } // PortPanel::getPort
 
 bool PortPanel::isPointInside(const ofPoint & aPoint)
 const
 {
-#if 0
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aPoint = ", &aPoint); //####
-#endif // 0
     bool result = b.inside(aPoint);
     
-#if 0
     OD_LOG_OBJEXIT_B(result); //####
-#endif // 0
     return result;
 } // PortPanel::isPointInside
 
@@ -194,15 +186,11 @@ bool PortPanel::isPointInside(const float xPos,
                               const float yPos)
 const
 {
-#if 0
     OD_LOG_OBJENTER(); //####
     OD_LOG_D2("xPos = ", xPos, "yPos = ", yPos); //####
-#endif // 0
     bool result = b.inside(xPos, yPos);
     
-#if 0
     OD_LOG_OBJEXIT_B(result); //####
-#endif // 0
     return result;
 } // PortPanel::isPointInside
 
@@ -242,15 +230,11 @@ bool PortPanel::mouseDragged(ofMouseEventArgs & args)
 
 bool PortPanel::mouseMoved(ofMouseEventArgs & args)
 {
-#if 0
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("args = ", &args); //####
-#endif // 0
     bool result = inherited::mouseMoved(args);
     
-#if 0
     OD_LOG_OBJEXIT_B(result); //####
-#endif // 0
     return result;
 } // PortPanel::mouseMoved
 
@@ -476,10 +460,6 @@ bool PortPanel::setValue(float mx,
     OD_LOG_OBJEXIT_B(result); //####
     return result;
 } // PortPanel::setValue
-
-#if defined(__APPLE__)
-# pragma mark Accessors
-#endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
 # pragma mark Global functions

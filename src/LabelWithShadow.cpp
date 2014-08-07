@@ -74,7 +74,7 @@ float LabelWithShadow::shadowWidth(3);
 ofColor LabelWithShadow::shadowColor(128);
 
 #if defined(__APPLE__)
-# pragma mark Constructors and destructors
+# pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
 LabelWithShadow::LabelWithShadow(IconlessPanel * parent) :
@@ -108,7 +108,7 @@ LabelWithShadow::~LabelWithShadow(void)
 } // LabelWithShadow::~LabelWithShadow
 
 #if defined(__APPLE__)
-# pragma mark Actions
+# pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
 float LabelWithShadow::calculateTextWidth(void)
@@ -188,10 +188,6 @@ LabelWithShadow * LabelWithShadow::setup(string      labelName,
     OD_LOG_OBJEXIT_P(result); //####
     return result;
 } // LabelWithShadow::setup
-
-#if defined(__APPLE__)
-# pragma mark Accessors
-#endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
 # pragma mark Global functions

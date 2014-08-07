@@ -86,7 +86,7 @@
 #endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
-# pragma mark Constructors and destructors
+# pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
 BackgroundScanner::BackgroundScanner(ServiceViewerApp & owner,
@@ -106,7 +106,7 @@ BackgroundScanner::~BackgroundScanner(void)
 } // BackgroundScanner::~BackgroundScanner
 
 #if defined(__APPLE__)
-# pragma mark Actions
+# pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
 void BackgroundScanner::enableScan(void)
@@ -183,10 +183,6 @@ void BackgroundScanner::threadedFunction(void)
     // done
     OD_LOG_OBJEXIT(); //####
 } // BackgroundScanner::threadedFunction
-
-#if defined(__APPLE__)
-# pragma mark Accessors
-#endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
 # pragma mark Global functions

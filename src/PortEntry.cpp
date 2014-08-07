@@ -130,11 +130,9 @@ static PortEntry::AnchorSide calculateAnchorForPoint(ofPoint &       newCentre,
                                                      const ofPoint & targetPoint,
                                                      const ofPoint & refCentre)
 {
-#if 0
     OD_LOG_ENTER(); //####
     OD_LOG_P3("newCentre = ", &newCentre, "targetPoint = ", &targetPoint, //####
               "refCentre = ", &refCentre); //####
-#endif // 0
     PortEntry::AnchorSide anchor = PortEntry::kAnchorUnknown;
     float                 boxSize = (refCentre.distance(targetPoint) * kTargetBoxScale);
     float                 soFar = 1e23;           // Ridiculously big, just in case.
@@ -163,9 +161,7 @@ static PortEntry::AnchorSide calculateAnchorForPoint(ofPoint &       newCentre,
         anchor = PortEntry::kAnchorTopCentre;
         newCentre = targetPoint + ofPoint(0, boxSize);
     }
-#if 0
     OD_LOG_EXIT_L(static_cast<int>(anchor)); //####
-#endif // 0
     return anchor;
 } // calculateAnchorForPoint
 
@@ -174,7 +170,7 @@ static PortEntry::AnchorSide calculateAnchorForPoint(ofPoint &       newCentre,
 #endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
-# pragma mark Constructors and destructors
+# pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
 PortEntry::PortEntry(IconlessPanel *     parent,
@@ -198,7 +194,7 @@ PortEntry::~PortEntry(void)
 } // PortEntry::~PortEntry
 
 #if defined(__APPLE__)
-# pragma mark Actions
+# pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
 /*! @brief Add an input connection to the port.
@@ -272,11 +268,9 @@ PortEntry::AnchorSide PortEntry::calculateClosestAnchor(ofPoint &       result,
                                                         const bool      disallowBottom,
                                                         const ofPoint & pp)
 {
-#if 0
     OD_LOG_OBJENTER(); //####
     OD_LOG_P2("result = ", &result, "pp = ", &pp); //####
     OD_LOG_B1("isSource = ", isSource); //####
-#endif // 0
     // Check each anchor point - the two side centres and optionally the bottom - to find the
     // shortest distance.
     AnchorSide  anchor = kAnchorUnknown;
@@ -315,9 +309,7 @@ PortEntry::AnchorSide PortEntry::calculateClosestAnchor(ofPoint &       result,
             }
         }
     }
-#if 0
     OD_LOG_OBJEXIT_L(static_cast<int> (anchor)); //####
-#endif // 0
     return anchor;
 } // PortEntry::calculateClosestAnchor
 
@@ -325,11 +317,9 @@ void PortEntry::drawDragLine(const float xPos,
                              const float yPos,
                              const bool  isUDP)
 {
-#if 0
     OD_LOG_OBJENTER(); //####
     OD_LOG_D2("xPos = ", xPos, "yPos = ", yPos); //####
     OD_LOG_B1("isUDP = ", isUDP); //####
-#endif // 0
     PortPanel * theParent = getParent();
     
     if (! theParent->isPointInside(xPos, yPos))
@@ -369,19 +359,15 @@ void PortEntry::drawDragLine(const float xPos,
         drawSourceAnchor(anchorHere, fromHere);
         drawTargetAnchor(anchorThere, toThere);
     }
-#if 0
     OD_LOG_OBJEXIT(); //####
-#endif // 0
 } // PortEntry::drawDragLine
 
 void PortEntry::drawSourceAnchor(const AnchorSide anchor,
                                  const ofPoint &  anchorPos)
 {
-#if 0
     OD_LOG_ENTER(); //####
     OD_LOG_L1("anchor = ", static_cast<int> (anchor)); //####
     OD_LOG_P1("anchorPos = ", &anchorPos); //####
-#endif // 0
     ofPoint first;
     ofPoint second;
     
@@ -416,19 +402,15 @@ void PortEntry::drawSourceAnchor(const AnchorSide anchor,
         ofLine(anchorPos, first);
         ofLine(anchorPos, second);
     }
-#if 0
     OD_LOG_EXIT(); //####
-#endif // 0
 } // PortEntry::drawSourceAnchor
 
 void PortEntry::drawTargetAnchor(const AnchorSide anchor,
                                  const ofPoint &  anchorPos)
 {
-#if 0
     OD_LOG_ENTER(); //####
     OD_LOG_L1("anchor = ", static_cast<int> (anchor)); //####
     OD_LOG_P1("anchorPos = ", &anchorPos); //####
-#endif // 0
     ofPoint first;
     ofPoint second;
     
@@ -463,23 +445,26 @@ void PortEntry::drawTargetAnchor(const AnchorSide anchor,
         ofLine(anchorPos, first);
         ofLine(anchorPos, second);
     }
-#if 0
     OD_LOG_EXIT(); //####
-#endif // 0
 } // PortEntry::drawTargetAnchor
+
+ofPoint PortEntry::getCentre(void)
+{
+    OD_LOG_OBJENTER(); //####
+    ofRectangle outer(getShape());
+    
+    OD_LOG_OBJEXIT(); //####
+    return ofPoint(outer.x + (outer.width / 2), outer.y + (outer.height / 2));
+} // PortEntry::getCentre
 
 bool PortEntry::isPointInside(const ofPoint & aPoint)
 const
 {
-#if 0
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aPoint = ", &aPoint); //####
-#endif // 0
     bool result = b.inside(aPoint);
     
-#if 0
     OD_LOG_OBJEXIT_B(result); //####
-#endif // 0
     return result;
 } // PortEntry::isPointInside
 
@@ -487,15 +472,11 @@ bool PortEntry::isPointInside(const float xPos,
                               const float yPos)
 const
 {
-#if 0
     OD_LOG_OBJENTER(); //####
     OD_LOG_D2("xPos = ", xPos, "yPos = ", yPos); //####
-#endif // 0
     bool result = b.inside(xPos, yPos);
     
-#if 0
     OD_LOG_OBJEXIT_B(result); //####
-#endif // 0
     return result;
 } // PortEntry::isPointInside
 
@@ -538,15 +519,11 @@ bool PortEntry::mouseDragged(ofMouseEventArgs & args)
 
 bool PortEntry::mouseMoved(ofMouseEventArgs & args)
 {
-#if 0
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("args = ", &args); //####
-#endif // 0
     bool result = inherited::mouseMoved(args);
     
-#if 0
     OD_LOG_OBJEXIT_B(result); //####
-#endif // 0
     return result;
 } // PortEntry::mouseMoved
 
@@ -749,23 +726,6 @@ PortEntry * PortEntry::setup(string      label,
     OD_LOG_OBJEXIT_P(result); //####
     return result;
 } // PortEntry::setup
-
-#if defined(__APPLE__)
-# pragma mark Accessors
-#endif // defined(__APPLE__)
-
-ofPoint PortEntry::getCentre(void)
-{
-#if 0
-    OD_LOG_OBJENTER(); //####
-#endif // 0
-    ofRectangle outer(getShape());
-    
-#if 0
-    OD_LOG_OBJEXIT(); //####
-#endif // 0
-    return ofPoint(outer.x + (outer.width / 2), outer.y + (outer.height / 2));
-} // PortEntry::getCentre
 
 #if defined(__APPLE__)
 # pragma mark Global functions

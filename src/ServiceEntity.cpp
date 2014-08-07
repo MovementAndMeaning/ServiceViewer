@@ -73,7 +73,7 @@ static const float kMarkerSide = 12;
 #endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
-# pragma mark Constructors and destructors
+# pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
 ServiceEntity::ServiceEntity(const PortPanel::EntityKind kind,
@@ -97,14 +97,12 @@ ServiceEntity::~ServiceEntity(void)
 } // ServiceEntity::~ServiceEntity
 
 #if defined(__APPLE__)
-# pragma mark Actions
+# pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
 void ServiceEntity::draw(void)
 {
-#if 0
     OD_LOG_OBJENTER(); //####
-#endif // 0
     ServiceViewerApp & owner = _panel.getOwner();
     
     _panel.draw();
@@ -206,9 +204,7 @@ void ServiceEntity::draw(void)
             }
         }
     }
-#if 0
     OD_LOG_OBJEXIT(); //####
-#endif // 0
 } // ServiceEntity::draw
 
 void ServiceEntity::handlePositionChange(void)
@@ -262,10 +258,6 @@ void ServiceEntity::setup(string      entityName,
     _panel.setTracker(this);
     OD_LOG_OBJEXIT(); //####
 } // ServiceEntity::setup
-
-#if defined(__APPLE__)
-# pragma mark Accessors
-#endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
 # pragma mark Global functions

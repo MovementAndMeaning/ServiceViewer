@@ -61,6 +61,8 @@
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
+//# define CHECK_FOR_STALE_PORTS /* Check for 'stale' ports in the scanner. */
+
 /*! @brief A slightly longer sleep, in milliseconds. */
 # define MIDDLE_SLEEP 35
 
@@ -443,6 +445,11 @@ private:
     
     /*! @brief The vertical coordinate of the current drag location. */
     float _dragYpos;
+    
+# if defined(CHECK_FOR_STALE_PORTS)
+    /*! @brief The time when the last stale removal occurred. */
+    float _lastStaleTime;
+# endif // defined(CHECK_FOR_STALE_PORTS)
     
     /*! @brief @c true if the connection being added will be UDP and @c false if it will be TCP. */
     bool _addingUDPConnection;

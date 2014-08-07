@@ -71,15 +71,11 @@ static const float kControlLengthScale = 0.25;
 #endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
-# pragma mark Constructors and destructors
+# pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
-# pragma mark Actions
-#endif // defined(__APPLE__)
-
-#if defined(__APPLE__)
-# pragma mark Accessors
+# pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
@@ -98,11 +94,9 @@ void DrawBezier(const ofPoint & startPoint,
                 const ofPoint & startCentre,
                 const ofPoint & endCentre)
 {
-#if 0
     OD_LOG_ENTER(); //####
     OD_LOG_P4("startPoint = ", &startPoint, "endPoint = ", &endPoint, "startCentre = ", //####
               &startCentre, "endCentre = ", &endCentre); //####
-#endif // 0
     ofPolyline bLine;
     float      controlLength = (startPoint.distance(endPoint) * kControlLengthScale);
     float      startAngle = atan2(startPoint.y - startCentre.y, startPoint.x - startCentre.x);
@@ -113,7 +107,5 @@ void DrawBezier(const ofPoint & startPoint,
     bLine.addVertex(startPoint);
     bLine.bezierTo(startPoint + controlPoint1, endPoint + controlPoint2, endPoint);
     bLine.draw();
-#if 0
     OD_LOG_EXIT();//####
-#endif // 0
 } // DrawBezier

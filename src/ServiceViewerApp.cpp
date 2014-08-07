@@ -104,8 +104,13 @@
 /*! @brief The line width for an input/output connection. */
 static const float kInputOutputConnectionWidth = 4;
 
-/*! @brief The minimum time between background scans. */
+/*! @brief The minimum time between background scans, in seconds. */
 static const float kMinScanInterval = 5;
+
+#if defined(CHECK_FOR_STALE_PORTS)
+/*! @brief The minimum time between removing stale entries, in seconds. */
+static const float kMinStaleInterval = 60;
+#endif // defined(CHECK_FOR_STALE_PORTS)
 
 /*! @brief The line width for a normal connection. */
 static const float kNormalConnectionWidth = 2;
@@ -309,7 +314,7 @@ static bool protocolsMatch(const string & sourceProtocol,
 #endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
-# pragma mark Constructors and destructors
+# pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
 ServiceViewerApp::ServiceViewerApp(void) :
@@ -317,16 +322,20 @@ ServiceViewerApp::ServiceViewerApp(void) :
     _foregroundEntities(&_entities2), _backgroundPorts(&_ports1), _foregroundPorts(&_ports2),
     _firstAddPort(NULL), _firstRemovePort(NULL), _scanner(new BackgroundScanner(*this,
                                                                                 kMinScanInterval)),
-    _addingUDPConnection(false), _addIsActive(false), _altActive(false), _commandActive(false),
-    _controlActive(false), _dragActive(false), _ignoreNextScan(false), _movementActive(false),
-    _networkAvailable(false), _registryAvailable(false), _removeIsActive(false), _shiftActive(false)
+#if defined(CHECK_FOR_STALE_PORTS)
+    _lastStaleTime(- (2 * kMinStaleInterval)),
+#endif // defined(CHECK_FOR_STALE_PORTS)
+    _addingUDPConnection(false), _addIsActive(false),
+    _altActive(false), _commandActive(false), _controlActive(false), _dragActive(false),
+    _ignoreNextScan(false), _movementActive(false), _networkAvailable(false),
+    _registryAvailable(false), _removeIsActive(false), _shiftActive(false)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_EXIT_P(this); //####
 } // ServiceViewerApp::ServiceViewerApp
 
 #if defined(__APPLE__)
-# pragma mark Actions
+# pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
 void ServiceViewerApp::addEntityToBackground(ServiceEntity * anEntity)
@@ -541,9 +550,7 @@ void ServiceViewerApp::dragEvent(ofDragInfo dragInfo)
 
 void ServiceViewerApp::draw(void)
 {
-#if 0
     OD_LOG_OBJENTER(); //####
-#endif // 0
     ofBackgroundGradient(ofColor::white, ofColor::gray);
     if (_networkAvailable)
     {
@@ -595,9 +602,7 @@ void ServiceViewerApp::draw(void)
         ofBitmapStringGetTextureRef().unbind();
         ofDisableAlphaBlending();
     }
-#if 0
     OD_LOG_OBJEXIT(); //####
-#endif // 0
 } // ServiceViewerApp::draw
 
 void ServiceViewerApp::exit(void)
@@ -750,11 +755,20 @@ void ServiceViewerApp::gatherEntitiesInBackground(MplusM::Common::CheckFunction 
     OD_LOG_P1("checkStuff = ", checkStuff); //####
     MplusM::Utilities::PortVector detectedPorts;
     MplusM::Common::StringVector  services;
+#if defined(CHECK_FOR_STALE_PORTS)
+    float                         now = ofGetElapsedTimef();
+#endif // defined(CHECK_FOR_STALE_PORTS)
     
     // Mark our utility ports as known.
     _rememberedPorts.insert(lInputOnlyPortName);
     _rememberedPorts.insert(lOutputOnlyPortName);
-    MplusM::Utilities::RemoveStalePorts();
+#if defined(CHECK_FOR_STALE_PORTS)
+    if ((_lastStaleTime + kMinStaleInterval) <= now)
+    {
+        MplusM::Utilities::RemoveStalePorts();
+        _lastStaleTime = now;
+    }
+#endif // defined(CHECK_FOR_STALE_PORTS)
     MplusM::Utilities::GetDetectedPortList(detectedPorts);
     MplusM::Utilities::GetServiceNames(services, true, checker, checkStuff);
     // Record the services to be displayed.
@@ -780,10 +794,8 @@ void ServiceViewerApp::gotMessage(ofMessage msg)
 
 void ServiceViewerApp::keyPressed(int key)
 {
-#if 0
     OD_LOG_OBJENTER(); //####
     OD_LOG_L1("key = ", key); //####
-#endif // 0
     if (OF_KEY_ALT == (key & OF_KEY_ALT))
     {
         // Note that the key state will be cleared by a mouse click, so we need to remember it with
@@ -805,17 +817,13 @@ void ServiceViewerApp::keyPressed(int key)
         _shiftActive = true;
     }
     inherited::keyPressed(key);
-#if 0
     OD_LOG_OBJEXIT(); //####
-#endif // 0
 } // ServiceViewerApp::keyPressed
 
 void ServiceViewerApp::keyReleased(int key)
 {
-#if 0
     OD_LOG_OBJENTER(); //####
     OD_LOG_L1("key = ", key); //####
-#endif // 0
     if (OF_KEY_ALT == (key & OF_KEY_ALT))
     {
         _altActive = false;
@@ -833,9 +841,7 @@ void ServiceViewerApp::keyReleased(int key)
         _shiftActive = false;
     }
     inherited::keyReleased(key);
-#if 0
     OD_LOG_OBJEXIT(); //####
-#endif // 0
 } // ServiceViewerApp::keyReleased
 
 void ServiceViewerApp::mouseDragged(int x,
@@ -851,14 +857,10 @@ void ServiceViewerApp::mouseDragged(int x,
 void ServiceViewerApp::mouseMoved(int x,
                                   int y)
 {
-#if 0
     OD_LOG_OBJENTER(); //####
     OD_LOG_L2("x = ", x, "y = ", y); //####
-#endif // 0
     inherited::mouseMoved(x, y);
-#if 0
     OD_LOG_OBJEXIT(); //####
-#endif // 0
 } // ServiceViewerApp::mouseMoved
 
 void ServiceViewerApp::mousePressed(int x,
@@ -1284,9 +1286,7 @@ void ServiceViewerApp::swapBackgroundAndForeground(void)
 
 void ServiceViewerApp::update(void)
 {
-#if 0
     OD_LOG_OBJENTER(); //####
-#endif // 0
     inherited::update();
     if (_scanner)
     {
@@ -1456,9 +1456,7 @@ void ServiceViewerApp::update(void)
             _scanner->enableScan();
         }
     }
-#if 0
     OD_LOG_OBJEXIT(); //####
-#endif // 0
 } // ServiceViewerApp::update
 
 void ServiceViewerApp::windowResized(int w,
@@ -1469,10 +1467,6 @@ void ServiceViewerApp::windowResized(int w,
     inherited::windowResized(w, h);
     OD_LOG_OBJEXIT(); //####
 } // ServiceViewerApp::windowResized
-
-#if defined(__APPLE__)
-# pragma mark Accessors
-#endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
 # pragma mark Global functions
