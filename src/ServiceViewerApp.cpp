@@ -1321,7 +1321,7 @@ void ServiceViewerApp::update(void)
                                                                   descriptor._description.c_str(),
                                                                       *this);
                     
-                    anEntity->setup(descriptor._canonicalName);
+                    anEntity->setup(descriptor._serviceName);
                     PortEntry * aPort = anEntity->addPort(descriptor._channelName, "",
                                                           PortEntry::kPortUsageService,
                                                           PortEntry::kPortDirectionInput);
