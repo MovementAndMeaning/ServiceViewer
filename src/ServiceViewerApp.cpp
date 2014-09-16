@@ -230,32 +230,33 @@ static PortEntry::PortDirection determineDirection(PortEntry *                  
                 
             default :
                 // Determine by doing a test connection.
-                if (MplusM::Common::NetworkConnectWithRetries(lOutputOnlyPortName, portName,
-                                                              STANDARD_WAIT_TIME, false, checker,
-                                                              checkStuff))
+                if (MplusM::Utilities::NetworkConnectWithRetries(lOutputOnlyPortName, portName,
+                                                                 STANDARD_WAIT_TIME, false,
+                                                                 checker, checkStuff))
                 {
                     canDoInput = true;
-                    if (! MplusM::Common::NetworkDisconnectWithRetries(lOutputOnlyPortName,
-                                                                       portName,
-                                                                       STANDARD_WAIT_TIME, checker,
-                                                                       checkStuff))
+                    if (! MplusM::Utilities::NetworkDisconnectWithRetries(lOutputOnlyPortName,
+                                                                          portName,
+                                                                          STANDARD_WAIT_TIME,
+                                                                          checker, checkStuff))
                     {
-                        OD_LOG("(! MplusM::Common::NetworkDisconnectWithRetries(" //####
+                        OD_LOG("(! MplusM::Utilities::NetworkDisconnectWithRetries(" //####
                                "lOutputOnlyPortName, portName, STANDARD_WAIT_TIME, " //####
                                "checker, checkStuff))"); //####
                     }
                 }
-                if (MplusM::Common::NetworkConnectWithRetries(portName, lInputOnlyPortName,
-                                                              STANDARD_WAIT_TIME, false, checker,
-                                                              checkStuff))
+                if (MplusM::Utilities::NetworkConnectWithRetries(portName, lInputOnlyPortName,
+                                                                 STANDARD_WAIT_TIME, false,
+                                                                 checker, checkStuff))
                 {
                     canDoOutput = true;
-                    if (! MplusM::Common::NetworkDisconnectWithRetries(portName, lInputOnlyPortName,
-                                                                       STANDARD_WAIT_TIME, checker,
-                                                                       checkStuff))
+                    if (! MplusM::Utilities::NetworkDisconnectWithRetries(portName,
+                                                                          lInputOnlyPortName,
+                                                                          STANDARD_WAIT_TIME,
+                                                                          checker, checkStuff))
                     {
-                        OD_LOG("(! MplusM::Common::NetworkDisconnectWithRetries(portName, " //####
-                               "lInputOnlyPortName, STANDARD_WAIT_TIME, checker, " //####
+                        OD_LOG("(! MplusM::Utilities::NetworkDisconnectWithRetries(" //####
+                               "portName, lInputOnlyPortName, STANDARD_WAIT_TIME, checker, " //####
                                "checkStuff))"); //####
                     }
                 }
