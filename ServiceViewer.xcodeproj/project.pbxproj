@@ -18,7 +18,7 @@
 		9D44DC88EF9E7991B4A09951 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 832BDC407620CDBA568B713D /* tinyxmlerror.cpp */; };
 		B266578FC55D23BFEBC042E7 /* ofxGuiGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECF8674C7975F1063C5E30CA /* ofxGuiGroup.cpp */; };
 		B56FE57CC35806596D38118C /* ofxSliderGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 802251BAF1B35B1D67B32FD0 /* ofxSliderGroup.cpp */; };
-		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
+		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		DF332FFB198989450089004E /* libOGDFDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF332FFA198989450089004E /* libOGDFDebug.a */; };
 		DF49868019256694000EB074 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF49867F19256694000EB074 /* libc++.dylib */; };
 		DF845F621988634F00A57B53 /* libmpmCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF845F611988634F00A57B53 /* libmpmCommon.a */; };
@@ -398,7 +398,7 @@
 		E4B69B4C0A3A1720003C02F2 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0600;
 			};
 			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "ServiceViewer" */;
 			compatibilityVersion = "Xcode 3.2";
