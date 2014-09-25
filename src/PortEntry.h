@@ -64,7 +64,7 @@ class ServiceViewerApp;
 /*! @brief A GUI element to represent ports. */
 class PortEntry : public LabelWithShadow
 {
-public:
+public :
     
     /*! @brief The anchor position for a connection between ports. */
     enum AnchorSide
@@ -362,25 +362,21 @@ public:
     static void drawTargetAnchor(const AnchorSide anchor,
                                  const ofPoint &  anchorPos);
     
-protected:
+protected :
     
-private:
+private :
+    
+    COPY_AND_ASSIGNMENT_(PortEntry);
+    
+public :
+
+protected :
+
+private :
     
     /*! @brief The class that this class is derived from. */
     typedef LabelWithShadow inherited;
-    
-    /*! @brief Copy constructor.
-     
-     Note - not implemented and private, to prevent unexpected copying.
-     @param other Another object to construct from. */
-    PortEntry(const PortEntry & other);
-    
-    /*! @brief Assignment operator.
-     
-     Note - not implemented and private, to prevent unexpected copying.
-     @param other Another object to construct from. */
-    PortEntry & operator =(const PortEntry & other);
-    
+        
     /*! @brief The connections to the port. */
     Connections _inputConnections;
     

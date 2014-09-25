@@ -41,6 +41,10 @@
 
 # include "ofxLabel.h"
 
+// Note that openFrameworks defines a macro called 'check' :( which messes up other header files.
+# undef check
+# include <mpm/M+MCommon.h>
+
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
 #  pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
@@ -57,7 +61,7 @@ class IconlessPanel;
 /*! @brief A text label with a shadow. */
 class LabelWithShadow : public ofxLabel
 {
-public:
+public :
     
     /*! @brief The constructor.
      @param parent The GUI element containing this element. */
@@ -142,7 +146,7 @@ public:
         shadowWidth = width;
     } // setDefaultShadowWidth
     
-protected:
+protected :
     
     /*! @brief Display the label. */
     virtual void render(void);
@@ -162,26 +166,22 @@ protected:
     /*! @brief The text label shadow width for this label. */
     float _thisShadowWidth;
     
-private:
+private :
     
-    /*! @brief The class that this class is derived from. */
-    typedef ofxLabel inherited;
-    
-    /*! @brief Copy constructor.
-     
-     Note - not implemented and private, to prevent unexpected copying.
-     @param other Another object to construct from. */
-    LabelWithShadow(const LabelWithShadow & other);
-    
-    /*! @brief Assignment operator.
-     
-     Note - not implemented and private, to prevent unexpected copying.
-     @param other Another object to construct from. */
-    LabelWithShadow & operator =(const LabelWithShadow & other);
+    COPY_AND_ASSIGNMENT_(LabelWithShadow);
     
     /*! @brief Return the width of the text to be displayed.
      @returns The width of the text to be displayed. */
     float calculateTextWidth(void);
+    
+public :
+
+protected :
+
+private :
+    
+    /*! @brief The class that this class is derived from. */
+    typedef ofxLabel inherited;
     
     /*! @brief The visual representation of the shadow. */
     ofPath _shadow;

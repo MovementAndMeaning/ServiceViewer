@@ -63,7 +63,7 @@ class ServiceViewerApp;
 /*! @brief A moveable GUI element to represent a set of ports. */
 class ServiceEntity : MovementTracker
 {
-public:
+public :
     
     /*! @brief The constructor.
      @param kind The kind of entity.
@@ -226,25 +226,21 @@ public:
                const float xx = 10,
                const float yy = 10);
     
-protected:
+protected :
     
-private:
+private :
+    
+    COPY_AND_ASSIGNMENT_(ServiceEntity);
+    
+public :
+
+protected :
+
+private :
     
     /*! @brief The class that this class is derived from. */
     typedef MovementTracker inherited;
-    
-    /*! @brief Copy constructor.
-     
-     Note - not implemented and private, to prevent unexpected copying.
-     @param other Another object to construct from. */
-    ServiceEntity(const ServiceEntity & other);
-    
-    /*! @brief Assignment operator.
-     
-     Note - not implemented and private, to prevent unexpected copying.
-     @param other Another object to construct from. */
-    ServiceEntity & operator =(const ServiceEntity & other);
-    
+        
     /*! @brief The GUI object that represents the entity. */
     PortPanel _panel;
     

@@ -60,7 +60,7 @@ class ServiceViewerApp;
 /*! @brief A GUI element to represent a set of ports. */
 class PortPanel : protected IconlessPanel
 {
-public:
+public :
     
     /*! @brief What kind of entity. */
     enum EntityKind
@@ -277,7 +277,7 @@ public:
                       const float              xx = 10,
                       const float              yy = 10);
     
-protected:
+protected :
     
     /*! @brief Process a mouse motion event.
      @param mx The new mouse horizontal position.
@@ -289,23 +289,19 @@ protected:
                           float my,
                           bool  bCheck);
     
-private:
+private :
+    
+    COPY_AND_ASSIGNMENT_(PortPanel);
+    
+public :
+
+protected :
+
+private :
     
     /*! @brief The class that this class is derived from. */
     typedef IconlessPanel inherited;
-    
-    /*! @brief Copy constructor.
-     
-     Note - not implemented and private, to prevent unexpected copying.
-     @param other Another object to construct from. */
-    PortPanel(const PortPanel & other);
-    
-    /*! @brief Assignment operator.
-     
-     Note - not implemented and private, to prevent unexpected copying.
-     @param other Another object to construct from. */
-    PortPanel & operator =(const PortPanel & other);
-    
+        
     /*! @brief The offset of the initial mouse motion, relative to the panel position. */
     ofPoint _grabPt;
     

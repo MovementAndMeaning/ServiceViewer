@@ -41,6 +41,10 @@
 
 # include "ofxGuiGroup.h"
 
+// Note that openFrameworks defines a macro called 'check' :( which messes up other header files.
+# undef check
+# include <mpm/M+MCommon.h>
+
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
 #  pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
@@ -55,7 +59,7 @@
 /*! @brief A GUI panel without save / restore icons. */
 class IconlessPanel : protected ofxGuiGroup
 {
-public:
+public :
     
     /*! @brief The constructor. */
     IconlessPanel(void);
@@ -112,7 +116,7 @@ public:
      @param newWidth The new width for the panel. */
     void setWidth(const float newWidth);
     
-protected:
+protected :
     
     /*! @brief Prepare the panel for display. */
     virtual void generateDraw(void);
@@ -120,26 +124,22 @@ protected:
     /*! @brief Display the panel. */
     virtual void render(void);
     
-private:
+private :
     
-    /*! @brief The class that this class is derived from. */
-    typedef ofxGuiGroup inherited;
-    
-    /*! @brief Copy constructor.
-     
-     Note - not implemented and private, to prevent unexpected copying.
-     @param other Another object to construct from. */
-    IconlessPanel(const IconlessPanel & other);
-    
-    /*! @brief Assignment operator.
-     
-     Note - not implemented and private, to prevent unexpected copying.
-     @param other Another object to construct from. */
-    IconlessPanel & operator =(const IconlessPanel & other);
+    COPY_AND_ASSIGNMENT_(IconlessPanel);
     
     /*! @brief Return the width of the text to be displayed.
      @returns The width of the text to be displayed. */
     float calculateTextWidth(void);
+    
+public :
+
+protected :
+
+private :
+    
+    /*! @brief The class that this class is derived from. */
+    typedef ofxGuiGroup inherited;
     
 }; // IconlessPanel
 

@@ -39,6 +39,10 @@
 #if (! defined(__ServiceViewer__MovementTracker__))
 # define __ServiceViewer__MovementTracker__  /* Header guard */
 
+// Note that openFrameworks defines a macro called 'check' :( which messes up other header files.
+# undef check
+# include <mpm/M+MCommon.h>
+
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
 #  pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
@@ -53,7 +57,7 @@
 /*! @brief A mixin class to handle movements of GUI elements. */
 class MovementTracker
 {
-public:
+public :
     
     /*! @brief The constructor. */
     MovementTracker(void);
@@ -67,22 +71,18 @@ public:
     /*! @brief The GUI element has completed its movement. */
     virtual void positionChangeComplete(void) = 0;
     
-protected:
+protected :
     
-private:
+private :
     
-    /*! @brief Copy constructor.
-     
-     Note - not implemented and private, to prevent unexpected copying.
-     @param other Another object to construct from. */
-    MovementTracker(const MovementTracker & other);
+    COPY_AND_ASSIGNMENT_(MovementTracker);
     
-    /*! @brief Assignment operator.
-     
-     Note - not implemented and private, to prevent unexpected copying.
-     @param other Another object to construct from. */
-    MovementTracker & operator =(const MovementTracker & other);
-    
+public :
+
+protected :
+
+private :
+        
 }; // MovementTracker
 
 #endif // ! defined(__ServiceViewer__MovementTracker__)

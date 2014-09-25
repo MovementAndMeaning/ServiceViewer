@@ -41,6 +41,10 @@
 
 # include "ofThread.h"
 
+// Note that openFrameworks defines a macro called 'check' :( which messes up other header files.
+# undef check
+# include <mpm/M+MCommon.h>
+
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
 #  pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
@@ -57,7 +61,7 @@ class ServiceViewerApp;
 /*! @brief A thread class to handle background port scanning. */
 class BackgroundScanner : public ofThread
 {
-public:
+public :
     
     /*! @brief The constructor.
      @param owner The application object that manages this thread.
@@ -79,27 +83,23 @@ public:
         return _scanComplete;
     } // scanComplete
     
-protected:
+protected :
     
     /*! @brief The thread run function. */
     virtual void threadedFunction(void);
     
-private:
+private :
+    
+    COPY_AND_ASSIGNMENT_(BackgroundScanner);
+    
+public :
+
+protected :
+
+private :
     
     /*! @brief The class that this class is derived from. */
     typedef ofThread inherited;
-    
-    /*! @brief Copy constructor.
-     
-     Note - not implemented and private, to prevent unexpected copying.
-     @param other Another object to construct from. */
-    BackgroundScanner(const BackgroundScanner & other);
-    
-    /*! @brief Assignment operator.
-     
-     Note - not implemented and private, to prevent unexpected copying.
-     @param other Another object to construct from. */
-    BackgroundScanner & operator =(const BackgroundScanner & other);
     
     /*! @brief The application object that manages the thread. */
     ServiceViewerApp & _owner;

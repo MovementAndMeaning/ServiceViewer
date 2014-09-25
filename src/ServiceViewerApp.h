@@ -75,7 +75,7 @@ class ServiceEntity;
 /*! @brief The service viewer application class. */
 class ServiceViewerApp : public ofBaseApp
 {
-public:
+public :
     
     /*! @brief The constructor. */
     ServiceViewerApp(void);
@@ -248,79 +248,11 @@ public:
      @returns The color to be used for UDP connections. */
     static ofColor getUdpConnectionColor(void);
     
-private:
+protected :
     
-    /*! @brief The class that this class is derived from. */
-    typedef ofBaseApp inherited;
+private :
     
-    /*! @brief The information for a connection. */
-    struct ConnectionDetails
-    {
-        /*! @brief The name of the destination port. */
-        string _inPortName;
-        
-        /*! @brief The name of the source port. */
-        string _outPortName;
-        
-        /*! @brief The mode of the connection. */
-        MplusM::Common::ChannelMode _mode;
-        
-    }; // ConnectionDetails
-    
-    /*! @brief The name and direction for a port. */
-    struct NameAndDirection
-    {
-        /*! @brief The name of the port. */
-        string _name;
-        
-        /*! @brief The direction of the port. */
-        PortEntry::PortDirection _direction;
-        
-    }; // NameAndDirection
-    
-    /*! @brief The name and associates for a port. */
-    struct PortAndAssociates
-    {
-        /*! @brief The name of the port. */
-        string _name;
-        
-        /*! @brief The associates of the port. */
-        MplusM::Utilities::PortAssociation _associates;
-        
-    }; // PortAndAssociates
-    
-    /*! @brief A mapping from port names to associates. */
-    typedef std::map<string, PortAndAssociates>                    AssociatesMap;
-    
-    /*! @brief A collection of connections. */
-    typedef std::vector<ConnectionDetails>                         ConnectionList;
-    
-    /*! @brief A collection of services and ports. */
-    typedef std::list<ServiceEntity *>                             EntityList;
-    
-    /*! @brief A mapping from strings to ports. */
-    typedef std::map<string, PortEntry *>                          PortEntryMap;
-    
-    /*! @brief A collection of port names. */
-    typedef std::map<string, NameAndDirection>                     PortMap;
-    
-    /*! @brief A collection of port names. */
-    typedef std::set<string>                                       PortSet;
-    
-    /*! @brief A mapping from strings to service descriptions. */
-    typedef std::map<string, MplusM::Utilities::ServiceDescriptor> ServiceMap;
-    
-    /*! @brief Copy constructor.
-     
-     Note - not implemented and private, to prevent unexpected copying.
-     @param other Another object to construct from. */
-    ServiceViewerApp(const ServiceViewerApp & other);
-    
-    /*! @brief Assignment operator.
-     
-     Note - not implemented and private, to prevent unexpected copying.
-     @param other Another object to construct from. */
-    ServiceViewerApp & operator =(const ServiceViewerApp & other);
+    COPY_AND_ASSIGNMENT_(ServiceViewerApp);
     
     /*! @brief Add connections between detected ports in the to-be-displayed list.
      @param detectedPorts The set of detected YARP ports.
@@ -388,6 +320,72 @@ private:
     
     /*! @brief Swap the background and foreground data structures. */
     void swapBackgroundAndForeground(void);
+    
+public :
+
+protected :
+
+private :
+    
+    /*! @brief The class that this class is derived from. */
+    typedef ofBaseApp inherited;
+    
+    /*! @brief The information for a connection. */
+    struct ConnectionDetails
+    {
+        /*! @brief The name of the destination port. */
+        string _inPortName;
+        
+        /*! @brief The name of the source port. */
+        string _outPortName;
+        
+        /*! @brief The mode of the connection. */
+        MplusM::Common::ChannelMode _mode;
+        
+    }; // ConnectionDetails
+    
+    /*! @brief The name and direction for a port. */
+    struct NameAndDirection
+    {
+        /*! @brief The name of the port. */
+        string _name;
+        
+        /*! @brief The direction of the port. */
+        PortEntry::PortDirection _direction;
+        
+    }; // NameAndDirection
+    
+    /*! @brief The name and associates for a port. */
+    struct PortAndAssociates
+    {
+        /*! @brief The name of the port. */
+        string _name;
+        
+        /*! @brief The associates of the port. */
+        MplusM::Utilities::PortAssociation _associates;
+        
+    }; // PortAndAssociates
+    
+    /*! @brief A mapping from port names to associates. */
+    typedef std::map<string, PortAndAssociates> AssociatesMap;
+    
+    /*! @brief A collection of connections. */
+    typedef std::vector<ConnectionDetails> ConnectionList;
+    
+    /*! @brief A collection of services and ports. */
+    typedef std::list<ServiceEntity *> EntityList;
+    
+    /*! @brief A mapping from strings to ports. */
+    typedef std::map<string, PortEntry *> PortEntryMap;
+    
+    /*! @brief A collection of port names. */
+    typedef std::map<string, NameAndDirection> PortMap;
+    
+    /*! @brief A collection of port names. */
+    typedef std::set<string> PortSet;
+    
+    /*! @brief A mapping from strings to service descriptions. */
+    typedef std::map<string, MplusM::Utilities::ServiceDescriptor> ServiceMap;
     
     /*! @brief A collection of visible services and ports. */
     EntityList _entities1;
