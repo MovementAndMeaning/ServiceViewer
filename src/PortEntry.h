@@ -41,10 +41,6 @@
 
 # include "LabelWithShadow.h"
 
-// Note that openFrameworks defines a macro called 'check' :( which messes up other header files.
-# undef check
-# include <mpm/M+MCommon.h>
-
 # include <set>
 
 # if defined(__APPLE__)
