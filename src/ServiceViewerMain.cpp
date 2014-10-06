@@ -100,6 +100,10 @@
 # pragma mark Global functions
 #endif // defined(__APPLE__)
 
+#if (! MAC_OR_LINUX_)
+# pragma warning(push)
+# pragma warning(disable: 4100)
+#endif // ! MAC_OR_LINUX_
 /*! @brief The entry point for displaying the services and ports.
  
  There is no input and the output consists of a list of ports and what, if anything, is connected to
@@ -141,3 +145,6 @@ int main(int      argc,
     OD_LOG_EXIT_L(0); //####
     return 0;
 } // main
+#if (! MAC_OR_LINUX_)
+# pragma warning(pop)
+#endif // ! MAC_OR_LINUX_
