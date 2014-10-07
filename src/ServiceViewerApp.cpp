@@ -961,8 +961,7 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort)
                     if (firstEntity && secondEntity)
                     {
                     if (MplusM::Utilities::RemoveConnection(firstName.c_str(),
-                                                            aPort->getPortName().c_str(), NULL,
-                                                            NULL))
+                                                            aPort->getPortName().c_str()))
                         {
                             _firstRemovePort->removeOutputConnection(aPort);
                             aPort->removeInputConnection(_firstRemovePort);
@@ -998,7 +997,7 @@ void ServiceViewerApp::reportPortEntryClicked(PortEntry * aPort)
                         if (MplusM::Utilities::AddConnection(firstName.c_str(),
                                                              aPort->getPortName().c_str(),
                                                              STANDARD_WAIT_TIME,
-                                                             _addingUDPConnection, NULL, NULL))
+                                                             _addingUDPConnection))
                         {
                             MplusM::Common::ChannelMode mode = (_addingUDPConnection ?
                                                                 MplusM::Common::kChannelModeUDP :

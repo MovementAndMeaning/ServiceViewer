@@ -159,7 +159,7 @@ void BackgroundScanner::threadedFunction(void)
 #endif // ! MAC_OR_LINUX_
                 }
                 _lastScanTime = ofGetElapsedTimef();
-                _owner.gatherEntitiesInBackground(NULL, NULL);
+                _owner.gatherEntitiesInBackground();
                 for (bool locked = lock(); ! locked; )
                 {
                     sleep(MIDDLE_SLEEP);

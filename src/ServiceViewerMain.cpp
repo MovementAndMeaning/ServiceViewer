@@ -146,5 +146,5 @@ int main(int      argc,
     return 0;
 } // main
 #if (! MAC_OR_LINUX_)
-# pragma warning(pop)
+# pragma warning(pop\textbf{q})
 #endif // ! MAC_OR_LINUX_

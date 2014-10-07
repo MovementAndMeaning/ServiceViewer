@@ -135,8 +135,8 @@ public :
     /*! @brief Identify the YARP network entities.
      @param checker A function that provides for early exit from loops.
      @param checkStuff The private data for the early exit function. */
-    void gatherEntitiesInBackground(MplusM::Common::CheckFunction checker,
-                                    void *                        checkStuff);
+    void gatherEntitiesInBackground(MplusM::Common::CheckFunction checker = NULL,
+                                    void *                        checkStuff = NULL);
     
     /*! @brief Process a message event.
      @param msg The message details. */
@@ -259,32 +259,34 @@ private :
      @param checker A function that provides for early exit from loops.
      @param checkStuff The private data for the early exit function. */
     void addPortConnectionsToBackground(const MplusM::Utilities::PortVector & detectedPorts,
-                                        MplusM::Common::CheckFunction         checker,
-                                        void *                                checkStuff);
+                                        MplusM::Common::CheckFunction         checker = NULL,
+                                        void *                                checkStuff = NULL);
     
     /*! @brief Add ports that have associates as 'adapter' entities to the to-be-displayed list.
      @param detectedPorts The set of detected YARP ports.
      @param checker A function that provides for early exit from loops.
      @param checkStuff The private data for the early exit function. */
     void addPortsWithAssociatesToBackground(const MplusM::Utilities::PortVector & detectedPorts,
-                                            MplusM::Common::CheckFunction         checker,
-                                            void *                                checkStuff);
+                                            MplusM::Common::CheckFunction         checker = NULL,
+                                            void *                                checkStuff =
+                                                                                            NULL);
     
     /*! @brief Add regular YARP ports as distinct entities to the to-be-displayed list.
      @param detectedPorts The set of detected YARP ports.
      @param checker A function that provides for early exit from loops.
      @param checkStuff The private data for the early exit function. */
     void addRegularPortEntitiesToBackground(const MplusM::Utilities::PortVector & detectedPorts,
-                                            MplusM::Common::CheckFunction         checker,
-                                            void *                                checkStuff);
+                                            MplusM::Common::CheckFunction         checker = NULL,
+                                            void *                                checkStuff =
+                                                                                            NULL);
     
     /*! @brief Add services as distinct entities to the to-be-displayed list.
      @param services The set of detected services.
      @param checker A function that provides for early exit from loops.
      @param checkStuff The private data for the early exit function. */
     void addServicesToBackground(const MplusM::Common::StringVector & services,
-                                 MplusM::Common::CheckFunction        checker,
-                                 void *                               checkStuff);
+                                 MplusM::Common::CheckFunction        checker = NULL,
+                                 void *                               checkStuff = NULL);
     
     /*! @brief Find a port in the to-be-displayed list by name.
      @param name The name of the port.
