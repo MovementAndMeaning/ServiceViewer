@@ -1247,8 +1247,9 @@ void ServiceViewerApp::setup(void)
     ofSetFrameRate(60);
     ofSetVerticalSync(true);
     MplusM::Utilities::SetUpGlobalStatusReporter();
+    MplusM::Utilities::CheckForNameServerReporter();
 #if CheckNetworkWorks_
-    if (yarp::os::Network::checkNetwork())
+    if (yarp::os::Network::checkNetwork(NETWORK_CHECK_TIMEOUT))
 #endif // CheckNetworkWorks_
     {
         _networkAvailable = true;
