@@ -561,12 +561,12 @@ bool PortEntry::mousePressed(ofMouseEventArgs & args)
                         prefix = "Client port ";
                         break;
                         
-                    case MplusM::Utilities::kPortKindService :
-                        prefix = "Service port ";
+                    case MplusM::Utilities::kPortKindRegistryService :
+                        prefix = "Registry Service port ";
                         break;
                         
-                    case MplusM::Utilities::kPortKindServiceRegistry :
-                        prefix = "Service Registry port ";
+                    case MplusM::Utilities::kPortKindService :
+                        prefix = "Service port ";
                         break;
                         
                     case MplusM::Utilities::kPortKindStandard :

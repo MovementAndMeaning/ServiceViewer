@@ -223,8 +223,8 @@ static PortEntry::PortDirection determineDirection(PortEntry *                  
                 canDoInput = canDoOutput = true;
                 break;
                 
+            case MplusM::Utilities::kPortKindRegistryService :
             case MplusM::Utilities::kPortKindService :
-            case MplusM::Utilities::kPortKindServiceRegistry :
                 canDoInput = true;
                 break;
                 
@@ -1418,8 +1418,8 @@ void ServiceViewerApp::update(void)
                             usage = PortEntry::kPortUsageClient;
                             break;
                             
+                        case MplusM::Utilities::kPortKindRegistryService :
                         case MplusM::Utilities::kPortKindService :
-                        case MplusM::Utilities::kPortKindServiceRegistry :
                             usage = PortEntry::kPortUsageService;
                             break;
                             
