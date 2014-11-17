@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
+		DF0ADB301A1A76430096548B /* libmpmCommon.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0ADB2C1A1A76430096548B /* libmpmCommon.dylib */; };
+		DF0ADB311A1A76430096548B /* libodLogging.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0ADB2D1A1A76430096548B /* libodLogging.dylib */; };
+		DF0ADB321A1A76430096548B /* libYARP_init.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0ADB2E1A1A76430096548B /* libYARP_init.dylib */; };
+		DF0ADB331A1A76430096548B /* libYARP_OS.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0ADB2F1A1A76430096548B /* libYARP_OS.dylib */; };
 		DF0B251619F96D2B001AEB0C /* BackgroundScanner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF0B250319F96D2B001AEB0C /* BackgroundScanner.cpp */; };
 		DF0B251719F96D2B001AEB0C /* IconlessPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF0B250519F96D2B001AEB0C /* IconlessPanel.cpp */; };
 		DF0B251819F96D2B001AEB0C /* LabelWithShadow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF0B250719F96D2B001AEB0C /* LabelWithShadow.cpp */; };
@@ -28,10 +32,6 @@
 		DF0B253819F96E17001AEB0C /* ofxToggle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF0B252F19F96E17001AEB0C /* ofxToggle.cpp */; };
 		DF0B254919F979EC001AEB0C /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0B254819F979EC001AEB0C /* libstdc++.dylib */; };
 		DF0B254B19F97A28001AEB0C /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0B254A19F97A28001AEB0C /* libc++.dylib */; };
-		DF0B255319FAAD6B001AEB0C /* libmpmCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0B254D19FAAD6B001AEB0C /* libmpmCommon.a */; };
-		DF0B255419FAAD6B001AEB0C /* libodLogging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0B254E19FAAD6B001AEB0C /* libodLogging.a */; };
-		DF0B255619FAAD6B001AEB0C /* libYARP_init.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0B255019FAAD6B001AEB0C /* libYARP_init.a */; };
-		DF0B255719FAAD6B001AEB0C /* libYARP_OS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0B255119FAAD6B001AEB0C /* libYARP_OS.a */; };
 		DF0B255F19FAE72A001AEB0C /* libACE.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0B255E19FAE72A001AEB0C /* libACE.dylib */; };
 		DF0B256019FAE782001AEB0C /* libOGDF.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0B254F19FAAD6B001AEB0C /* libOGDF.a */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
@@ -84,6 +84,10 @@
 
 /* Begin PBXFileReference section */
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
+		DF0ADB2C1A1A76430096548B /* libmpmCommon.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libmpmCommon.dylib; path = "../../../../../../opt/M+M/lib/libmpmCommon.dylib"; sourceTree = "<group>"; };
+		DF0ADB2D1A1A76430096548B /* libodLogging.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libodLogging.dylib; path = "../../../../../../opt/M+M/lib/libodLogging.dylib"; sourceTree = "<group>"; };
+		DF0ADB2E1A1A76430096548B /* libYARP_init.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libYARP_init.dylib; path = "../../../../../../opt/M+M/lib/libYARP_init.dylib"; sourceTree = "<group>"; };
+		DF0ADB2F1A1A76430096548B /* libYARP_OS.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libYARP_OS.dylib; path = "../../../../../../opt/M+M/lib/libYARP_OS.dylib"; sourceTree = "<group>"; };
 		DF0B250319F96D2B001AEB0C /* BackgroundScanner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BackgroundScanner.cpp; sourceTree = "<group>"; };
 		DF0B250419F96D2B001AEB0C /* BackgroundScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackgroundScanner.h; sourceTree = "<group>"; };
 		DF0B250519F96D2B001AEB0C /* IconlessPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IconlessPanel.cpp; sourceTree = "<group>"; };
@@ -122,11 +126,7 @@
 		DF0B253019F96E17001AEB0C /* ofxToggle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxToggle.h; path = ../../../addons/ofxGui/src/ofxToggle.h; sourceTree = "<group>"; };
 		DF0B254819F979EC001AEB0C /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
 		DF0B254A19F97A28001AEB0C /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
-		DF0B254D19FAAD6B001AEB0C /* libmpmCommon.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmpmCommon.a; path = "/opt/M+M/lib/libmpmCommon.a"; sourceTree = "<absolute>"; };
-		DF0B254E19FAAD6B001AEB0C /* libodLogging.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libodLogging.a; path = "/opt/M+M/lib/libodLogging.a"; sourceTree = "<absolute>"; };
 		DF0B254F19FAAD6B001AEB0C /* libOGDF.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOGDF.a; path = "/opt/M+M/lib/libOGDF.a"; sourceTree = "<absolute>"; };
-		DF0B255019FAAD6B001AEB0C /* libYARP_init.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libYARP_init.a; path = "/opt/M+M/lib/libYARP_init.a"; sourceTree = "<absolute>"; };
-		DF0B255119FAAD6B001AEB0C /* libYARP_OS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libYARP_OS.a; path = "/opt/M+M/lib/libYARP_OS.a"; sourceTree = "<absolute>"; };
 		DF0B255E19FAE72A001AEB0C /* libACE.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libACE.dylib; path = "/opt/M+M/lib/libACE.dylib"; sourceTree = "<absolute>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
@@ -154,10 +154,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DF0B255319FAAD6B001AEB0C /* libmpmCommon.a in Frameworks */,
-				DF0B255419FAAD6B001AEB0C /* libodLogging.a in Frameworks */,
-				DF0B255619FAAD6B001AEB0C /* libYARP_init.a in Frameworks */,
-				DF0B255719FAAD6B001AEB0C /* libYARP_OS.a in Frameworks */,
+				DF0ADB321A1A76430096548B /* libYARP_init.dylib in Frameworks */,
 				DF0B256019FAE782001AEB0C /* libOGDF.a in Frameworks */,
 				DF0B255F19FAE72A001AEB0C /* libACE.dylib in Frameworks */,
 				DF0B254919F979EC001AEB0C /* libstdc++.dylib in Frameworks */,
@@ -167,12 +164,15 @@
 				E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */,
 				E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */,
 				E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */,
+				DF0ADB301A1A76430096548B /* libmpmCommon.dylib in Frameworks */,
 				E45BE97C0E8CC7DD009D7055 /* ApplicationServices.framework in Frameworks */,
 				E45BE97D0E8CC7DD009D7055 /* AudioToolbox.framework in Frameworks */,
 				E45BE97F0E8CC7DD009D7055 /* CoreAudio.framework in Frameworks */,
 				E45BE9800E8CC7DD009D7055 /* CoreFoundation.framework in Frameworks */,
 				E45BE9810E8CC7DD009D7055 /* CoreServices.framework in Frameworks */,
+				DF0ADB311A1A76430096548B /* libodLogging.dylib in Frameworks */,
 				E45BE9830E8CC7DD009D7055 /* OpenGL.framework in Frameworks */,
+				DF0ADB331A1A76430096548B /* libYARP_OS.dylib in Frameworks */,
 				E45BE9840E8CC7DD009D7055 /* QuickTime.framework in Frameworks */,
 				E4C2424710CC5A17004149E2 /* AppKit.framework in Frameworks */,
 				E4C2424810CC5A17004149E2 /* Cocoa.framework in Frameworks */,
@@ -250,12 +250,12 @@
 			children = (
 				DF0B254A19F97A28001AEB0C /* libc++.dylib */,
 				DF0B254819F979EC001AEB0C /* libstdc++.dylib */,
-				DF0B254D19FAAD6B001AEB0C /* libmpmCommon.a */,
-				DF0B254E19FAAD6B001AEB0C /* libodLogging.a */,
+				DF0ADB2C1A1A76430096548B /* libmpmCommon.dylib */,
+				DF0ADB2D1A1A76430096548B /* libodLogging.dylib */,
+				DF0ADB2E1A1A76430096548B /* libYARP_init.dylib */,
+				DF0ADB2F1A1A76430096548B /* libYARP_OS.dylib */,
 				DF0B255E19FAE72A001AEB0C /* libACE.dylib */,
 				DF0B254F19FAAD6B001AEB0C /* libOGDF.a */,
-				DF0B255019FAAD6B001AEB0C /* libYARP_init.a */,
-				DF0B255119FAAD6B001AEB0C /* libYARP_OS.a */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -404,7 +404,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cp -f ../../../libs/fmodex/lib/osx/libfmodex.dylib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/libfmodex.dylib\"; install_name_tool -change ./libfmodex.dylib @executable_path/libfmodex.dylib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\ninstall_name_tool -change libACE.dylib /opt/M+M/lib/libACE.dylib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\nmkdir -p \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\ncp -f \"$ICON_FILE\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"";
+			shellScript = "cp -f ../../../libs/fmodex/lib/osx/libfmodex.dylib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/libfmodex.dylib\"; install_name_tool -change ./libfmodex.dylib @executable_path/libfmodex.dylib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\ninstall_name_tool -change libACE.dylib \"@rpath/libACE.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\ninstall_name_tool -change libYARP_OS.1.dylib \"@rpath/libYARP_OS.1.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\ninstall_name_tool -change libYARP_init.1.dylib \"@rpath/libYARP_init.1.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\ninstall_name_tool -change libYARP_sig.1.dylib \"@rpath/libYARP_sig.1.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\ninstall_name_tool -change libYARP_dev.1.dylib \"@rpath/libYARP_dev.1.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\ninstall_name_tool -change libYARP_name.1.dylib \"@rpath/libYARP_name.1.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\ninstall_name_tool -change libmpmCommon.dylib \"@rpath/libmpmCommon.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\ninstall_name_tool -change libodLogging.dylib \"@rpath/libodLogging.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\nmkdir -p \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\ncp -f \"$ICON_FILE\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -472,6 +472,7 @@
 					src,
 					"/opt/M+M/include",
 				);
+				LD_RUNPATH_SEARCH_PATHS = "/opt/M+M/lib";
 				LIBRARY_SEARCH_PATHS = "/opt/M+M/lib";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -511,6 +512,7 @@
 					src,
 					"/opt/M+M/include",
 				);
+				LD_RUNPATH_SEARCH_PATHS = "/opt/M+M/lib";
 				LIBRARY_SEARCH_PATHS = "/opt/M+M/lib";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_CPLUSPLUSFLAGS = (
