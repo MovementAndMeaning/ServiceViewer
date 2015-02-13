@@ -53,6 +53,7 @@
 
 #if defined(__APPLE__)
 # pragma clang diagnostic push
+# pragma clang diagnostic ignored "-Wunknown-pragmas"
 # pragma clang diagnostic ignored "-Wc++11-extensions"
 # pragma clang diagnostic ignored "-Wdocumentation"
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
@@ -72,6 +73,7 @@
 
 #if defined(__APPLE__)
 # pragma clang diagnostic push
+# pragma clang diagnostic ignored "-Wunknown-pragmas"
 # pragma clang diagnostic ignored "-Wc++11-extensions"
 # pragma clang diagnostic ignored "-Wdocumentation"
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
@@ -88,6 +90,7 @@
 
 #if defined(__APPLE__)
 # pragma clang diagnostic push
+# pragma clang diagnostic ignored "-Wunknown-pragmas"
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 #endif // defined(__APPLE__)
 /*! @file
