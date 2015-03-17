@@ -1,4 +1,4 @@
 #!/bin/sh
 
-sloccount src 
+sloccount src
 sloccount ../ofMpM2OSC/src
