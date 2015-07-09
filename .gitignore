@@ -33,3 +33,5 @@ UserInterfaceState.xcuserstate
 *.exp
 obj
 ServiceViewer.xccheckout
+CMakeCache.txt
+cmake.check_cache
