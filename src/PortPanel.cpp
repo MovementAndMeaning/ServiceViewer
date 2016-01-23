@@ -130,10 +130,11 @@ PortPanel::~PortPanel(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-PortEntry * PortPanel::addPort(const string &                 portName,
-                               const string &                 portProtocol,
-                               const PortEntry::PortUsage     portKind,
-                               const PortEntry::PortDirection direction)
+PortEntry *
+PortPanel::addPort(const string &                 portName,
+                   const string &                 portProtocol,
+                   const PortEntry::PortUsage     portKind,
+                   const PortEntry::PortDirection direction)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S2s("portName = ", portName, "portProtocol = ", portProtocol); //####
@@ -154,7 +155,8 @@ PortEntry * PortPanel::addPort(const string &                 portName,
     return aPort;
 } // PortPanel::addPort
 
-PortEntry * PortPanel::getPort(const int num)
+PortEntry *
+PortPanel::getPort(const int num)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_L1("num = ", num); //####
@@ -172,7 +174,8 @@ PortEntry * PortPanel::getPort(const int num)
     return result;
 } // PortPanel::getPort
 
-bool PortPanel::isPointInside(const ofPoint & aPoint)
+bool
+PortPanel::isPointInside(const ofPoint & aPoint)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -183,8 +186,9 @@ const
     return result;
 } // PortPanel::isPointInside
 
-bool PortPanel::isPointInside(const float xPos,
-                              const float yPos)
+bool
+PortPanel::isPointInside(const float xPos,
+                         const float yPos)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -195,7 +199,8 @@ const
     return result;
 } // PortPanel::isPointInside
 
-bool PortPanel::mouseDragged(ofMouseEventArgs & args)
+bool
+PortPanel::mouseDragged(ofMouseEventArgs & args)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("args = ", &args); //####
@@ -229,7 +234,8 @@ bool PortPanel::mouseDragged(ofMouseEventArgs & args)
     return result;
 } // PortPanel::mouseDragged
 
-bool PortPanel::mouseMoved(ofMouseEventArgs & args)
+bool
+PortPanel::mouseMoved(ofMouseEventArgs & args)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("args = ", &args); //####
@@ -239,7 +245,8 @@ bool PortPanel::mouseMoved(ofMouseEventArgs & args)
     return result;
 } // PortPanel::mouseMoved
 
-bool PortPanel::mousePressed(ofMouseEventArgs & args)
+bool
+PortPanel::mousePressed(ofMouseEventArgs & args)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("args = ", &args); //####
@@ -293,7 +300,8 @@ bool PortPanel::mousePressed(ofMouseEventArgs & args)
     return result;
 } // PortPanel::mousePressed
 
-bool PortPanel::mouseReleased(ofMouseEventArgs & args)
+bool
+PortPanel::mouseReleased(ofMouseEventArgs & args)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("args = ", &args); //####
@@ -359,26 +367,27 @@ bool PortPanel::mouseReleased(ofMouseEventArgs & args)
     return result;
 } // PortPanel::mouseReleased
 
-void PortPanel::setName(string name)
+void
+PortPanel::setName(string name)
 {
     OD_LOG_OBJENTER(); //####
     string prefix;
     
     switch (MplusM::Utilities::MapStringToServiceKind(_behaviour))
     {
-	    case MplusM::Common::kServiceKindFilter :
+        case MplusM::Common::kServiceKindFilter :
             prefix = "Filter ";
             break;
             
-	    case MplusM::Common::kServiceKindInput :
+        case MplusM::Common::kServiceKindInput :
             prefix = "Input ";
             break;
             
-	    case MplusM::Common::kServiceKindOutput :
+        case MplusM::Common::kServiceKindOutput :
             prefix = "Output ";
             break;
             
-	    default :
+        default :
             prefix = "";
             break;
             
@@ -387,10 +396,11 @@ void PortPanel::setName(string name)
     OD_LOG_OBJEXIT(); //####
 } // PortPanel::setName
 
-PortPanel * PortPanel::setup(string      collectionName,
-                             string      filename,
-                             const float xx,
-                             const float yy)
+PortPanel *
+PortPanel::setup(string      collectionName,
+                 string      filename,
+                 const float xx,
+                 const float yy)
 {
     OD_LOG_OBJENTER(); //####
     registerMouseEvents();
@@ -401,10 +411,11 @@ PortPanel * PortPanel::setup(string      collectionName,
     return result;
 } // PortPanel::setup
 
-PortPanel * PortPanel::setup(const ofParameterGroup & parameters,
-                             string                   filename,
-                             const float              xx,
-                             const float              yy)
+PortPanel *
+PortPanel::setup(const ofParameterGroup & parameters,
+                 string                   filename,
+                 const float              xx,
+                 const float              yy)
 {
     OD_LOG_OBJENTER(); //####
     registerMouseEvents();
@@ -414,9 +425,10 @@ PortPanel * PortPanel::setup(const ofParameterGroup & parameters,
     return result;
 } // PortPanel::setup
 
-bool PortPanel::setValue(float mx,
-                         float my,
-                         bool  bCheck)
+bool
+PortPanel::setValue(float mx,
+                    float my,
+                    bool  bCheck)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_D2("mx = ", mx, "my = ", my); //####

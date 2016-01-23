@@ -110,7 +110,8 @@ public :
               const float              yy = 10);
     
     /*! @brief The destructor. */
-    virtual ~PortPanel(void);
+    virtual
+    ~PortPanel(void);
     
     /*! @brief Add a port to the panel.
      @param portName The name of the port.
@@ -118,21 +119,23 @@ public :
      @param portKind What the port will be used for.
      @param direction The primary direction of the port.
      @returns The newly-created port. */
-    PortEntry * addPort(const string &                 portName,
-                        const string &                 portProtocol = "",
-                        const PortEntry::PortUsage     portKind = PortEntry::kPortUsageOther,
-                        const PortEntry::PortDirection direction =
-                                                            PortEntry::kPortDirectionInputOutput);
+    PortEntry *
+    addPort(const string &                 portName,
+            const string &                 portProtocol = "",
+            const PortEntry::PortUsage     portKind = PortEntry::kPortUsageOther,
+            const PortEntry::PortDirection direction = PortEntry::kPortDirectionInputOutput);
     
     /*! @brief Draw the panel. */
-    inline void draw(void)
+    inline void
+    draw(void)
     {
         inherited::draw();
     } // draw
     
     /*! @brief Returns the entity that contains thie panel.
      @returns The entity that contains this panel. */
-    ServiceEntity & getContainer(void)
+    ServiceEntity &
+    getContainer(void)
     const
     {
         return _within;
@@ -140,7 +143,8 @@ public :
     
     /*! @brief Return the height of the vertical gap between panel elements.
      @returns The vertical gap between panel elements. */
-    inline float getGapHeight(void)
+    inline float
+    getGapHeight(void)
     const
     {
         return inherited::spacingNextElement;
@@ -148,7 +152,8 @@ public :
     
     /*! @brief Return the height of the header for the panel.
      @returns The height of the header for the panel. */
-    inline float getHeader(void)
+    inline float
+    getHeader(void)
     const
     {
         return inherited::getHeader();
@@ -156,26 +161,30 @@ public :
     
     /*! @brief Returns the height of the panel.
      @returns The height of the panel. */
-    inline float getHeight(void)
+    inline float
+    getHeight(void)
     {
         return inherited::getHeight();
     } // getHeight
     
     /*! @brief Returns the name of the panel.
      @returns The name of the panel. */
-    inline string getName(void)
+    inline string
+    getName(void)
     {
         return inherited::getName();
     } // getName
     
     /*! @brief Returns the number of ports in this panel.
      @returns The number of ports in this panel. */
-    inline int getNumPorts(void)
+    inline int
+    getNumPorts(void)
     {
         return inherited::getNumControls();
     } // getNumPorts
     
-    inline ServiceViewerApp & getOwner(void)
+    inline ServiceViewerApp &
+    getOwner(void)
     const
     {
         return _owner;
@@ -184,18 +193,21 @@ public :
     /*! @brief Returns a port by index.
      @param num The zero-origin index of the port.
      @returns A port or @c NULL if the index is out of range. */
-    PortEntry * getPort(const int num);
+    PortEntry *
+    getPort(const int num);
     
     /*! @brief Returns the outline of the panel.
      @returns The outline of the panel. */
-    inline ofRectangle getShape(void)
+    inline ofRectangle
+    getShape(void)
     {
         return inherited::getShape();
     } // getShape
     
     /*! @brief Returns the width of the panel.
      @returns The width of the panel. */
-    inline float getWidth(void)
+    inline float
+    getWidth(void)
     {
         return inherited::getWidth();
     } // getWidth
@@ -205,7 +217,8 @@ public :
      @param aPoint The point of interest.
      @returns @c true if the given point is within the displayed region of the entry and @c false
      otherwise. */
-    bool isPointInside(const ofPoint & aPoint)
+    bool
+    isPointInside(const ofPoint & aPoint)
     const;
     
     /*! @brief Returns @c true if the given point is within the displayed region of the entry and
@@ -214,46 +227,54 @@ public :
      @param yPos The vertical coordinate of the point of interest.
      @returns @c true if the given point is within the displayed region of the entry and @c false
      otherwise. */
-    bool isPointInside(const float xPos,
-                       const float yPos)
+    bool
+    isPointInside(const float xPos,
+                  const float yPos)
     const;
     
     /*! @brief Process a mouse-dragged event.
      @param args The attributes of the event.
      @returns @c true if the event was processed and @c false if it can be further propagated. */
-    virtual bool mouseDragged(ofMouseEventArgs & args);
+    virtual bool
+    mouseDragged(ofMouseEventArgs & args);
     
     /*! @brief Process a mouse-moved event.
      @param args The attributes of the event.
      @returns @c true if the event was processed and @c false if it can be further propagated. */
-    virtual bool mouseMoved(ofMouseEventArgs & args);
+    virtual bool
+    mouseMoved(ofMouseEventArgs & args);
     
     /*! @brief Process a mouse-pressed event.
      @param args The attributes of the event.
      @returns @c true if the event was processed and @c false if it can be further propagated. */
-    virtual bool mousePressed(ofMouseEventArgs & args);
+    virtual bool
+    mousePressed(ofMouseEventArgs & args);
     
     /*! @brief Process a mouse-released event.
      @param args The attributes of the event.
      @returns @c true if the event was processed and @c false if it can be further propagated. */
-    virtual bool mouseReleased(ofMouseEventArgs & args);
+    virtual bool
+    mouseReleased(ofMouseEventArgs & args);
     
     /*! @brief Set the title string for the panel.
      @param name The new title string for the panel. */
-    void setName(string name);
+    void
+    setName(string name);
     
     /*! @brief Move the panel to a new location.
      @param xx The new horizontal coordinate.
      @param yy The new vertical coordinate. */
-    inline virtual void setPosition(float xx,
-                                    float yy)
+    inline virtual void
+    setPosition(float xx,
+                float yy)
     {
         inherited::setPosition(xx, yy);
     } // setPosition
     
     /*! @brief Connect a tracking object to the panel, that will receive
      handlePositionChange and positionChangeComplete notifications */
-    inline void setTracker(MovementTracker * newTracker)
+    inline void
+    setTracker(MovementTracker * newTracker)
     {
         _tracker = newTracker;
     } // setTracker
@@ -263,20 +284,22 @@ public :
      @param filename The settings file for the panel.
      @param xx The initial horizontal position of the panel.
      @param yy The initial vertical position of the panel. */
-    PortPanel * setup(string      collectionName = "",
-                      string      filename = "settings.xml",
-                      const float xx = 10,
-                      const float yy = 10);
+    PortPanel *
+    setup(string      collectionName = "",
+          string      filename = "settings.xml",
+          const float xx = 10,
+          const float yy = 10);
     
     /*! @brief Set the parameters of the panel.
      @param parameters The set of named parameters for the panel.
      @param filename The settings file for the panel.
      @param xx The initial horizontal position of the panel.
      @param yy The initial vertical position of the panel. */
-    PortPanel * setup(const ofParameterGroup & parameters,
-                      string                   filename = "settings.xml",
-                      const float              xx = 10,
-                      const float              yy = 10);
+    PortPanel *
+    setup(const ofParameterGroup & parameters,
+          string                   filename = "settings.xml",
+          const float              xx = 10,
+          const float              yy = 10);
     
 protected :
     
@@ -286,9 +309,10 @@ protected :
      @param bCheck @c true if this is the initial mouse motion event.
      @returns @c true if the event was processed and @c false if it can be further
      propagated. */
-    virtual bool setValue(float mx,
-                          float my,
-                          bool  bCheck);
+    virtual bool
+    setValue(float mx,
+             float my,
+             bool  bCheck);
     
 private :
     

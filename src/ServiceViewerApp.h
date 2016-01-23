@@ -83,29 +83,35 @@ public :
     
     /*! @brief Add an entity to the list of next-to-be-displayed entities.
      @param anEntity The entity to be added. */
-    void addEntityToBackground(ServiceEntity * anEntity);
+    void
+    addEntityToBackground(ServiceEntity * anEntity);
     
     /*! @brief Add an entity to the list of currently displayed entities.
      @param anEntity The entity to be added. */
-    void addEntityToForeground(ServiceEntity * anEntity);
+    void
+    addEntityToForeground(ServiceEntity * anEntity);
     
     /*! @brief Returns @c true if an add-connection operation is active and @c false otherwise.
      @returns @c true if an add-connection operation is active and @c false otherwise. */
-    inline bool addIsActive(void)
+    inline bool
+    addIsActive(void)
     const
     {
         return _addIsActive;
     } // addIsActive
     
     /*! @brief Clear any pending drag actions. */
-    void clearDragState(void);
+    void
+    clearDragState(void);
     
     /*! @brief Clear out the background data. */
-    void clearOutBackgroundData(void);
+    void
+    clearOutBackgroundData(void);
     
     /*! @brief Returns the state of the CONTROL modifier key.
      @returns @c true if the CONTROL modifier key is pressed and @c false otherwise. */
-    inline bool controlActive(void)
+    inline bool
+    controlActive(void)
     const
     {
         return _controlActive;
@@ -113,7 +119,8 @@ public :
     
     /*! @brief Returns @c true if a drag operation is active and @c false otherwise.
      @returns @c true if a drag operation is active and @c false otherwise. */
-    inline bool dragActive(void)
+    inline bool
+    dragActive(void)
     const
     {
         return _dragActive;
@@ -121,79 +128,94 @@ public :
     
     /*! @brief Process a drag event.
      @param dragInfo The attributes of the event. */
-    virtual void dragEvent(ofDragInfo dragInfo);
+    virtual void
+    dragEvent(ofDragInfo dragInfo);
     
     /*! @brief Perform the draw step of the update-draw loop. */
-    virtual void draw(void);
+    virtual void
+    draw(void);
     
     /*! @brief Handle an exit request. */
-    virtual void exit(void);
+    virtual void
+    exit(void);
     
     /*! @brief Remove a port from the set of known ports.
      @param aPort The port to be removed. */
-    void forgetPort(PortEntry * aPort);
+    void
+    forgetPort(PortEntry * aPort);
     
     /*! @brief Identify the YARP network entities.
      @param checker A function that provides for early exit from loops.
      @param checkStuff The private data for the early exit function. */
-    void gatherEntitiesInBackground(MplusM::Common::CheckFunction checker = NULL,
-                                    void *                        checkStuff = NULL);
+    void
+    gatherEntitiesInBackground(MplusM::Common::CheckFunction checker = NULL,
+                               void *                        checkStuff = NULL);
     
     /*! @brief Process a message event.
      @param msg The message details. */
-    virtual void gotMessage(ofMessage msg);
+    virtual void
+    gotMessage(ofMessage msg);
     
     /*! @brief Process a key-pressed event.
      @param key The key that was pressed. */
-    virtual void keyPressed(int key);
+    virtual void
+    keyPressed(int key);
     
     /*! @brief Process a key-released event.
      @param key The key that was released. */
-    virtual void keyReleased(int key);
+    virtual void
+    keyReleased(int key);
     
     /*! @brief Process a mouse-dragged event.
      @param x The current horizontal mouse position.
      @param y The current vertical mouse position.
      @param button The button that is active. */
-    virtual void mouseDragged(int x,
-                              int y,
-                              int button);
+    virtual void
+    mouseDragged(int x,
+                 int y,
+                 int button);
     
     /*! @brief Process a mouse-moved event.
      @param x The current horizontal mouse position.
      @param y The current vertical mouse position. */
-    virtual void mouseMoved(int x,
-                            int y);
+    virtual void
+    mouseMoved(int x,
+               int y);
     
     /*! @brief Process a mouse-pressed event.
      @param x The current horizontal mouse position.
      @param y The current vertical mouse position.
      @param button The button that is active. */
-    virtual void mousePressed(int x,
-                              int y,
-                              int button);
+    virtual void
+    mousePressed(int x,
+                 int y,
+                 int button);
     
     /*! @brief Process a mouse-released event.
      @param x The current horizontal mouse position.
      @param y The current vertical mouse position.
      @param button The button that was active. */
-    virtual void mouseReleased(int x,
-                               int y,
-                               int button);
+    virtual void
+    mouseReleased(int x,
+                  int y,
+                  int button);
     
     /*! @brief Move an entity to the end of the entity list so that it will be the last drawn.
      @param anEntity The entity to be moved. */
-    void moveEntityToEndOfForegroundList(ServiceEntity * anEntity);
+    void
+    moveEntityToEndOfForegroundList(ServiceEntity * anEntity);
     
     /*! @brief Indicate that an entity move has begun. */
-    inline void movementStarted(void)
+    inline void
+    movementStarted(void)
     {
         _movementActive = true;
     } // movementStarted
     
     /*! @brief Returns @c true if a remove-connection operation is active and @c false otherwise.
      @returns @c true if a remove-connection operation is active and @c false otherwise. */
-    inline bool removeIsActive(void)
+    inline bool
+    removeIsActive(void)
     const
     {
         return _removeIsActive;
@@ -202,52 +224,64 @@ public :
     /*! @brief Handle the drag operation for an 'add-connection' operation.
      @param xPos The current horizontal mouse position.
      @param yPos The current vertical mouse position. */
-    void reportConnectionDrag(const float xPos,
-                              const float yPos);
+    void
+    reportConnectionDrag(const float xPos,
+                         const float yPos);
     
     /*! @brief Process a click on a Port Entry with a modifier set.
      @param aPort The port being handled. */
-    void reportPortEntryClicked(PortEntry * aPort);
+    void
+    reportPortEntryClicked(PortEntry * aPort);
     
     /*! @brief Setup the parameters of the application. */
-    virtual void setup(void);
+    virtual void
+    setup(void);
     
     /*! @brief Perform the update step of the update-draw loop. */
-    virtual void update(void);
+    virtual void
+    update(void);
     
     /*! @brief Process a window-resized event.
      @param w The new window width.
      @param h The new window height. */
-    virtual void windowResized(int w,
-                               int h);
+    virtual void
+    windowResized(int w,
+                  int h);
     
     /*! @brief Return the color to be used for markers.
      @returns The color to be used for markers. */
-    static ofColor getMarkerColor(void);
+    static ofColor
+    getMarkerColor(void);
     
     /*! @brief Return the line width for an input/output connection.
      @returns The line width for an input/output connection. */
-    static float getInputOutputConnectionWidth(void);
+    static float
+    getInputOutputConnectionWidth(void);
     
     /*! @brief Return the line width for a normal connection.
      @returns The line width for a normal connection. */
-    static float getNormalConnectionWidth(void);
+    static float
+    getNormalConnectionWidth(void);
     
     /*! @brief Return the color to be used for non-TCP/non-UDP connections.
      @returns The color to be used for non-TCP/non-UDP connection. */
-    static ofColor getOtherConnectionColor(void);
+    static ofColor
+    getOtherConnectionColor(void);
     
     /*! @brief Return the line width for a service connection.
      @returns The line width for a service connection. */
-    static float getServiceConnectionWidth(void);
+    static float
+    getServiceConnectionWidth(void);
     
     /*! @brief Return the color to be used for TCP connections.
      @returns The color to be used for TCP connections. */
-    static ofColor getTcpConnectionColor(void);
+    static ofColor
+    getTcpConnectionColor(void);
     
     /*! @brief Return the color to be used for UDP connections.
      @returns The color to be used for UDP connections. */
-    static ofColor getUdpConnectionColor(void);
+    static ofColor
+    getUdpConnectionColor(void);
     
 protected :
     
@@ -259,70 +293,80 @@ private :
      @param detectedPorts The set of detected YARP ports.
      @param checker A function that provides for early exit from loops.
      @param checkStuff The private data for the early exit function. */
-    void addPortConnectionsToBackground(const MplusM::Utilities::PortVector & detectedPorts,
-                                        MplusM::Common::CheckFunction         checker = NULL,
-                                        void *                                checkStuff = NULL);
+    void
+    addPortConnectionsToBackground(const MplusM::Utilities::PortVector & detectedPorts,
+                                   MplusM::Common::CheckFunction         checker = NULL,
+                                   void *                                checkStuff = NULL);
     
     /*! @brief Add ports that have associates as 'adapter' entities to the to-be-displayed list.
      @param detectedPorts The set of detected YARP ports.
      @param checker A function that provides for early exit from loops.
      @param checkStuff The private data for the early exit function. */
-    void addPortsWithAssociatesToBackground(const MplusM::Utilities::PortVector & detectedPorts,
-                                            MplusM::Common::CheckFunction         checker = NULL,
-                                            void *                                checkStuff =
-                                                                                            NULL);
+    void
+    addPortsWithAssociatesToBackground(const MplusM::Utilities::PortVector & detectedPorts,
+                                       MplusM::Common::CheckFunction         checker = NULL,
+                                       void *                                checkStuff = NULL);
     
     /*! @brief Add regular YARP ports as distinct entities to the to-be-displayed list.
      @param detectedPorts The set of detected YARP ports.
      @param checker A function that provides for early exit from loops.
      @param checkStuff The private data for the early exit function. */
-    void addRegularPortEntitiesToBackground(const MplusM::Utilities::PortVector & detectedPorts,
-                                            MplusM::Common::CheckFunction         checker = NULL,
-                                            void *                                checkStuff =
-                                                                                            NULL);
+    void
+    addRegularPortEntitiesToBackground(const MplusM::Utilities::PortVector & detectedPorts,
+                                       MplusM::Common::CheckFunction         checker = NULL,
+                                       void *                                checkStuff = NULL);
     
     /*! @brief Add services as distinct entities to the to-be-displayed list.
      @param services The set of detected services.
      @param checker A function that provides for early exit from loops.
      @param checkStuff The private data for the early exit function. */
-    void addServicesToBackground(const MplusM::Common::StringVector & services,
-                                 MplusM::Common::CheckFunction        checker = NULL,
-                                 void *                               checkStuff = NULL);
+    void
+    addServicesToBackground(const MplusM::Common::StringVector & services,
+                            MplusM::Common::CheckFunction        checker = NULL,
+                            void *                               checkStuff = NULL);
     
     /*! @brief Find a port in the to-be-displayed list by name.
      @param name The name of the port.
      @returns @c NULL if the port cannot be found and non-@c NULL if it is found. */
-    PortEntry * findBackgroundPort(const string & name);
+    PortEntry *
+    findBackgroundPort(const string & name);
     
     /*! @brief Find an entity in the currently-displayed list by name.
      @param name The name of the entity.
      @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
-    ServiceEntity * findForegroundEntity(const string & name);
+    ServiceEntity *
+    findForegroundEntity(const string & name);
     
     /*! @brief Find an entity by the name of a port within it.
      @param name The name of the port.
      @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
-    ServiceEntity * findForegroundEntityForPort(const string & name);
+    ServiceEntity *
+    findForegroundEntityForPort(const string & name);
     
     /*! @brief Find an entity by a port within it.
      @param aPort The port of interest.
      @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
-    ServiceEntity * findForegroundEntityForPort(const PortEntry * aPort);
+    ServiceEntity *
+    findForegroundEntityForPort(const PortEntry * aPort);
     
     /*! @brief Find a port in the currently-displayed list by name.
      @param name The name of the port.
      @returns @c NULL if the port cannot be found and non-@c NULL if it is found. */
-    PortEntry * findForegroundPort(const string & name);
+    PortEntry *
+    findForegroundPort(const string & name);
     
     /*! @brief Add a port to the set of known ports in the to-be-displayed list.
      @param aPort The port to be added. */
-    void rememberPortInBackground(PortEntry * aPort);
+    void
+    rememberPortInBackground(PortEntry * aPort);
     
     /*! @brief Set the entity positions. */
-    void setEntityPositions(void);
+    void
+    setEntityPositions(void);
     
     /*! @brief Swap the background and foreground data structures. */
-    void swapBackgroundAndForeground(void);
+    void
+    swapBackgroundAndForeground(void);
     
 public :
 

@@ -76,11 +76,13 @@ public :
                   const float              yy = 10);
     
     /*! @brief The destructor. */
-    virtual ~IconlessPanel(void);
+    virtual
+    ~IconlessPanel(void);
     
     /*! @brief Return the height of the header for the panel.
      @returns The height of the header for the panel. */
-    inline float getHeader(void)
+    inline float
+    getHeader(void)
     const
     {
         return inherited::header;
@@ -88,7 +90,8 @@ public :
     
     /*! @brief Return the width of the panel.
      @returns The width of the panel. */
-    inline float getWidth(void)
+    inline float
+    getWidth(void)
     {
         return inherited::getWidth();
     } // getWidth
@@ -98,32 +101,37 @@ public :
      @param filename The settings file for the panel.
      @param xx The initial horizontal position of the panel.
      @param yy The initial vertical position of the panel. */
-    IconlessPanel * setup(string      collectionName = "",
-                          string      filename = "settings.xml",
-                          const float xx = 10,
-                          const float yy = 10);
+    IconlessPanel *
+    setup(string      collectionName = "",
+          string      filename = "settings.xml",
+          const float xx = 10,
+          const float yy = 10);
     
     /*! @brief Set the parameters of the panel.
      @param parameters The set of named parameters for the panel.
      @param filename The settings file for the panel.
      @param xx The initial horizontal position of the panel.
      @param yy The initial vertical position of the panel. */
-    IconlessPanel * setup(const ofParameterGroup & parameters,
-                          string                   filename = "settings.xml",
-                          const float              xx = 10,
-                          const float              yy = 10);
+    IconlessPanel *
+    setup(const ofParameterGroup & parameters,
+          string                   filename = "settings.xml",
+          const float              xx = 10,
+          const float              yy = 10);
     
     /*! @brief Change the width of the panel.
      @param newWidth The new width for the panel. */
-    void setWidth(const float newWidth);
+    void
+    setWidth(const float newWidth);
     
 protected :
     
     /*! @brief Prepare the panel for display. */
-    virtual void generateDraw(void);
+    virtual void
+    generateDraw(void);
     
     /*! @brief Display the panel. */
-    virtual void render(void);
+    virtual void
+    render(void);
     
 private :
     
@@ -131,7 +139,8 @@ private :
     
     /*! @brief Return the width of the text to be displayed.
      @returns The width of the text to be displayed. */
-    float calculateTextWidth(void);
+    float
+    calculateTextWidth(void);
     
 public :
 

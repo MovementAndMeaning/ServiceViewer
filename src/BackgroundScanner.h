@@ -71,14 +71,17 @@ public :
                       const float        minScanInterval);
     
     /*! @brief The destructor. */
-    virtual ~BackgroundScanner(void);
+    virtual
+    ~BackgroundScanner(void);
     
     /*! @brief The next scan can be initiated. */
-    void enableScan(void);
+    void
+    enableScan(void);
     
     /*! @brief Returns @c true if the scan data is available and @c false otherwise.
      @returns @c true if the scan data is available and @c false otherwise. */
-    inline bool scanComplete(void)
+    inline bool
+    scanComplete(void)
     const
     {
         return _scanComplete;
@@ -87,7 +90,8 @@ public :
 protected :
     
     /*! @brief The thread run function. */
-    virtual void threadedFunction(void);
+    virtual void
+    threadedFunction(void);
     
 private :
     

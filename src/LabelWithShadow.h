@@ -79,14 +79,17 @@ public :
                     const float         height = defaultHeight);
     
     /*! @brief The destructor. */
-    virtual ~LabelWithShadow(void);
+    virtual
+    ~LabelWithShadow(void);
     
     /*! @brief Prepare the label for display. */
-    virtual void generateDraw(void);
+    virtual void
+    generateDraw(void);
     
     /*! @brief Return the color used for the text label shadow.
      @returns The color used for the text label shadow. */
-    inline ofColor getShadowColor(void)
+    inline ofColor
+    getShadowColor(void)
     const
     {
         return _thisShadowColor;
@@ -94,7 +97,8 @@ public :
     
     /*! @brief Return the width of the text label shadow.
      @returns The width of the text label shadow. */
-    inline float getShadowWidth(void)
+    inline float
+    getShadowWidth(void)
     const
     {
         return _thisShadowWidth;
@@ -102,7 +106,8 @@ public :
     
     /*! @brief Set the color used for the text label shadow.
      @param color The color to be used for the text label shadow. */
-    inline void setShadowColor(const ofColor & color)
+    inline void
+    setShadowColor(const ofColor & color)
     {
         generateDraw();
         _thisShadowColor = color;
@@ -110,7 +115,8 @@ public :
     
     /*! @brief Set the width of the text label shadow.
      @param width The width of the text label shadow. */
-    inline void setShadowWidth(const float width)
+    inline void
+    setShadowWidth(const float width)
     {
         _thisShadowWidth = width;
     } // setShadowWidth
@@ -119,30 +125,34 @@ public :
      @param label The named parameters of the panel.
      @param width The visual width of the panel.
      @param height The visual height of the panel. */
-    LabelWithShadow * setup(ofParameter<string> label,
-                            const float         width = defaultWidth,
-                            const float         height = defaultHeight);
+    LabelWithShadow *
+    setup(ofParameter<string> label,
+          const float         width = defaultWidth,
+          const float         height = defaultHeight);
     
     /*! @brief Set the parameters of the panel.
      @param labelName The name for the value of the panel.
      @param label The value of the panel.
      @param width The visual width of the panel.
      @param height The visual height of the panel. */
-    LabelWithShadow * setup(string      labelName,
-                            string      label,
-                            const float width = defaultWidth,
-                            const float height = defaultHeight);
+    LabelWithShadow *
+    setup(string      labelName,
+          string      label,
+          const float width = defaultWidth,
+          const float height = defaultHeight);
     
     /*! @brief Set the default color for text label shadows.
      @param color The default color for text label shadows. */
-    inline static void setDefaultShadowColor(const ofColor & color)
+    inline static void
+    setDefaultShadowColor(const ofColor & color)
     {
         shadowColor = color;
     } // setDefaultShadowColor
     
     /*! @brief Set the default width for text label shadows.
      @param width The default width for text label shadows. */
-    inline static void setDefaultShadowWidth(const float width)
+    inline static void
+    setDefaultShadowWidth(const float width)
     {
         shadowWidth = width;
     } // setDefaultShadowWidth
@@ -150,8 +160,22 @@ public :
 protected :
     
     /*! @brief Display the label. */
-    virtual void render(void);
+    virtual void
+    render(void);
     
+private :
+    
+    COPY_AND_ASSIGNMENT_(LabelWithShadow);
+    
+    /*! @brief Return the width of the text to be displayed.
+     @returns The width of the text to be displayed. */
+    float
+    calculateTextWidth(void);
+    
+public :
+
+protected :
+
     /*! @brief The default text label shadow color. */
     static ofColor shadowColor;
     
@@ -167,18 +191,6 @@ protected :
     /*! @brief The text label shadow width for this label. */
     float _thisShadowWidth;
     
-private :
-    
-    COPY_AND_ASSIGNMENT_(LabelWithShadow);
-    
-    /*! @brief Return the width of the text to be displayed.
-     @returns The width of the text to be displayed. */
-    float calculateTextWidth(void);
-    
-public :
-
-protected :
-
 private :
     
     /*! @brief The class that this class is derived from. */

@@ -111,7 +111,8 @@ BackgroundScanner::~BackgroundScanner(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void BackgroundScanner::enableScan(void)
+void
+BackgroundScanner::enableScan(void)
 {
     OD_LOG_OBJENTER(); //####
     for (bool locked = lock(); ! locked; )
@@ -124,7 +125,8 @@ void BackgroundScanner::enableScan(void)
     OD_LOG_OBJEXIT(); //####
 } // BackgroundScanner::enableScan
 
-void BackgroundScanner::threadedFunction(void)
+void
+BackgroundScanner::threadedFunction(void)
 {
     OD_LOG_OBJENTER(); //####
     // start

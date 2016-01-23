@@ -64,13 +64,16 @@ public :
     MovementTracker(void);
     
     /*! @brief The destructor. */
-    virtual ~MovementTracker(void);
+    virtual
+    ~MovementTracker(void);
     
     /*! @brief Handle a position change notification for the GUI element. */
-    virtual void handlePositionChange(void) = 0;
+    virtual void
+    handlePositionChange(void) = 0;
     
     /*! @brief The GUI element has completed its movement. */
-    virtual void positionChangeComplete(void) = 0;
+    virtual void
+    positionChangeComplete(void) = 0;
     
 protected :
     

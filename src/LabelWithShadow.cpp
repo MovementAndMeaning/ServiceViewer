@@ -112,7 +112,8 @@ LabelWithShadow::~LabelWithShadow(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-float LabelWithShadow::calculateTextWidth(void)
+float
+LabelWithShadow::calculateTextWidth(void)
 {
     OD_LOG_OBJENTER(); //####
     string name;
@@ -129,7 +130,8 @@ float LabelWithShadow::calculateTextWidth(void)
     return result;
 } // LabelWithShadow::calculateTextWidth
 
-void LabelWithShadow::generateDraw(void)
+void
+LabelWithShadow::generateDraw(void)
 {
     OD_LOG_OBJENTER(); //####
     float newWidth = calculateTextWidth();
@@ -152,7 +154,8 @@ void LabelWithShadow::generateDraw(void)
     OD_LOG_OBJEXIT(); //####
 } // LabelWithShadow::generateDraw
 
-void LabelWithShadow::render(void)
+void
+LabelWithShadow::render(void)
 {
     OD_LOG_OBJENTER(); //####
     _shadow.draw();
@@ -160,9 +163,10 @@ void LabelWithShadow::render(void)
     OD_LOG_OBJEXIT(); //####
 } // LabelWithShadow::render
 
-LabelWithShadow * LabelWithShadow::setup(ofParameter<string> label,
-                                         const float         width,
-                                         const float         height)
+LabelWithShadow *
+LabelWithShadow::setup(ofParameter<string> label,
+                       const float         width,
+                       const float         height)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_D2("width = ", width, "height = ", height); //####
@@ -174,10 +178,11 @@ LabelWithShadow * LabelWithShadow::setup(ofParameter<string> label,
     return result;
 } // LabelWithShadow::setup
 
-LabelWithShadow * LabelWithShadow::setup(string      labelName,
-                                         string      label,
-                                         const float width,
-                                         const float height)
+LabelWithShadow *
+LabelWithShadow::setup(string      labelName,
+                       string      label,
+                       const float width,
+                       const float height)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S2s("labelName = ", labelName, "label = ", label); //####

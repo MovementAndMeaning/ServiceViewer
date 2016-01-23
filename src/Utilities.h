@@ -61,9 +61,10 @@
  beginning tangent.
  @param endCentre A reference point for the end of the curve, used to calculate the ending
  tangent. */
-void DrawBezier(const ofPoint & startPoint,
-                const ofPoint & endPoint,
-                const ofPoint & startCentre,
-                const ofPoint & endCentre);
+void
+DrawBezier(const ofPoint & startPoint,
+           const ofPoint & endPoint,
+           const ofPoint & startCentre,
+           const ofPoint & endCentre);
 
 #endif // ! defined(__ServiceViewer__Utilities__)

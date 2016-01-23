@@ -101,7 +101,8 @@ ServiceEntity::~ServiceEntity(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void ServiceEntity::draw(void)
+void
+ServiceEntity::draw(void)
 {
     OD_LOG_OBJENTER(); //####
     ServiceViewerApp & owner = _panel.getOwner();
@@ -208,7 +209,8 @@ void ServiceEntity::draw(void)
     OD_LOG_OBJEXIT(); //####
 } // ServiceEntity::draw
 
-void ServiceEntity::handlePositionChange(void)
+void
+ServiceEntity::handlePositionChange(void)
 {
     OD_LOG_OBJENTER(); //####
     // Here we re-adjust any lines attached to the entity.
@@ -217,7 +219,8 @@ void ServiceEntity::handlePositionChange(void)
     OD_LOG_OBJEXIT(); //####
 } // ServiceEntity::handlePositionChange
 
-bool ServiceEntity::hasPort(const PortEntry * aPort)
+bool
+ServiceEntity::hasPort(const PortEntry * aPort)
 {
     OD_LOG_OBJENTER(); //####
     bool result = false;
@@ -237,7 +240,8 @@ bool ServiceEntity::hasPort(const PortEntry * aPort)
     return result;
 } // ServiceEntity::hasPort
 
-void ServiceEntity::positionChangeComplete(void)
+void
+ServiceEntity::positionChangeComplete(void)
 {
     OD_LOG_OBJENTER(); //####
     _panel.getOwner().moveEntityToEndOfForegroundList(this);
@@ -246,9 +250,10 @@ void ServiceEntity::positionChangeComplete(void)
     OD_LOG_OBJEXIT(); //####
 } // ServiceEntity::positionChangeComplete
 
-void ServiceEntity::setup(string      entityName,
-                          const float xx,
-                          const float yy)
+void
+ServiceEntity::setup(string      entityName,
+                     const float xx,
+                     const float yy)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("entityName = ", entityName); //####

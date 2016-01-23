@@ -77,7 +77,8 @@ public :
                   ServiceViewerApp &          owner);
     
     /*! @brief The destructor. */
-    virtual ~ServiceEntity(void);
+    virtual
+    ~ServiceEntity(void);
     
     /*! @brief Add a port to the panel.
      @param portName The name of the port.
@@ -85,53 +86,60 @@ public :
      @param portKind What the port will be used for.
      @param direction The primary direction of the port.
      @returns The newly-created port. */
-    inline PortEntry * addPort(const string &                 portName,
-                               const string &                 portProtocol,
-                               const PortEntry::PortUsage     portKind,
-                               const PortEntry::PortDirection direction =
-                                                               PortEntry::kPortDirectionInputOutput)
+    inline PortEntry *
+    addPort(const string &                 portName,
+            const string &                 portProtocol,
+            const PortEntry::PortUsage     portKind,
+            const PortEntry::PortDirection direction = PortEntry::kPortDirectionInputOutput)
     {
         return _panel.addPort(portName, portProtocol, portKind, direction);
     } // addPort
     
     /*! @brief Stop displaying the connect marker. */
-    inline void clearConnectMarker(void)
+    inline void
+    clearConnectMarker(void)
     {
         _drawConnectMarker = false;
     } // clearConnectMarker
     
     /*! @brief Stop displaying the disconnect marker. */
-    inline void clearDisconnectMarker(void)
+    inline void
+    clearDisconnectMarker(void)
     {
         _drawDisconnectMarker = false;
     } // clearDisconnectMarker
     
     /*! @brief Deselect the entity. */
-    inline void deselect(void)
+    inline void
+    deselect(void)
     {
         _selected = false;
     } // deselect
     
     /*! @brief Display the entity. */
-    void draw(void);
+    void
+    draw(void);
     
     /*! @brief Returns the height of the entity.
      @returns The height of the entity. */
-    inline float getHeight(void)
+    inline float
+    getHeight(void)
     {
         return _panel.getHeight();
     } // getHeight
     
     /*! @brief Return the name of the entity.
      @returns The name of the entity. */
-    inline string getName(void)
+    inline string
+    getName(void)
     {
         return _panel.getName();
     } // getName
     
     /*! @brief Return the node corresponding to the entity.
      @returns The node corresponding to the entity. */
-    inline ogdf::node getNode(void)
+    inline ogdf::node
+    getNode(void)
     const
     {
         return _node;
@@ -139,7 +147,8 @@ public :
     
     /*! @brief Returns the number of ports in this entity.
      @returns The number of ports in this entity. */
-    inline int getNumPorts(void)
+    inline int
+    getNumPorts(void)
     {
         return _panel.getNumPorts();
     } // getNumPorts
@@ -147,65 +156,76 @@ public :
     /*! @brief Returns a port by index.
      @param num The zero-origin index of the port.
      @returns A port or @c NULL if the index is out of range. */
-    PortEntry * getPort(const int num)
+    PortEntry *
+    getPort(const int num)
     {
         return _panel.getPort(num);
     } // getPort
     
     /*! @brief Return the bounding box for the entity.
      @returns The bounding box for the entity. */
-    inline ofRectangle getShape(void)
+    inline ofRectangle
+    getShape(void)
     {
         return _panel.getShape();
     } // getShape
     
     /*! @brief Returns the width of the entity.
      @returns The width of the entity. */
-    inline float getWidth(void)
+    inline float
+    getWidth(void)
     {
         return _panel.getWidth();
     } // getWidth
     
     /*! @brief The entity position has been changed. */
-    virtual void handlePositionChange(void);
+    virtual void
+    handlePositionChange(void);
     
     /*! @brief Check if a port is part of the entity.
      @param aPort The port to be checked for.
      @returns @c true if the port is contained within the entity and @c false otherwise. */
-    bool hasPort(const PortEntry * aPort);
+    bool
+    hasPort(const PortEntry * aPort);
     
     /*! @brief Return @c true is the entity is selected.
      @returns @c true if the entity is selected and @c false otherwise. */
-    inline bool isSelected(void)
+    inline bool
+    isSelected(void)
     const
     {
         return _selected;
     } // isSelected
     
     /*! @brief The entity position changes are complete. */
-    virtual void positionChangeComplete(void);
+    virtual void
+    positionChangeComplete(void);
     
     /*! @brief Select the entity. */
-    inline void select(void)
+    inline void
+    select(void)
     {
         _selected = true;
     } // select
     
     /*! @brief Start displaying the connect marker. */
-    inline void setConnectMarker(void)
+    inline void
+    setConnectMarker(void)
     {
         _drawConnectMarker = true;
     } // setConnectMarker
     
     /*! @brief Start displaying the disconnect marker. */
-    inline void setDisconnectMarker(void)
+    inline void
+    setDisconnectMarker(void)
     {
         _drawDisconnectMarker = true;
     } // setDisconnectMarker
     
     /*! @brief Sets the node corresponding to the entity.
      @param newNode The new value for the node corresponding to the entity. */
-    inline void setNode(ogdf::node newNode)
+    inline void
+    setNode(ogdf::node newNode)
     {
         _node = newNode;
     } // setNode
@@ -213,8 +233,9 @@ public :
     /*! @brief Move the entity to a new location on the display.
      @param xx The new horizontal position of the entity.
      @param yy The new vertical position of the entity. */
-    inline void setPosition(const float xx = 10,
-                            const float yy = 10)
+    inline void
+    setPosition(const float xx = 10,
+                const float yy = 10)
     {
         _panel.setPosition(xx, yy);
     } // setPosition
@@ -223,9 +244,10 @@ public :
      @param entityName The name of the service or application.
      @param xx The initial horizontal position of the entity.
      @param yy The initial vertical position of the entity. */
-    void setup(string      entityName,
-               const float xx = 10,
-               const float yy = 10);
+    void
+    setup(string      entityName,
+          const float xx = 10,
+          const float yy = 10);
     
 protected :
     

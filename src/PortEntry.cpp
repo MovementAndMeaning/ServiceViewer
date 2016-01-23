@@ -79,10 +79,11 @@ static const float kTargetBoxScale = 0.25;
  @param testPoint The point being checked.
  @param bestSoFar On input, the current closest point and output, the new closest point.
  @returns @c true if the new point is closer than the previous closest point. */
-static bool calculateMinDistance(float &         distanceSoFar,
-                                 const ofPoint & refPoint,
-                                 const ofPoint & testPoint,
-                                 ofPoint &       bestSoFar)
+static bool
+calculateMinDistance(float &         distanceSoFar,
+                     const ofPoint & refPoint,
+                     const ofPoint & testPoint,
+                     ofPoint &       bestSoFar)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P4("distanceSoFar = ", &distanceSoFar, "refPoint = ", &refPoint, "testPoint = ", //####
@@ -111,11 +112,12 @@ static bool calculateMinDistance(float &         distanceSoFar,
  @param testY The vertical coordinate for the point being checked.
  @param bestSoFar On input, the current closest point and output, the new closest point.
  @returns @c true if the new point is closer than the previous closest point. */
-inline static bool calculateMinDistance(float &         distanceSoFar,
-                                        const ofPoint & refPoint,
-                                        const float     testX,
-                                        const float     testY,
-                                        ofPoint &       bestSoFar)
+inline static bool
+calculateMinDistance(float &         distanceSoFar,
+                     const ofPoint & refPoint,
+                     const float     testX,
+                     const float     testY,
+                     ofPoint &       bestSoFar)
 {
     return calculateMinDistance(distanceSoFar, refPoint, ofPoint(testX, testY), bestSoFar);
 } // calculateMinDistance
@@ -126,10 +128,11 @@ inline static bool calculateMinDistance(float &         distanceSoFar,
  @param targetPoint The target point.
  @param refCentre The reference point.
  @returns The side to which the anchor is attached. */
-static PortEntry::AnchorSide calculateAnchorForPoint(ofPoint &       newCentre,
-                                                     const bool      disallowBottom,
-                                                     const ofPoint & targetPoint,
-                                                     const ofPoint & refCentre)
+static PortEntry::AnchorSide
+calculateAnchorForPoint(ofPoint &       newCentre,
+                        const bool      disallowBottom,
+                        const ofPoint & targetPoint,
+                        const ofPoint & refCentre)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P3("newCentre = ", &newCentre, "targetPoint = ", &targetPoint, //####
@@ -200,8 +203,9 @@ PortEntry::~PortEntry(void)
 
 /*! @brief Add an input connection to the port.
  @param other The port that is to be connected. */
-void PortEntry::addInputConnection(PortEntry *                 other,
-                                   MplusM::Common::ChannelMode mode)
+void
+PortEntry::addInputConnection(PortEntry *                 other,
+                              MplusM::Common::ChannelMode mode)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("other = ", other); //####
@@ -233,8 +237,9 @@ void PortEntry::addInputConnection(PortEntry *                 other,
 
 /*! @brief Add an output connection to the port.
  @param other The port that is to be connected. */
-void PortEntry::addOutputConnection(PortEntry *                 other,
-                                    MplusM::Common::ChannelMode mode)
+void
+PortEntry::addOutputConnection(PortEntry *                 other,
+                               MplusM::Common::ChannelMode mode)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("other = ", other); //####
@@ -264,10 +269,11 @@ void PortEntry::addOutputConnection(PortEntry *                 other,
     OD_LOG_OBJEXIT(); //####
 } // PortEntry::addOutputConnection
 
-PortEntry::AnchorSide PortEntry::calculateClosestAnchor(ofPoint &       result,
-                                                        const bool      isSource,
-                                                        const bool      disallowBottom,
-                                                        const ofPoint & pp)
+PortEntry::AnchorSide
+PortEntry::calculateClosestAnchor(ofPoint &       result,
+                                  const bool      isSource,
+                                  const bool      disallowBottom,
+                                  const ofPoint & pp)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P2("result = ", &result, "pp = ", &pp); //####
@@ -314,9 +320,10 @@ PortEntry::AnchorSide PortEntry::calculateClosestAnchor(ofPoint &       result,
     return anchor;
 } // PortEntry::calculateClosestAnchor
 
-void PortEntry::drawDragLine(const float xPos,
-                             const float yPos,
-                             const bool  isUDP)
+void
+PortEntry::drawDragLine(const float xPos,
+                        const float yPos,
+                        const bool  isUDP)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_D2("xPos = ", xPos, "yPos = ", yPos); //####
@@ -363,8 +370,9 @@ void PortEntry::drawDragLine(const float xPos,
     OD_LOG_OBJEXIT(); //####
 } // PortEntry::drawDragLine
 
-void PortEntry::drawSourceAnchor(const AnchorSide anchor,
-                                 const ofPoint &  anchorPos)
+void
+PortEntry::drawSourceAnchor(const AnchorSide anchor,
+                            const ofPoint &  anchorPos)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_L1("anchor = ", static_cast<int> (anchor)); //####
@@ -374,27 +382,27 @@ void PortEntry::drawSourceAnchor(const AnchorSide anchor,
     
     switch (anchor)
     {
-	    case kAnchorLeft :
+        case kAnchorLeft :
             first = anchorPos + ofPoint(kArrowSize, -kArrowSize);
             second = anchorPos + ofPoint(kArrowSize, kArrowSize);
             break;
             
-	    case kAnchorRight :
+        case kAnchorRight :
             first = anchorPos + ofPoint(-kArrowSize, -kArrowSize);
             second = anchorPos + ofPoint(-kArrowSize, kArrowSize);
             break;
             
-	    case kAnchorBottomCentre :
+        case kAnchorBottomCentre :
             first = anchorPos + ofPoint(-kArrowSize, -kArrowSize);
             second = anchorPos + ofPoint(kArrowSize, -kArrowSize);
             break;
             
-	    case kAnchorTopCentre :
+        case kAnchorTopCentre :
             first = anchorPos + ofPoint(-kArrowSize, kArrowSize);
             second = anchorPos + ofPoint(kArrowSize, kArrowSize);
             break;
             
-	    default :
+        default :
             break;
             
     }
@@ -406,8 +414,9 @@ void PortEntry::drawSourceAnchor(const AnchorSide anchor,
     OD_LOG_EXIT(); //####
 } // PortEntry::drawSourceAnchor
 
-void PortEntry::drawTargetAnchor(const AnchorSide anchor,
-                                 const ofPoint &  anchorPos)
+void
+PortEntry::drawTargetAnchor(const AnchorSide anchor,
+                            const ofPoint &  anchorPos)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_L1("anchor = ", static_cast<int> (anchor)); //####
@@ -417,27 +426,27 @@ void PortEntry::drawTargetAnchor(const AnchorSide anchor,
     
     switch (anchor)
     {
-	    case kAnchorLeft :
+        case kAnchorLeft :
             first = anchorPos + ofPoint(-kArrowSize, -kArrowSize);
             second = anchorPos + ofPoint(-kArrowSize, kArrowSize);
             break;
             
-	    case kAnchorRight :
+        case kAnchorRight :
             first = anchorPos + ofPoint(kArrowSize, -kArrowSize);
             second = anchorPos + ofPoint(kArrowSize, kArrowSize);
             break;
             
-	    case kAnchorBottomCentre :
+        case kAnchorBottomCentre :
             first = anchorPos + ofPoint(-kArrowSize, kArrowSize);
             second = anchorPos + ofPoint(kArrowSize, kArrowSize);
             break;
             
-	    case kAnchorTopCentre :
+        case kAnchorTopCentre :
             first = anchorPos + ofPoint(-kArrowSize, -kArrowSize);
             second = anchorPos + ofPoint(kArrowSize, -kArrowSize);
             break;
             
-	    default :
+        default :
             break;
             
     }
@@ -449,7 +458,8 @@ void PortEntry::drawTargetAnchor(const AnchorSide anchor,
     OD_LOG_EXIT(); //####
 } // PortEntry::drawTargetAnchor
 
-ofPoint PortEntry::getCentre(void)
+ofPoint
+PortEntry::getCentre(void)
 {
     OD_LOG_OBJENTER(); //####
     ofRectangle outer(getShape());
@@ -458,7 +468,8 @@ ofPoint PortEntry::getCentre(void)
     return ofPoint(outer.x + (outer.width / 2), outer.y + (outer.height / 2));
 } // PortEntry::getCentre
 
-bool PortEntry::isPointInside(const ofPoint & aPoint)
+bool
+PortEntry::isPointInside(const ofPoint & aPoint)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -469,8 +480,9 @@ const
     return result;
 } // PortEntry::isPointInside
 
-bool PortEntry::isPointInside(const float xPos,
-                              const float yPos)
+bool
+PortEntry::isPointInside(const float xPos,
+                         const float yPos)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -481,7 +493,8 @@ const
     return result;
 } // PortEntry::isPointInside
 
-bool PortEntry::mouseDragged(ofMouseEventArgs & args)
+bool
+PortEntry::mouseDragged(ofMouseEventArgs & args)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("args = ", &args); //####
@@ -518,7 +531,8 @@ bool PortEntry::mouseDragged(ofMouseEventArgs & args)
     return result;
 } // PortEntry::mouseDragged
 
-bool PortEntry::mouseMoved(ofMouseEventArgs & args)
+bool
+PortEntry::mouseMoved(ofMouseEventArgs & args)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("args = ", &args); //####
@@ -528,7 +542,8 @@ bool PortEntry::mouseMoved(ofMouseEventArgs & args)
     return result;
 } // PortEntry::mouseMoved
 
-bool PortEntry::mousePressed(ofMouseEventArgs & args)
+bool
+PortEntry::mousePressed(ofMouseEventArgs & args)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("args = ", &args); //####
@@ -600,7 +615,8 @@ bool PortEntry::mousePressed(ofMouseEventArgs & args)
     return result;
 } // PortEntry::mousePressed
 
-bool PortEntry::mouseReleased(ofMouseEventArgs & args)
+bool
+PortEntry::mouseReleased(ofMouseEventArgs & args)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("args = ", &args); //####
@@ -646,7 +662,8 @@ bool PortEntry::mouseReleased(ofMouseEventArgs & args)
     return result;
 } // PortEntry::mouseReleased
 
-void PortEntry::removeInputConnection(PortEntry * other)
+void
+PortEntry::removeInputConnection(PortEntry * other)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("other = ", other); //####
@@ -670,7 +687,8 @@ void PortEntry::removeInputConnection(PortEntry * other)
     OD_LOG_OBJEXIT(); //####
 } // PortEntry::removeInputConnection
 
-void PortEntry::removeOutputConnection(PortEntry * other)
+void
+PortEntry::removeOutputConnection(PortEntry * other)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("other = ", other); //####
@@ -693,9 +711,10 @@ void PortEntry::removeOutputConnection(PortEntry * other)
     OD_LOG_OBJEXIT(); //####
 } // PortEntry::removeOutputConnection
 
-PortEntry * PortEntry::setup(string      label,
-                             const float width,
-                             const float height)
+PortEntry *
+PortEntry::setup(string      label,
+                 const float width,
+                 const float height)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("label = ", label); //####
@@ -705,19 +724,19 @@ PortEntry * PortEntry::setup(string      label,
     _portName = label;
     switch (_direction)
     {
-	    case kPortDirectionInput :
+        case kPortDirectionInput :
             tag = "In";
             break;
             
-	    case kPortDirectionInputOutput :
+        case kPortDirectionInputOutput :
             tag = "I/O";
             break;
             
-	    case kPortDirectionOutput :
+        case kPortDirectionOutput :
             tag = "Out";
             break;
             
-	    default :
+        default :
             tag = "Unk";
             break;
             

@@ -106,7 +106,8 @@ IconlessPanel::~IconlessPanel(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-float IconlessPanel::calculateTextWidth(void)
+float
+IconlessPanel::calculateTextWidth(void)
 {
     OD_LOG_OBJENTER(); //####
     ofRectangle bbox = getTextBoundingBox(getName(), 0, 0);
@@ -116,7 +117,8 @@ float IconlessPanel::calculateTextWidth(void)
     return result;
 } // IconlessPanel::calculateTextWidth
 
-void IconlessPanel::generateDraw(void)
+void
+IconlessPanel::generateDraw(void)
 {
     OD_LOG_OBJENTER(); //####
     border.clear();
@@ -133,7 +135,8 @@ void IconlessPanel::generateDraw(void)
     OD_LOG_OBJEXIT(); //####
 } // IconlessPanel::generateDraw
 
-void IconlessPanel::render(void)
+void
+IconlessPanel::render(void)
 {
     OD_LOG_OBJENTER(); //####
     border.draw();
@@ -169,10 +172,11 @@ void IconlessPanel::render(void)
     OD_LOG_OBJEXIT(); //####
 } // IconlessPanel::render
 
-IconlessPanel * IconlessPanel::setup(string      collectionName,
-                                     string      filename,
-                                     const float xx,
-                                     const float yy)
+IconlessPanel *
+IconlessPanel::setup(string      collectionName,
+                     string      filename,
+                     const float xx,
+                     const float yy)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S2s("collectionName = ", collectionName, "filename = ", filename); //####
@@ -187,10 +191,11 @@ IconlessPanel * IconlessPanel::setup(string      collectionName,
     return result;
 } // IconlessPanel::setup
 
-IconlessPanel * IconlessPanel::setup(const ofParameterGroup & parameters,
-                                     string                   filename,
-                                     const float              xx,
-                                     const float              yy)
+IconlessPanel *
+IconlessPanel::setup(const ofParameterGroup & parameters,
+                     string                   filename,
+                     const float              xx,
+                     const float              yy)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("filename = ", filename); //####
@@ -205,7 +210,8 @@ IconlessPanel * IconlessPanel::setup(const ofParameterGroup & parameters,
     return result;
 } // IconlessPanel::setup
 
-void IconlessPanel::setWidth(const float newWidth)
+void
+IconlessPanel::setWidth(const float newWidth)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_D1("newWidth = ", newWidth); //####

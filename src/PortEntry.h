@@ -142,19 +142,22 @@ public :
               const PortDirection direction = kPortDirectionInput);
     
     /*! @brief The destructor. */
-    virtual ~PortEntry(void);
+    virtual
+    ~PortEntry(void);
     
     /*! @brief Add an input connection to the port.
      @param other The port that is to be connected.
      @param mode The mode of the connection. */
-    void addInputConnection(PortEntry *                 other,
-                            MplusM::Common::ChannelMode mode);
+    void
+    addInputConnection(PortEntry *                 other,
+                       MplusM::Common::ChannelMode mode);
     
     /*! @brief Add an output connection to the port.
      @param other The port that is to be connected.
      @param mode The mode of the connection. */
-    void addOutputConnection(PortEntry *                 other,
-                             MplusM::Common::ChannelMode mode);
+    void
+    addOutputConnection(PortEntry *                 other,
+                        MplusM::Common::ChannelMode mode);
     
     /*! @brief Determine the anchor point that is the minimum distance from a given point.
      @param result The coordinates of the anchor point.
@@ -163,11 +166,12 @@ public :
      @param xx The horizontal coordinate for the point of interest.
      @param yy The vertical coordinate for the point of interest.
      @returns The side to which the anchor is attached. */
-    inline AnchorSide calculateClosestAnchor(ofPoint &   result,
-                                             const bool  isSource,
-                                             const bool  disallowBottom,
-                                             const float xx,
-                                             const float yy)
+    inline AnchorSide
+    calculateClosestAnchor(ofPoint &   result,
+                           const bool  isSource,
+                           const bool  disallowBottom,
+                           const float xx,
+                           const float yy)
     {
         return calculateClosestAnchor(result, isSource, disallowBottom, ofPoint(xx, yy));
     } // calculateClosestAnchor
@@ -178,26 +182,30 @@ public :
      @param disallowBottom @c true if the anchor cannot be bottom-centre.
      @param pp The point of interest.
      @returns The side to which the anchor is attached. */
-    AnchorSide calculateClosestAnchor(ofPoint &       result,
-                                      const bool      isSource,
-                                      const bool      disallowBottom,
-                                      const ofPoint & pp);
+    AnchorSide
+    calculateClosestAnchor(ofPoint &       result,
+                           const bool      isSource,
+                           const bool      disallowBottom,
+                           const ofPoint & pp);
     
     /*! @brief Display the 'drag-line' from this port entry to the given coordinates.
      @param xPos The horizontal coordinate of the destination.
      @param yPos The vertical coordinate of the destination.
      @param isUDP @c true if the connection will be UDP and @c false otherwise. */
-    void drawDragLine(const float xPos,
-                      const float yPos,
-                      const bool  isUDP);
+    void
+    drawDragLine(const float xPos,
+                 const float yPos,
+                 const bool  isUDP);
     
     /*! @brief Return the location of the centre of the port entry.
      @returns The location of the centre of the port entry. */
-    ofPoint getCentre(void);
+    ofPoint
+    getCentre(void);
     
     /*! @brief Return the direction of the port entry.
      @returns The direction of the port entry. */
-    PortDirection getDirection(void)
+    PortDirection
+    getDirection(void)
     const
     {
         return _direction;
@@ -205,7 +213,8 @@ public :
     
     /*! @brief Return the set of input connections to the port.
      @returns The set of input connections to the port. */
-    inline const Connections & getInputConnections(void)
+    inline const Connections &
+    getInputConnections(void)
     const
     {
         return _inputConnections;
@@ -213,13 +222,15 @@ public :
     
     /*! @brief Return the set of output connections to the port.
      @returns The set of output connections to the port. */
-    inline const Connections & getOutputConnections(void)
+    inline const Connections &
+    getOutputConnections(void)
     const
     {
         return _outputConnections;
     } // getOutputConnections
     
-    inline PortPanel * getParent(void)
+    inline PortPanel *
+    getParent(void)
     const
     {
         return reinterpret_cast<PortPanel *> (_parent);
@@ -227,7 +238,8 @@ public :
     
     /*! @brief Return the name of the associated port.
      @returns The name of the associated port. */
-    inline string getPortName(void)
+    inline string
+    getPortName(void)
     const
     {
         return _portName;
@@ -235,7 +247,8 @@ public :
     
     /*! @brief Return the protocol of the associated port.
      @returns The protocol of the associated port. */
-    inline string getProtocol(void)
+    inline string
+    getProtocol(void)
     const
     {
         return _portProtocol;
@@ -243,7 +256,8 @@ public :
     
     /*! @brief Return the usage of the port entry.
      @returns The usage of the port entry. */
-    PortUsage getUsage(void)
+    PortUsage
+    getUsage(void)
     const
     {
         return _usage;
@@ -252,7 +266,8 @@ public :
     /*! @brief Returns @c true if the port entry is a secondary port of a service and @c false
      otherwise.
      @returns @c true if the port is a secondary port of a service and @c false otherwise. */
-    inline bool isInputOutput(void)
+    inline bool
+    isInputOutput(void)
     const
     {
         return (kPortUsageInputOutput == _usage);
@@ -262,7 +277,8 @@ public :
      panel and @c false otherwise.
      @returns @c true if the port is the last port entry in a panel and @c false
      otherwise. */
-    inline bool isLastPort(void)
+    inline bool
+    isLastPort(void)
     const
     {
         return _isLastPort;
@@ -273,7 +289,8 @@ public :
      @param aPoint The point of interest.
      @returns @c true if the given point is within the displayed region of the entry and
      @c false otherwise. */
-    bool isPointInside(const ofPoint & aPoint)
+    bool
+    isPointInside(const ofPoint & aPoint)
     const;
     
     /*! @brief Returns @c true if the given point is within the displayed region of the
@@ -282,14 +299,16 @@ public :
      @param yPos The vertical coordinate of the point of interest.
      @returns @c true if the given point is within the displayed region of the entry and
      @c false otherwise. */
-    bool isPointInside(const float xPos,
-                       const float yPos)
+    bool
+    isPointInside(const float xPos,
+                  const float yPos)
     const;
     
     /*! @brief Returns @c true if the port entry is part of a service and @c false
      otherwise.
      @returns @c true if the port is part of a service and @c false otherwise. */
-    inline bool isService(void)
+    inline bool
+    isService(void)
     const
     {
         return (kPortUsageService == _usage);
@@ -299,36 +318,43 @@ public :
      @param args The attributes of the event.
      @returns @c true if the event was processed and @c false if it can be further
      propagated. */
-    virtual bool mouseDragged(ofMouseEventArgs & args);
+    virtual bool
+    mouseDragged(ofMouseEventArgs & args);
     
     /*! @brief Process a mouse-moved event.
      @param args The attributes of the event.
      @returns @c true if the event was processed and @c false if it can be further
      propagated. */
-    virtual bool mouseMoved(ofMouseEventArgs & args);
+    virtual bool
+    mouseMoved(ofMouseEventArgs & args);
     
     /*! @brief Process a mouse-pressed event.
      @param args The attributes of the event.
      @returns @c true if the event was processed and @c false if it can be further
      propagated. */
-    virtual bool mousePressed(ofMouseEventArgs & args);
+    virtual bool
+    mousePressed(ofMouseEventArgs & args);
     
     /*! @brief Process a mouse-released event.
      @param args The attributes of the event.
      @returns @c true if the event was processed and @c false if it can be further
      propagated. */
-    virtual bool mouseReleased(ofMouseEventArgs & args);
+    virtual bool
+    mouseReleased(ofMouseEventArgs & args);
     
     /*! @brief Remove an input connection from a port.
      @param other The port that is to be disconnected. */
-    void removeInputConnection(PortEntry * other);
+    void
+    removeInputConnection(PortEntry * other);
     
     /*! @brief Remove an output connection from a port.
      @param other The port that is to be disconnected. */
-    void removeOutputConnection(PortEntry * other);
+    void
+    removeOutputConnection(PortEntry * other);
     
     /*! @brief Mark the port entry as the bottom-most (last) port entry in a panel. */
-    inline void setAsLastPort(void)
+    inline void
+    setAsLastPort(void)
     {
         _isLastPort = true;
     } // setAsLastPort
@@ -337,12 +363,14 @@ public :
      @param label The port name for the entry.
      @param width The visual width of the entry.
      @param height The visual height of the entry. */
-    PortEntry * setup(string      label,
-                      const float width = defaultWidth,
-                      const float height = defaultHeight);
+    PortEntry *
+    setup(string      label,
+          const float width = defaultWidth,
+          const float height = defaultHeight);
     
     /*! @brief Mark the port entry as not being the bottom-most port entry in a panel. */
-    inline void unsetAsLastPort(void)
+    inline void
+    unsetAsLastPort(void)
     {
         _isLastPort = false;
     } // unsetAsLastPort
@@ -350,14 +378,16 @@ public :
     /*! @brief Displays an anchor leaving the given location.
      @param anchor The side to which the anchor is attached.
      @param anchorPos The coordinates of the anchor point. */
-    static void drawSourceAnchor(const AnchorSide anchor,
-                                 const ofPoint &  anchorPos);
+    static void
+    drawSourceAnchor(const AnchorSide anchor,
+                     const ofPoint &  anchorPos);
     
     /*! @brief Displays an anchor arriving at the given location.
      @param anchor The side to which the anchor is attached.
      @param anchorPos The coordinates of the anchor point. */
-    static void drawTargetAnchor(const AnchorSide anchor,
-                                 const ofPoint &  anchorPos);
+    static void
+    drawTargetAnchor(const AnchorSide anchor,
+                     const ofPoint &  anchorPos);
     
 protected :
     
