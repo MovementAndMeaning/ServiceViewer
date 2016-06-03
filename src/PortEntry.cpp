@@ -36,7 +36,6 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-//#include "PortEntry.h"
 #include "ServiceEntity.h"
 #include "ServiceViewerApp.h"
 #include "Utilities.h"
