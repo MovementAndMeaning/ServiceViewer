@@ -41,8 +41,8 @@
 #include "ServiceViewerApp.h"
 #include "Utilities.h"
 
-//#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
+//#include <odlEnable.h>
+#include <odlInclude.h>
 
 #include "ofGraphics.h"
 
@@ -85,16 +85,16 @@ ServiceEntity::ServiceEntity(const PortPanel::EntityKind kind,
     _drawConnectMarker(false), _drawDisconnectMarker(false), _drawMoveMarker(false),
     _selected(false)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_S2s("behaviour = ", behaviour, "description = ", description); //####
-    OD_LOG_P1("owner = ", &owner); //####
-    OD_LOG_EXIT_P(this); //####
+    ODL_ENTER(); //####
+    ODL_S2s("behaviour = ", behaviour, "description = ", description); //####
+    ODL_P1("owner = ", &owner); //####
+    ODL_EXIT_P(this); //####
 } // ServiceEntity::ServiceEntity
 
 ServiceEntity::~ServiceEntity(void)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJENTER(); //####
+    ODL_OBJEXIT(); //####
 } // ServiceEntity::~ServiceEntity
 
 #if defined(__APPLE__)
@@ -104,7 +104,7 @@ ServiceEntity::~ServiceEntity(void)
 void
 ServiceEntity::draw(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     ServiceViewerApp & owner = _panel.getOwner();
     
     _panel.draw();
@@ -206,23 +206,23 @@ ServiceEntity::draw(void)
             }
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ServiceEntity::draw
 
 void
 ServiceEntity::handlePositionChange(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     // Here we re-adjust any lines attached to the entity.
     _panel.getOwner().movementStarted();
     _selected = _drawMoveMarker = true;
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ServiceEntity::handlePositionChange
 
 bool
 ServiceEntity::hasPort(const PortEntry * aPort)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     bool result = false;
     
     for (int ii = 0, mm = _panel.getNumPorts(); mm > ii; ++ii)
@@ -236,18 +236,18 @@ ServiceEntity::hasPort(const PortEntry * aPort)
         }
         
     }
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // ServiceEntity::hasPort
 
 void
 ServiceEntity::positionChangeComplete(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _panel.getOwner().moveEntityToEndOfForegroundList(this);
     _selected = _drawMoveMarker = false;
     // something to do??
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ServiceEntity::positionChangeComplete
 
 void
@@ -255,14 +255,14 @@ ServiceEntity::setup(string      entityName,
                      const float xx,
                      const float yy)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_S1s("entityName = ", entityName); //####
-    OD_LOG_D2("xx = ", xx, "yy = ", yy); //####
+    ODL_OBJENTER(); //####
+    ODL_S1s("entityName = ", entityName); //####
+    ODL_D2("xx = ", xx, "yy = ", yy); //####
     _panel.setup();
     _panel.setName(entityName);
     setPosition(xx, yy);
     _panel.setTracker(this);
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ServiceEntity::setup
 
 #if defined(__APPLE__)

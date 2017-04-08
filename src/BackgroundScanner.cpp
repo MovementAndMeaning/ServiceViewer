@@ -39,8 +39,8 @@
 #include "BackgroundScanner.h"
 #include "ServiceViewerApp.h"
 
-//#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
+//#include <odlEnable.h>
+#include <odlInclude.h>
 
 #include "ofUtils.h"
 
@@ -96,15 +96,15 @@ BackgroundScanner::BackgroundScanner(ServiceViewerApp & owner,
     inherited(), _owner(owner), _scanActive(false), _scanInterval(minScanInterval),
     _scanComplete(false), _scanEnabled(false)
 {
-    OD_LOG_ENTER(); //####
+    ODL_ENTER(); //####
     _lastScanTime = ofGetElapsedTimef();
-    OD_LOG_EXIT_P(this); //####
+    ODL_EXIT_P(this); //####
 } // BackgroundScanner::BackgroundScanner
 
 BackgroundScanner::~BackgroundScanner(void)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJENTER(); //####
+    ODL_OBJEXIT(); //####
 } // BackgroundScanner::~BackgroundScanner
 
 #if defined(__APPLE__)
@@ -114,7 +114,7 @@ BackgroundScanner::~BackgroundScanner(void)
 void
 BackgroundScanner::enableScan(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     for (bool locked = lock(); ! locked; )
     {
         yield();
@@ -122,13 +122,13 @@ BackgroundScanner::enableScan(void)
     _scanComplete = false;
     _scanEnabled = true;
     unlock();
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // BackgroundScanner::enableScan
 
 void
 BackgroundScanner::threadedFunction(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     // start
     while (isThreadRunning())
     {
@@ -185,7 +185,7 @@ BackgroundScanner::threadedFunction(void)
         }
     }
     // done
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // BackgroundScanner::threadedFunction
 
 #if defined(__APPLE__)

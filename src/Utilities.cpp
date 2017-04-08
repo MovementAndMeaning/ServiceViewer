@@ -38,8 +38,8 @@
 
 #include "Utilities.h"
 
-//#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
+//#include <odlEnable.h>
+#include <odlInclude.h>
 
 #include "ofGraphics.h"
 #include "ofxGui.h"
@@ -96,8 +96,8 @@ DrawBezier(const ofPoint & startPoint,
            const ofPoint & startCentre,
            const ofPoint & endCentre)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_P4("startPoint = ", &startPoint, "endPoint = ", &endPoint, "startCentre = ", //####
+    ODL_ENTER(); //####
+    ODL_P4("startPoint = ", &startPoint, "endPoint = ", &endPoint, "startCentre = ", //####
               &startCentre, "endCentre = ", &endCentre); //####
     ofPolyline bLine;
     float      controlLength = (startPoint.distance(endPoint) * kControlLengthScale);
@@ -109,5 +109,5 @@ DrawBezier(const ofPoint & startPoint,
     bLine.addVertex(startPoint);
     bLine.bezierTo(startPoint + controlPoint1, endPoint + controlPoint2, endPoint);
     bLine.draw();
-    OD_LOG_EXIT();//####
+    ODL_EXIT();//####
 } // DrawBezier

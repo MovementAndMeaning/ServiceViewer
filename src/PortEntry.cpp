@@ -40,8 +40,8 @@
 #include "ServiceViewerApp.h"
 #include "Utilities.h"
 
-//#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
+//#include <odlEnable.h>
+#include <odlInclude.h>
 
 #include "ofGraphics.h"
 #include "ofSystemUtils.h"
@@ -84,8 +84,8 @@ calculateMinDistance(float &         distanceSoFar,
                      const ofPoint & testPoint,
                      ofPoint &       bestSoFar)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_P4("distanceSoFar = ", &distanceSoFar, "refPoint = ", &refPoint, "testPoint = ", //####
+    ODL_ENTER(); //####
+    ODL_P4("distanceSoFar = ", &distanceSoFar, "refPoint = ", &refPoint, "testPoint = ", //####
               &testPoint, "bestSoFar = ", &bestSoFar); //####
     bool  result;
     float newDistance = refPoint.distance(testPoint);
@@ -100,7 +100,7 @@ calculateMinDistance(float &         distanceSoFar,
     {
         result = false;
     }
-    OD_LOG_EXIT_B(result); //####
+    ODL_EXIT_B(result); //####
     return result;
 } // calculateMinDistance
 
@@ -133,8 +133,8 @@ calculateAnchorForPoint(ofPoint &       newCentre,
                         const ofPoint & targetPoint,
                         const ofPoint & refCentre)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_P3("newCentre = ", &newCentre, "targetPoint = ", &targetPoint, //####
+    ODL_ENTER(); //####
+    ODL_P3("newCentre = ", &newCentre, "targetPoint = ", &targetPoint, //####
               "refCentre = ", &refCentre); //####
     PortEntry::AnchorSide anchor = PortEntry::kAnchorUnknown;
     float                 boxSize = (refCentre.distance(targetPoint) * kTargetBoxScale);
@@ -164,7 +164,7 @@ calculateAnchorForPoint(ofPoint &       newCentre,
         anchor = PortEntry::kAnchorTopCentre;
         newCentre = targetPoint + ofPoint(0, boxSize);
     }
-    OD_LOG_EXIT_L(static_cast<int>(anchor)); //####
+    ODL_EXIT_L(static_cast<int>(anchor)); //####
     return anchor;
 } // calculateAnchorForPoint
 
@@ -183,17 +183,17 @@ PortEntry::PortEntry(IconlessPanel *     parent,
     inherited(parent), _portProtocol(portProtocol), _direction(direction), _usage(portKind),
     _isLastPort(true)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_P1("parent = ", parent); //####
-    OD_LOG_S1s("portProtocol = ", portProtocol.c_str()); //####
-    OD_LOG_L2("portKind = ", portKind, "direction = ", direction); //####
-    OD_LOG_EXIT_P(this); //####
+    ODL_ENTER(); //####
+    ODL_P1("parent = ", parent); //####
+    ODL_S1s("portProtocol = ", portProtocol.c_str()); //####
+    ODL_L2("portKind = ", portKind, "direction = ", direction); //####
+    ODL_EXIT_P(this); //####
 } // PortEntry::PortEntry
 
 PortEntry::~PortEntry(void)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJENTER(); //####
+    ODL_OBJEXIT(); //####
 } // PortEntry::~PortEntry
 
 #if defined(__APPLE__)
@@ -206,8 +206,8 @@ void
 PortEntry::addInputConnection(PortEntry *                 other,
                               MplusM::Common::ChannelMode mode)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("other = ", other); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("other = ", other); //####
     if (other)
     {
         bool canAdd = true;
@@ -231,7 +231,7 @@ PortEntry::addInputConnection(PortEntry *                 other,
             _inputConnections.push_back(newConnection);
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // PortEntry::addInputConnection
 
 /*! @brief Add an output connection to the port.
@@ -240,8 +240,8 @@ void
 PortEntry::addOutputConnection(PortEntry *                 other,
                                MplusM::Common::ChannelMode mode)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("other = ", other); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("other = ", other); //####
     if (other)
     {
         bool canAdd = true;
@@ -265,7 +265,7 @@ PortEntry::addOutputConnection(PortEntry *                 other,
             _outputConnections.push_back(newConnection);
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // PortEntry::addOutputConnection
 
 PortEntry::AnchorSide
@@ -274,9 +274,9 @@ PortEntry::calculateClosestAnchor(ofPoint &       result,
                                   const bool      disallowBottom,
                                   const ofPoint & pp)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P2("result = ", &result, "pp = ", &pp); //####
-    OD_LOG_B1("isSource = ", isSource); //####
+    ODL_OBJENTER(); //####
+    ODL_P2("result = ", &result, "pp = ", &pp); //####
+    ODL_B1("isSource = ", isSource); //####
     // Check each anchor point - the two side centres and optionally the bottom - to find the
     // shortest distance.
     AnchorSide  anchor = kAnchorUnknown;
@@ -315,7 +315,7 @@ PortEntry::calculateClosestAnchor(ofPoint &       result,
             }
         }
     }
-    OD_LOG_OBJEXIT_L(static_cast<int> (anchor)); //####
+    ODL_OBJEXIT_L(static_cast<int> (anchor)); //####
     return anchor;
 } // PortEntry::calculateClosestAnchor
 
@@ -324,9 +324,9 @@ PortEntry::drawDragLine(const float xPos,
                         const float yPos,
                         const bool  isUDP)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_D2("xPos = ", xPos, "yPos = ", yPos); //####
-    OD_LOG_B1("isUDP = ", isUDP); //####
+    ODL_OBJENTER(); //####
+    ODL_D2("xPos = ", xPos, "yPos = ", yPos); //####
+    ODL_B1("isUDP = ", isUDP); //####
     PortPanel * theParent = getParent();
     
     if (! theParent->isPointInside(xPos, yPos))
@@ -366,16 +366,16 @@ PortEntry::drawDragLine(const float xPos,
         drawSourceAnchor(anchorHere, fromHere);
         drawTargetAnchor(anchorThere, toThere);
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // PortEntry::drawDragLine
 
 void
 PortEntry::drawSourceAnchor(const AnchorSide anchor,
                             const ofPoint &  anchorPos)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_L1("anchor = ", static_cast<int> (anchor)); //####
-    OD_LOG_P1("anchorPos = ", &anchorPos); //####
+    ODL_ENTER(); //####
+    ODL_L1("anchor = ", static_cast<int> (anchor)); //####
+    ODL_P1("anchorPos = ", &anchorPos); //####
     ofPoint first;
     ofPoint second;
     
@@ -410,16 +410,16 @@ PortEntry::drawSourceAnchor(const AnchorSide anchor,
         ofLine(anchorPos, first);
         ofLine(anchorPos, second);
     }
-    OD_LOG_EXIT(); //####
+    ODL_EXIT(); //####
 } // PortEntry::drawSourceAnchor
 
 void
 PortEntry::drawTargetAnchor(const AnchorSide anchor,
                             const ofPoint &  anchorPos)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_L1("anchor = ", static_cast<int> (anchor)); //####
-    OD_LOG_P1("anchorPos = ", &anchorPos); //####
+    ODL_ENTER(); //####
+    ODL_L1("anchor = ", static_cast<int> (anchor)); //####
+    ODL_P1("anchorPos = ", &anchorPos); //####
     ofPoint first;
     ofPoint second;
     
@@ -454,16 +454,16 @@ PortEntry::drawTargetAnchor(const AnchorSide anchor,
         ofLine(anchorPos, first);
         ofLine(anchorPos, second);
     }
-    OD_LOG_EXIT(); //####
+    ODL_EXIT(); //####
 } // PortEntry::drawTargetAnchor
 
 ofPoint
 PortEntry::getCentre(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     ofRectangle outer(getShape());
     
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
     return ofPoint(outer.x + (outer.width / 2), outer.y + (outer.height / 2));
 } // PortEntry::getCentre
 
@@ -471,11 +471,11 @@ bool
 PortEntry::isPointInside(const ofPoint & aPoint)
 const
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("aPoint = ", &aPoint); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("aPoint = ", &aPoint); //####
     bool result = b.inside(aPoint);
     
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // PortEntry::isPointInside
 
@@ -484,20 +484,20 @@ PortEntry::isPointInside(const float xPos,
                          const float yPos)
 const
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_D2("xPos = ", xPos, "yPos = ", yPos); //####
+    ODL_OBJENTER(); //####
+    ODL_D2("xPos = ", xPos, "yPos = ", yPos); //####
     bool result = b.inside(xPos, yPos);
     
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // PortEntry::isPointInside
 
 bool
 PortEntry::mouseDragged(ofMouseEventArgs & args)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("args = ", &args); //####
-    OD_LOG_L1("args.button = ", args.button); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("args = ", &args); //####
+    ODL_L1("args.button = ", args.button); //####
     bool result = inherited::mouseDragged(args);
     
     if (! result)
@@ -510,7 +510,7 @@ PortEntry::mouseDragged(ofMouseEventArgs & args)
             bool controlWasActive = owner.controlActive();
             bool removeIsActive = owner.removeIsActive();
             
-            OD_LOG_B3("addIsActive = ", addIsActive, "controlWasActive = ", controlWasActive, //####
+            ODL_B3("addIsActive = ", addIsActive, "controlWasActive = ", controlWasActive, //####
                       "removeIsActive = ", removeIsActive); //####
             if (OF_MOUSE_BUTTON_3 == args.button)
             {
@@ -526,27 +526,27 @@ PortEntry::mouseDragged(ofMouseEventArgs & args)
             }
         }
     }
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // PortEntry::mouseDragged
 
 bool
 PortEntry::mouseMoved(ofMouseEventArgs & args)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("args = ", &args); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("args = ", &args); //####
     bool result = inherited::mouseMoved(args);
     
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // PortEntry::mouseMoved
 
 bool
 PortEntry::mousePressed(ofMouseEventArgs & args)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("args = ", &args); //####
-    OD_LOG_L1("args.button = ", args.button); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("args = ", &args); //####
+    ODL_L1("args.button = ", args.button); //####
     bool result = inherited::mousePressed(args);
     
     if (! result)
@@ -559,7 +559,7 @@ PortEntry::mousePressed(ofMouseEventArgs & args)
             bool controlWasActive = owner.controlActive();
             bool removeIsActive = owner.removeIsActive();
             
-            OD_LOG_B3("addIsActive = ", addIsActive, "controlWasActive = ", controlWasActive, //####
+            ODL_B3("addIsActive = ", addIsActive, "controlWasActive = ", controlWasActive, //####
                       "removeIsActive = ", removeIsActive); //####
             if (OF_MOUSE_BUTTON_3 == args.button)
             {
@@ -610,16 +610,16 @@ PortEntry::mousePressed(ofMouseEventArgs & args)
             }
         }
     }
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // PortEntry::mousePressed
 
 bool
 PortEntry::mouseReleased(ofMouseEventArgs & args)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("args = ", &args); //####
-    OD_LOG_L1("args.button = ", args.button); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("args = ", &args); //####
+    ODL_L1("args.button = ", args.button); //####
     bool result = inherited::mouseReleased(args);
     
     if (! result)
@@ -632,7 +632,7 @@ PortEntry::mouseReleased(ofMouseEventArgs & args)
             bool controlWasActive = owner.controlActive();
             bool removeIsActive = owner.removeIsActive();
             
-            OD_LOG_B3("addIsActive = ", addIsActive, "controlWasActive = ", controlWasActive, //####
+            ODL_B3("addIsActive = ", addIsActive, "controlWasActive = ", controlWasActive, //####
                       "removeIsActive = ", removeIsActive); //####
             if (OF_MOUSE_BUTTON_3 == args.button)
             {
@@ -657,15 +657,15 @@ PortEntry::mouseReleased(ofMouseEventArgs & args)
             }
         }
     }
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // PortEntry::mouseReleased
 
 void
 PortEntry::removeInputConnection(PortEntry * other)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("other = ", other); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("other = ", other); //####
     if (other)
     {
         Connections::iterator walker(_inputConnections.begin());
@@ -683,14 +683,14 @@ PortEntry::removeInputConnection(PortEntry * other)
             _inputConnections.erase(walker);
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // PortEntry::removeInputConnection
 
 void
 PortEntry::removeOutputConnection(PortEntry * other)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("other = ", other); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("other = ", other); //####
     if (other)
     {
         Connections::iterator walker(_outputConnections.begin());
@@ -707,7 +707,7 @@ PortEntry::removeOutputConnection(PortEntry * other)
             _outputConnections.erase(walker);
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // PortEntry::removeOutputConnection
 
 PortEntry *
@@ -715,9 +715,9 @@ PortEntry::setup(string      label,
                  const float width,
                  const float height)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_S1s("label = ", label); //####
-    OD_LOG_D2("width = ", width, "height = ", height); //####
+    ODL_OBJENTER(); //####
+    ODL_S1s("label = ", label); //####
+    ODL_D2("width = ", width, "height = ", height); //####
     string tag;
     
     _portName = label;
@@ -742,7 +742,7 @@ PortEntry::setup(string      label,
     }
     PortEntry * result = static_cast<PortEntry *> (inherited::setup(tag, label, width, height));
     
-    OD_LOG_OBJEXIT_P(result); //####
+    ODL_OBJEXIT_P(result); //####
     return result;
 } // PortEntry::setup
 

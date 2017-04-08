@@ -38,8 +38,8 @@
 
 #include "ServiceViewerApp.h"
 
-//#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
+//#include <odlEnable.h>
+#include <odlInclude.h>
 
 #include "ofAppRunner.h"
 
@@ -121,13 +121,13 @@ main(int      argc,
 # pragma unused(argc)
 #endif // MAC_OR_LINUX_
 #if defined(MpM_ServicesLogToStandardError)
-    OD_LOG_INIT(*argv, kODLoggingOptionIncludeProcessID | kODLoggingOptionIncludeThreadID | //####
+    ODL_INIT(*argv, kODLoggingOptionIncludeProcessID | kODLoggingOptionIncludeThreadID | //####
                 kODLoggingOptionWriteToStderr | kODLoggingOptionEnableThreadSupport); //####
 #else // ! defined(MpM_ServicesLogToStandardError)
-    OD_LOG_INIT(*argv, kODLoggingOptionIncludeProcessID | kODLoggingOptionIncludeThreadID | //####
+    ODL_INIT(*argv, kODLoggingOptionIncludeProcessID | kODLoggingOptionIncludeThreadID | //####
                 kODLoggingOptionEnableThreadSupport); //####
 #endif // ! defined(MpM_ServicesLogToStandardError)
-    OD_LOG_ENTER(); //####
+    ODL_ENTER(); //####
 #if MAC_OR_LINUX_
     MplusM::Common::SetUpLogger(*argv);
 #endif // MAC_OR_LINUX_
@@ -142,10 +142,10 @@ main(int      argc,
     }
     catch (...)
     {
-        OD_LOG("Exception caught"); //####
+        ODL_LOG("Exception caught"); //####
     }
     yarp::os::Network::fini();
-    OD_LOG_EXIT_L(0); //####
+    ODL_EXIT_L(0); //####
     return 0;
 } // main
 #if (! MAC_OR_LINUX_)

@@ -41,8 +41,8 @@
 #include "ServiceViewerApp.h"
 #include "Utilities.h"
 
-//#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
+//#include <odlEnable.h>
+#include <odlInclude.h>
 
 #include "ofSystemUtils.h"
 
@@ -84,10 +84,10 @@ PortPanel::PortPanel(const EntityKind   kind,
     inherited(), _tracker(NULL), _owner(owner), _within(within), _behaviour(behaviour),
     _description(description), _kind(kind), _grabbed(false)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_S2s("behaviour = ", behaviour, "description = ", description); //####
-    OD_LOG_P2("owner = ", &owner, "within = ", &within); //####
-    OD_LOG_EXIT_P(this); //####
+    ODL_ENTER(); //####
+    ODL_S2s("behaviour = ", behaviour, "description = ", description); //####
+    ODL_P2("owner = ", &owner, "within = ", &within); //####
+    ODL_EXIT_P(this); //####
 } // PortPanel::PortPanel
 
 PortPanel::PortPanel(const EntityKind         kind,
@@ -102,17 +102,17 @@ PortPanel::PortPanel(const EntityKind         kind,
     inherited(parameters, filename, xx, yy), _tracker(NULL), _owner(owner), _within(within),
     _behaviour(behaviour), _description(description), _kind(kind), _grabbed(false)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_S3s("behaviour = ", behaviour, "description = ", description, "filename = ", //####
+    ODL_ENTER(); //####
+    ODL_S3s("behaviour = ", behaviour, "description = ", description, "filename = ", //####
               filename); //####
-    OD_LOG_P3("owner = ", &owner, "within = ", &within, "parameters = ", &parameters); //####
-    OD_LOG_D2("xx = ", xx, "yy = ", yy); //####
-    OD_LOG_EXIT_P(this); //####
+    ODL_P3("owner = ", &owner, "within = ", &within, "parameters = ", &parameters); //####
+    ODL_D2("xx = ", xx, "yy = ", yy); //####
+    ODL_EXIT_P(this); //####
 } // PortPanel::PortPanel
 
 PortPanel::~PortPanel(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     unregisterMouseEvents();
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
@@ -123,7 +123,7 @@ PortPanel::~PortPanel(void)
             delete aPort;
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // PortPanel::~PortPanel
 
 #if defined(__APPLE__)
@@ -136,8 +136,8 @@ PortPanel::addPort(const string &                 portName,
                    const PortEntry::PortUsage     portKind,
                    const PortEntry::PortDirection direction)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_S2s("portName = ", portName, "portProtocol = ", portProtocol); //####
+    ODL_OBJENTER(); //####
+    ODL_S2s("portName = ", portName, "portProtocol = ", portProtocol); //####
     int         countBefore = getNumPorts();
     PortEntry * aPort = new PortEntry(this, portProtocol, portKind, direction);
     
@@ -151,15 +151,15 @@ PortPanel::addPort(const string &                 portName,
             bPort->unsetAsLastPort();
         }
     }
-    OD_LOG_OBJEXIT_P(aPort); //####
+    ODL_OBJEXIT_P(aPort); //####
     return aPort;
 } // PortPanel::addPort
 
 PortEntry *
 PortPanel::getPort(const int num)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_L1("num = ", num); //####
+    ODL_OBJENTER(); //####
+    ODL_L1("num = ", num); //####
     PortEntry * result;
     
     if (0 <= num)
@@ -170,7 +170,7 @@ PortPanel::getPort(const int num)
     {
         result = NULL;
     }
-    OD_LOG_OBJEXIT_P(result); //####
+    ODL_OBJEXIT_P(result); //####
     return result;
 } // PortPanel::getPort
 
@@ -178,11 +178,11 @@ bool
 PortPanel::isPointInside(const ofPoint & aPoint)
 const
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("aPoint = ", &aPoint); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("aPoint = ", &aPoint); //####
     bool result = b.inside(aPoint);
     
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // PortPanel::isPointInside
 
@@ -191,26 +191,26 @@ PortPanel::isPointInside(const float xPos,
                          const float yPos)
 const
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_D2("xPos = ", xPos, "yPos = ", yPos); //####
+    ODL_OBJENTER(); //####
+    ODL_D2("xPos = ", xPos, "yPos = ", yPos); //####
     bool result = b.inside(xPos, yPos);
     
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // PortPanel::isPointInside
 
 bool
 PortPanel::mouseDragged(ofMouseEventArgs & args)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("args = ", &args); //####
-    OD_LOG_L1("args.button = ", args.button); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("args = ", &args); //####
+    ODL_L1("args.button = ", args.button); //####
     bool result = false;
     bool addIsActive = _owner.addIsActive();
     bool controlWasActive = _owner.controlActive();
     bool removeIsActive = _owner.removeIsActive();
     
-    OD_LOG_B3("addIsActive = ", addIsActive, "controlWasActive = ", controlWasActive, //####
+    ODL_B3("addIsActive = ", addIsActive, "controlWasActive = ", controlWasActive, //####
               "removeIsActive = ", removeIsActive); //####
     if (controlWasActive || (OF_MOUSE_BUTTON_3 == args.button))
     {
@@ -230,27 +230,27 @@ PortPanel::mouseDragged(ofMouseEventArgs & args)
     {
         result = inherited::mouseDragged(args);
     }
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // PortPanel::mouseDragged
 
 bool
 PortPanel::mouseMoved(ofMouseEventArgs & args)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("args = ", &args); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("args = ", &args); //####
     bool result = inherited::mouseMoved(args);
     
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // PortPanel::mouseMoved
 
 bool
 PortPanel::mousePressed(ofMouseEventArgs & args)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("args = ", &args); //####
-    OD_LOG_L1("args.button = ", args.button); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("args = ", &args); //####
+    ODL_L1("args.button = ", args.button); //####
     bool result = inherited::mousePressed(args);
     
     if (! result)
@@ -261,7 +261,7 @@ PortPanel::mousePressed(ofMouseEventArgs & args)
             bool controlWasActive = _owner.controlActive();
             bool removeIsActive = _owner.removeIsActive();
             
-            OD_LOG_B3("addIsActive = ", addIsActive, "controlWasActive = ", controlWasActive, //####
+            ODL_B3("addIsActive = ", addIsActive, "controlWasActive = ", controlWasActive, //####
                       "removeIsActive = ", removeIsActive); //####
             if (OF_MOUSE_BUTTON_3 == args.button)
             {
@@ -296,16 +296,16 @@ PortPanel::mousePressed(ofMouseEventArgs & args)
             }
         }
     }
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // PortPanel::mousePressed
 
 bool
 PortPanel::mouseReleased(ofMouseEventArgs & args)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("args = ", &args); //####
-    OD_LOG_L1("args.button = ", args.button); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("args = ", &args); //####
+    ODL_L1("args.button = ", args.button); //####
     bool result = false;
     
     if (b.inside(args.x, args.y))
@@ -314,7 +314,7 @@ PortPanel::mouseReleased(ofMouseEventArgs & args)
         bool controlWasActive = _owner.controlActive();
         bool removeIsActive = _owner.removeIsActive();
         
-        OD_LOG_B3("addIsActive = ", addIsActive, "controlWasActive = ", controlWasActive, //####
+        ODL_B3("addIsActive = ", addIsActive, "controlWasActive = ", controlWasActive, //####
                   "removeIsActive = ", removeIsActive); //####
         if (controlWasActive || (OF_MOUSE_BUTTON_3 == args.button))
         {
@@ -363,14 +363,14 @@ PortPanel::mouseReleased(ofMouseEventArgs & args)
             result = true;
         }
     }
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // PortPanel::mouseReleased
 
 void
 PortPanel::setName(string name)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     string prefix;
     
     switch (MplusM::Utilities::MapStringToServiceKind(_behaviour))
@@ -393,7 +393,7 @@ PortPanel::setName(string name)
             
     }
     inherited::setName(prefix + name);
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // PortPanel::setName
 
 PortPanel *
@@ -402,12 +402,12 @@ PortPanel::setup(string      collectionName,
                  const float xx,
                  const float yy)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     registerMouseEvents();
     PortPanel * result = static_cast<PortPanel *> (inherited::setup(collectionName, filename, xx,
                                                                     yy));
     
-    OD_LOG_OBJEXIT_P(result); //####
+    ODL_OBJEXIT_P(result); //####
     return result;
 } // PortPanel::setup
 
@@ -417,11 +417,11 @@ PortPanel::setup(const ofParameterGroup & parameters,
                  const float              xx,
                  const float              yy)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     registerMouseEvents();
     PortPanel * result = static_cast<PortPanel *> (inherited::setup(parameters, filename, xx, yy));
     
-    OD_LOG_OBJEXIT_P(result); //####
+    ODL_OBJEXIT_P(result); //####
     return result;
 } // PortPanel::setup
 
@@ -430,9 +430,9 @@ PortPanel::setValue(float mx,
                     float my,
                     bool  bCheck)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_D2("mx = ", mx, "my = ", my); //####
-    OD_LOG_B1("bCheck = ", bCheck); //####
+    ODL_OBJENTER(); //####
+    ODL_D2("mx = ", mx, "my = ", my); //####
+    ODL_B1("bCheck = ", bCheck); //####
     bool result = false;
     
     if (! isGuiDrawing())
@@ -458,7 +458,7 @@ PortPanel::setValue(float mx,
                 _grabbed = false;
             }
 #endif // ! defined(CAN_GRAB_OUTSIDE_HEADER_)
-            OD_LOG_B1("_grabbed <- ", _grabbed); //####
+            ODL_B1("_grabbed <- ", _grabbed); //####
         }
     }
     else if (_grabbed)
@@ -470,7 +470,7 @@ PortPanel::setValue(float mx,
         }
         result = true;
     }
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // PortPanel::setValue
 

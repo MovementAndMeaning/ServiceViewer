@@ -40,8 +40,8 @@
 #include "IconlessPanel.h"
 #include "Utilities.h"
 
-//#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
+//#include <odlEnable.h>
+#include <odlInclude.h>
 
 #if defined(__APPLE__)
 # pragma clang diagnostic push
@@ -81,11 +81,11 @@ ofColor LabelWithShadow::shadowColor(128);
 LabelWithShadow::LabelWithShadow(IconlessPanel * parent) :
     inherited(), _parent(parent)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_P1("parent = ", parent); //####
+    ODL_ENTER(); //####
+    ODL_P1("parent = ", parent); //####
     _thisShadowColor = shadowColor;
     _thisShadowWidth = shadowWidth;
-    OD_LOG_EXIT_P(this); //####
+    ODL_EXIT_P(this); //####
 } // LabelWithShadow::LabelWithShadow
 
 LabelWithShadow::LabelWithShadow(IconlessPanel *     parent,
@@ -94,18 +94,18 @@ LabelWithShadow::LabelWithShadow(IconlessPanel *     parent,
                                  const float         height) :
     inherited(label, width, height), _parent(parent)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_P1("parent = ", parent); //####
-    OD_LOG_D2("width = ", width, "height = ", height); //####
+    ODL_ENTER(); //####
+    ODL_P1("parent = ", parent); //####
+    ODL_D2("width = ", width, "height = ", height); //####
     _thisShadowColor = shadowColor;
     _thisShadowWidth = shadowWidth;
-    OD_LOG_EXIT_P(this); //####
+    ODL_EXIT_P(this); //####
 } // LabelWithShadow::LabelWithShadow
 
 LabelWithShadow::~LabelWithShadow(void)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJENTER(); //####
+    ODL_OBJEXIT(); //####
 } // LabelWithShadow::~LabelWithShadow
 
 #if defined(__APPLE__)
@@ -115,7 +115,7 @@ LabelWithShadow::~LabelWithShadow(void)
 float
 LabelWithShadow::calculateTextWidth(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     string name;
     
     if (! getName().empty())
@@ -126,14 +126,14 @@ LabelWithShadow::calculateTextWidth(void)
     ofRectangle bbox = getTextBoundingBox(name, 0, 0);
     float       result = ((0 <= bbox.width) ? (bbox.width + (2 * textPadding)) : 0);
     
-    OD_LOG_OBJEXIT_D(result); //####
+    ODL_OBJEXIT_D(result); //####
     return result;
 } // LabelWithShadow::calculateTextWidth
 
 void
 LabelWithShadow::generateDraw(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     float newWidth = calculateTextWidth();
     float parentWidth = _parent->getWidth();
     
@@ -151,16 +151,16 @@ LabelWithShadow::generateDraw(void)
     _shadow.setFilled(true);
     _shadow.rectangle(b.x + _thisShadowWidth, b.y + _thisShadowWidth, b.width, b.height);
     inherited::generateDraw();
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // LabelWithShadow::generateDraw
 
 void
 LabelWithShadow::render(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _shadow.draw();
     inherited::render();
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // LabelWithShadow::render
 
 LabelWithShadow *
@@ -168,13 +168,13 @@ LabelWithShadow::setup(ofParameter<string> label,
                        const float         width,
                        const float         height)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_D2("width = ", width, "height = ", height); //####
+    ODL_OBJENTER(); //####
+    ODL_D2("width = ", width, "height = ", height); //####
     LabelWithShadow * result = static_cast<LabelWithShadow *> (inherited::setup(label, width,
                                                                                 height));
     
     b.width = kOurDefaultLabelWidth;
-    OD_LOG_OBJEXIT_P(result); //####
+    ODL_OBJEXIT_P(result); //####
     return result;
 } // LabelWithShadow::setup
 
@@ -184,14 +184,14 @@ LabelWithShadow::setup(string      labelName,
                        const float width,
                        const float height)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_S2s("labelName = ", labelName, "label = ", label); //####
-    OD_LOG_D2("width = ", width, "height = ", height); //####
+    ODL_OBJENTER(); //####
+    ODL_S2s("labelName = ", labelName, "label = ", label); //####
+    ODL_D2("width = ", width, "height = ", height); //####
     LabelWithShadow * result = static_cast<LabelWithShadow *> (inherited::setup(labelName, label,
                                                                                 width, height));
     
     b.width = kOurDefaultLabelWidth;
-    OD_LOG_OBJEXIT_P(result); //####
+    ODL_OBJEXIT_P(result); //####
     return result;
 } // LabelWithShadow::setup
 

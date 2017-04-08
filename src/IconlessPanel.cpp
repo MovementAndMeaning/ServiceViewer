@@ -41,8 +41,8 @@
 #include "MovementTracker.h"
 #include "Utilities.h"
 
-//#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
+//#include <odlEnable.h>
+#include <odlInclude.h>
 
 #include "ofGraphics.h"
 
@@ -80,8 +80,8 @@ static const int kOurDefaultPanelWidth = 20;
 IconlessPanel::IconlessPanel(void) :
     inherited()
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_EXIT_P(this); //####
+    ODL_ENTER(); //####
+    ODL_EXIT_P(this); //####
 } // IconlessPanel::IconlessPanel
 
 IconlessPanel::IconlessPanel(const ofParameterGroup & parameters,
@@ -90,16 +90,16 @@ IconlessPanel::IconlessPanel(const ofParameterGroup & parameters,
                              const float              yy) :
     inherited(parameters, filename, xx, yy)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_S1s("filename = ", filename); //####
-    OD_LOG_D2("xx = ", xx, "yy = ", yy); //####
-    OD_LOG_EXIT_P(this); //####
+    ODL_ENTER(); //####
+    ODL_S1s("filename = ", filename); //####
+    ODL_D2("xx = ", xx, "yy = ", yy); //####
+    ODL_EXIT_P(this); //####
 } // IconlessPanel::IconlessPanel
 
 IconlessPanel::~IconlessPanel(void)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJENTER(); //####
+    ODL_OBJEXIT(); //####
 } // IconlessPanel::~IconlessPanel
 
 #if defined(__APPLE__)
@@ -109,18 +109,18 @@ IconlessPanel::~IconlessPanel(void)
 float
 IconlessPanel::calculateTextWidth(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     ofRectangle bbox = getTextBoundingBox(getName(), 0, 0);
     float       result = ((0 < bbox.width) ? (bbox.width + (2 * textPadding)) : 0);
     
-    OD_LOG_OBJEXIT_D(result); //####
+    ODL_OBJEXIT_D(result); //####
     return result;
 } // IconlessPanel::calculateTextWidth
 
 void
 IconlessPanel::generateDraw(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     border.clear();
     border.setStrokeColor(thisBorderColor);
     border.setStrokeWidth(1);
@@ -132,13 +132,13 @@ IconlessPanel::generateDraw(void)
     headerBg.rectangle(b.x, b.y + 1, b.width, getHeader());
     textMesh = getTextMesh(getName(), textPadding + b.x, (getHeader() / 2) + (4 + b.y));
     setWidth(calculateTextWidth());
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // IconlessPanel::generateDraw
 
 void
 IconlessPanel::render(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     border.draw();
     headerBg.draw();
     ofBlendMode blendMode = ofGetStyle().blendingMode;
@@ -169,7 +169,7 @@ IconlessPanel::render(void)
     {
         ofEnableBlendMode(blendMode);
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // IconlessPanel::render
 
 IconlessPanel *
@@ -178,16 +178,16 @@ IconlessPanel::setup(string      collectionName,
                      const float xx,
                      const float yy)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_S2s("collectionName = ", collectionName, "filename = ", filename); //####
-    OD_LOG_D2("xx = ", xx, "yy = ", yy); //####
+    ODL_OBJENTER(); //####
+    ODL_S2s("collectionName = ", collectionName, "filename = ", filename); //####
+    ODL_D2("xx = ", xx, "yy = ", yy); //####
     IconlessPanel * result = static_cast<IconlessPanel *> (inherited::setup(collectionName,
                                                                             filename, xx, yy));
     
     // Override the default width - this will be adjusted later.
     b.width = kOurDefaultPanelWidth;
     sizeChangedCB();
-    OD_LOG_OBJEXIT_P(result); //####
+    ODL_OBJEXIT_P(result); //####
     return result;
 } // IconlessPanel::setup
 
@@ -197,24 +197,24 @@ IconlessPanel::setup(const ofParameterGroup & parameters,
                      const float              xx,
                      const float              yy)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_S1s("filename = ", filename); //####
-    OD_LOG_D2("xx = ", xx, "yy = ", yy); //####
+    ODL_OBJENTER(); //####
+    ODL_S1s("filename = ", filename); //####
+    ODL_D2("xx = ", xx, "yy = ", yy); //####
     IconlessPanel * result = static_cast<IconlessPanel *> (inherited::setup(parameters, filename,
                                                                             xx, yy));
     
     // Override the default width - this will be adjusted later.
     b.width = kOurDefaultPanelWidth;
     sizeChangedCB();
-    OD_LOG_OBJEXIT_P(result); //####
+    ODL_OBJEXIT_P(result); //####
     return result;
 } // IconlessPanel::setup
 
 void
 IconlessPanel::setWidth(const float newWidth)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_D1("newWidth = ", newWidth); //####
+    ODL_OBJENTER(); //####
+    ODL_D1("newWidth = ", newWidth); //####
     if (b.width < newWidth)
     {
         b.width = newWidth;
@@ -228,7 +228,7 @@ IconlessPanel::setWidth(const float newWidth)
         sizeChangedCB();
         generateDraw();
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // IconlessPanel::setWidth
 
 #if defined(__APPLE__)

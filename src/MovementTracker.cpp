@@ -38,8 +38,8 @@
 
 #include "MovementTracker.h"
 
-//#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
+//#include <odlEnable.h>
+#include <odlInclude.h>
 
 #if defined(__APPLE__)
 # pragma clang diagnostic push
@@ -71,14 +71,14 @@
 
 MovementTracker::MovementTracker(void)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_EXIT_P(this); //####
+    ODL_ENTER(); //####
+    ODL_EXIT_P(this); //####
 } // MovementTracker::MovementTracker
 
 MovementTracker::~MovementTracker(void)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJENTER(); //####
+    ODL_OBJEXIT(); //####
 } // MovementTracker::~MovementTracker
 
 #if defined(__APPLE__)
