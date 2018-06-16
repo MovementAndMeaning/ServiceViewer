@@ -1296,11 +1296,11 @@ ServiceViewerApp::setup(void)
     else
     {
         ODL_LOG("! (yarp::os::Network::checkNetwork())"); //####
-# if defined(MAC_OR_LINUX_)
+# if MAC_OR_LINUX_
         yarp::os::impl::Logger & theLogger = MplusM::Common::GetLogger();
         
         theLogger.fail("YARP network not running.");
-# endif // defined(MAC_OR_LINUX_)
+# endif // MAC_OR_LINUX_
         _networkAvailable = false;
     }
 #endif // CheckNetworkWorks_

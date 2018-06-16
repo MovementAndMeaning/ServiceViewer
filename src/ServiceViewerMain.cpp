@@ -102,10 +102,10 @@
 # pragma mark Global functions
 #endif // defined(__APPLE__)
 
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # pragma warning(push)
 # pragma warning(disable: 4100)
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
 /*! @brief The entry point for displaying the services and ports.
  
  There is no input and the output consists of a list of ports and what, if anything, is connected to
@@ -117,9 +117,9 @@ int
 main(int      argc,
      char * * argv)
 {
-#if defined(MAC_OR_LINUX_)
+#if MAC_OR_LINUX_
 # pragma unused(argc)
-#endif // defined(MAC_OR_LINUX_)
+#endif // MAC_OR_LINUX_
 #if defined(MpM_ServicesLogToStandardError)
     ODL_INIT(*argv, kODLoggingOptionIncludeProcessID | kODLoggingOptionIncludeThreadID | //####
                 kODLoggingOptionWriteToStderr | kODLoggingOptionEnableThreadSupport); //####
@@ -128,9 +128,9 @@ main(int      argc,
                 kODLoggingOptionEnableThreadSupport); //####
 #endif // ! defined(MpM_ServicesLogToStandardError)
     ODL_ENTER(); //####
-#if defined(MAC_OR_LINUX_)
+#if MAC_OR_LINUX_
     MplusM::Common::SetUpLogger(*argv);
-#endif // defined(MAC_OR_LINUX_)
+#endif // MAC_OR_LINUX_
     yarp::os::Network yarp; // This is necessary to establish any connections to the YARP
                             // infrastructure
     
@@ -148,6 +148,6 @@ main(int      argc,
     ODL_EXIT_L(0); //####
     return 0;
 } // main
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # pragma warning(pop\textbf{q})
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
