@@ -164,7 +164,7 @@ calculateAnchorForPoint(ofPoint &       newCentre,
         anchor = PortEntry::kAnchorTopCentre;
         newCentre = targetPoint + ofPoint(0, boxSize);
     }
-    ODL_EXIT_L(static_cast<int>(anchor)); //####
+    ODL_EXIT_I(static_cast<int>(anchor)); //####
     return anchor;
 } // calculateAnchorForPoint
 
@@ -315,7 +315,7 @@ PortEntry::calculateClosestAnchor(ofPoint &       result,
             }
         }
     }
-    ODL_OBJEXIT_L(static_cast<int> (anchor)); //####
+    ODL_OBJEXIT_I(static_cast<int> (anchor)); //####
     return anchor;
 } // PortEntry::calculateClosestAnchor
 

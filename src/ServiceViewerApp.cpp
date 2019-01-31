@@ -287,7 +287,7 @@ determineDirection(PortEntry *                   oldEntry,
     {
         result = PortEntry::kPortDirectionUnknown;
     }
-    ODL_EXIT_L(static_cast<long> (result)); //####
+    ODL_EXIT_I(static_cast<long> (result)); //####
     return result;
 } // determineDirection
 
